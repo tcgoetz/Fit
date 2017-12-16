@@ -30,7 +30,7 @@ class MonitoringInfoOutputData(OutputData):
         if isinstance(activity_type, list):
             for index, type in enumerate(activity_type):
                 entry = {
-                    'file'                      : filename,
+                    'filename'                      : filename,
                     'timestamp'                 : self.local_timestamp,
                     'activity_type'             : type,
                     'resting_metabolic_rate'    : resting_metabolic_rate,

@@ -64,7 +64,7 @@ class DefinitionMessage(Data):
         23  : [ 'device_info', { 2 : ManufacturerField(), 3 : Field('serial_number'),
                                  4 : ProductField('garmin_product'), 5 : VersionField('software_version'),
                                  6 : Field('hardware_version'), 7 : TimeSField('cum_operating_time'),
-                                 10 : BatteryVoltageField() } ],
+                                 10 : BatteryVoltageField('battery_voltage') } ],
         24  : [ 'unknown',  { } ],
         25  : [ 'workout', {} ],
         26  : [ 'workout', { 6 : Field('num_valid_steps'), 8 : StringField('wkt_name'), } ],

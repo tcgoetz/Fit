@@ -218,7 +218,7 @@ class ManufacturerField(Field):
     }
 
     def __init__(self):
-        Field.__init__(self)
+        Field.__init__(self, name='manufacturer')
 
     def convert_single(self, value):
         try:
@@ -395,8 +395,8 @@ class BatteryVoltageField(Field):
     _units = [ 'v', 'v' ]
     _conversion_factor = [ 256.0, 256.0 ]
 
-    def __init__(self):
-        Field.__init__(self)
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, *args, **kwargs)
 
 
 class GenderField(Field):
@@ -432,7 +432,7 @@ class CaloriesField(Field):
 
 
 class ActiveCaloriesField(CaloriesField):
-    is_dependant_field = True
+#    is_dependant_field = True
     dependant_field_control_field = 'activity_type'
 
     def __init__(self, *args, **kwargs):
@@ -498,7 +498,7 @@ class TimeMsField(Field):
 
 
 class CumActiveTimeField(TimeMsField):
-    is_dependant_field = True
+#    is_dependant_field = True
     dependant_field_control_field = 'activity_type'
 
     def __init__(self, *args, **kwargs):
@@ -529,7 +529,7 @@ class TimeMinField(Field):
 
 
 class DurationField(TimeMinField):
-    is_dependant_field = True
+#    is_dependant_field = True
     dependant_field_control_field = 'activity_type'
 
     def __init__(self, *args, **kwargs):
@@ -583,7 +583,7 @@ class DistanceField(Field):
 
 
 class MonitoringDistanceField(DistanceField):
-    is_dependant_field = True
+#    is_dependant_field = True
     dependant_field_control_field = 'activity_type'
 
     def __init__(self, *args, **kwargs):
@@ -606,7 +606,7 @@ class CyclesField(Field):
     _units = ['cycles', 'cycles' ]
     _conversion_factor = [ 2.0, 2.0 ]
     def __init__(self, name='cycles', *args, **kwargs):
-        field_name = name + "_" + self._units[0]
+        field_name = self._units[0]
         Field.__init__(self, name=field_name, *args, **kwargs)
 
 
@@ -614,7 +614,7 @@ class StepsField(Field):
     _units = ['steps', 'steps' ]
     _conversion_factor = [ 1.0, 1.0 ]
     def __init__(self, name, *args, **kwargs):
-        field_name = name + "_" + self._units[0]
+        field_name = self._units[0]
         Field.__init__(self, name=field_name, *args, **kwargs)
 
 
@@ -622,7 +622,7 @@ class StrokesField(Field):
     _units = ['strokes', 'strokes' ]
     _conversion_factor = [ 2.0, 2.0 ]
     def __init__(self, name, *args, **kwargs):
-        field_name = name + "_" + self._units[0]
+        field_name = self._units[0]
         Field.__init__(self, name=field_name, *args, **kwargs)
 
 class CyclesBaseField(Field):

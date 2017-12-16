@@ -16,7 +16,7 @@ class DeviceOutputData(OutputData):
     def parse_messages(self, file):
         for device_info_message in file['device_info']:
             entry = {}
-            entry['file'] = file.filename
+            entry['filename'] = file.filename
     #        entry['type'] = file.type
             for field_name in device_info_message:
                 field_value = device_info_message[field_name]
