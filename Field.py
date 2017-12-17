@@ -927,30 +927,8 @@ class AltField(Field):
         Field.__init__(self, *args, **kwargs)
 
 
-class FloorsField(Field):
-    _units = [ 'floors', 'floors' ]
-    _conversion_factor = [ 3047.9, 3047.9 ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
-
-    def convert_single_display(self, value):
-        return int(self.convert_single(value))
-
-
-class ClimbSubField(Field):
+class ClimbField(Field):
     _units = [ 'm', 'ft' ]
     _conversion_factor = [ 1000.0, 304.79 ]
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
-
-
-class ClimbField(Field):
-    def __init__(self, name, stats_mode, *args, **kwargs):
-        Field.__init__(self, name='', stats_mode=FieldStats.stats_none, *args, **kwargs)
-        self._subfield['climb'] = ClimbSubField(name, stats_mode)
-        self._subfield['floors'] = FloorsField(name + "_floors", stats_mode)
-
-    def convert(self, value, invalid, english_units=False):
-        return FieldValue(self, ['climb', 'floors'], invalid=invalid, value=self.convert_many(value), orig=value,
-                            climb=self._subfield['climb'].convert(value, invalid, english_units),
-                            floors=self._subfield['floors'].convert(value, invalid, english_units))
