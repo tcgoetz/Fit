@@ -30,7 +30,7 @@ class DataMessage():
                 for subfield_name in subfield_names:
                     subfield_value = field_value[subfield_name]
                     subfield_formal_name = subfield_value.field.name
-                    if subfield_formal_name in field_values.keys():
+                    if subfield_formal_name in field_values:
                         field_values[subfield_formal_name]._value['value'] += subfield_value._value['value']
                     else:
                         field_values[subfield_formal_name] = subfield_value
@@ -74,7 +74,5 @@ class DataMessage():
         return self._fields.values()
 
     def __str__(self):
-        fields_str = ''
-        for field_name in self._fields.keys():
-            fields_str += str(self._fields[field_name]) + ","
+        fields_str = "".join(["%s," % value for value in self._fields.values()])
         return ("%s: %s (%d): %s" % (self.__class__.__name__,  self.name(), self.type(), fields_str))

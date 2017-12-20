@@ -176,7 +176,7 @@ class DefinitionMessage(Data):
         Data.__init__(self, file, DefinitionMessage.primary_schema, DefinitionMessage.secondary_schema)
         self.record_header = record_header
 
-        if self.message_number() in DefinitionMessage.known_messages.keys():
+        if self.message_number() in DefinitionMessage.known_messages:
             self.message_data = DefinitionMessage.known_messages[self.message_number()]
         else:
             logger.info("Unknown message number %d: %s" % (self.message_number(), str(self.decoded_data)))
@@ -215,11 +215,11 @@ class DefinitionMessage(Data):
 
     def field(self, field_number):
         # first check for reserved indexes
-        if field_number in DefinitionMessage.reserved_field_indexes.keys():
+        if field_number in DefinitionMessage.reserved_field_indexes:
             field = DefinitionMessage.reserved_field_indexes[field_number]
         else:
             fields = self.fields()
-            if field_number in fields.keys():
+            if field_number in fields:
                 field = fields[field_number]
             else:
                 field = UnknownField(field_number)

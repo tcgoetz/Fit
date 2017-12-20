@@ -48,7 +48,7 @@ class FieldDefinition(Data):
         return self['base_type']
 
     def base_type(self):
-        if self.base_type_value() in FieldDefinition.base_type_data.keys():
+        if self.base_type_value() in FieldDefinition.base_type_data:
             base_type = FieldDefinition.base_type_data[self.base_type_value()]
         else:
             raise IndexError("Unknown base type index %d" % self.base_type_value())
@@ -71,4 +71,5 @@ class FieldDefinition(Data):
         return (self.size_value() / type_size)
 
     def __str__(self):
-        return ("%s: type %d: %d of %s" % (self.__class__.__name__, self.fdn_value(), self.size_value(), self.type_string()));
+        return ("%s: type %d: %d of %s" %
+            (self.__class__.__name__, self.fdn_value(), self.size_value(), self.type_string()));

@@ -151,7 +151,7 @@ class File():
         return DeviceOutputData(self)
 
     def __getitem__(self, name):
-        if name in self._data_messages.keys():
+        if name in self._data_messages:
             return self._data_messages[name]
         return None
 
