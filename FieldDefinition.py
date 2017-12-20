@@ -6,7 +6,7 @@
 
 import logging, collections
 
-from Data import Data
+from Data import *
 
 
 
@@ -49,10 +49,8 @@ class FieldDefinition(Data):
 
     def base_type(self):
         if self.base_type_value() in FieldDefinition.base_type_data:
-            base_type = FieldDefinition.base_type_data[self.base_type_value()]
-        else:
-            raise IndexError("Unknown base type index %d" % self.base_type_value())
-        return base_type
+            return FieldDefinition.base_type_data[self.base_type_value()]
+        raise IndexError("Unknown base type index %d" % self.base_type_value())
 
     def type_endian(self):
         return (self.base_type())[0]
@@ -67,7 +65,7 @@ class FieldDefinition(Data):
         return (self.base_type())[3]
 
     def type_count(self):
-        type_size = self.type_to_size(self.type_string())
+        type_size = Schema.type_to_size(self.type_string())
         return (self.size_value() / type_size)
 
     def __str__(self):
