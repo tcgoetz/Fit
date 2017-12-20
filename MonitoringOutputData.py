@@ -45,7 +45,7 @@ class MonitoringOutputData(OutputData):
                 self.last_timestamp = message.timestamp()
                 self.add_entry_field(entry, 'timestamp', self.last_timestamp)
             else:
-               self.add_entry_field(entry, field_name, field['display'], field.units())
+               self.add_entry_field(entry, field_name, field.value(), field.units())
 
         logger.debug(message.name() + ": " + str(entry))
 

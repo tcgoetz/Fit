@@ -50,9 +50,6 @@ class Field():
     def convert_single(self, value):
         return value / self._conversion_factor[self.units_type]
 
-    def convert_single_display(self, value):
-        return self.convert_single(value)
-
     def _convert_many(self, _convert_single, value):
         if isinstance(value, list):
             converted_value = []
@@ -65,9 +62,6 @@ class Field():
     def convert_many(self, value):
         return self._convert_many(self.convert_single, value)
 
-    def convert_many_display(self, value):
-        return self._convert_many(self.convert_single_display, value)
-
     def convert_single_units(self, value):
         return self._units[self.units_type]
 
@@ -79,8 +73,7 @@ class Field():
             self.units_type = Field.attr_units_type_english
         else:
             self.units_type = Field.attr_units_type_metric
-        return FieldValue(self, invalid=invalid, value=self.convert_many(value),
-                            display=self.convert_many_display(value), orig=value)
+        return FieldValue(self, invalid=invalid, value=self.convert_many(value), orig=value)
 
 
 class ManufacturerField(Field):
@@ -493,9 +486,6 @@ class TimeMsField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def convert_single_display(self, value):
-        return timedelta(0, self.convert_single(value))
-
 
 class CumActiveTimeField(TimeMsField):
 #    is_dependant_field = True
@@ -515,17 +505,11 @@ class TimeSField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def convert_single_display(self, value):
-        return timedelta(0, self.convert_single(value))
-
 
 class TimeMinField(Field):
     _units = [ 'min', 'min' ]
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
-
-    def convert_single_display(self, value):
-        return timedelta(0, self.convert_single(value) * 60)
 
 
 class DurationField(TimeMinField):
@@ -539,40 +523,6 @@ class DurationField(TimeMinField):
         dependant_field_name = self.name + "_" + ActivityTypeField._type[activity_type_index]
         dependant_field_stats_mode = ActivityTypeField._stats_mode[activity_type_index]
         return TimeMinField(name=dependant_field_name, stats_mode=dependant_field_stats_mode)
-
-
-class IntensityMinsField(Field):
-    _units = [ 'min', 'min' ]
-    def __init__(self,*args, **kwargs):
-        Field.__init__(self,  'intensity_mins', *args, **kwargs)
-
-
-class ModerateActivityMinsField(Field):
-    _units = [ 'min', 'min' ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
-        self._subfield['intensity_mins'] = IntensityMinsField(FieldStats.stats_all)
-        self._subfield['moderate_activity'] = TimeMinField('moderate_activity', FieldStats.stats_all)
-
-    def convert(self, value, invalid, english_units=False):
-        return FieldValue(self, ['intensity_mins', 'moderate_activity'], invalid=invalid,
-                            value=self.convert_many(value), orig=value,
-                            intensity_mins=self._subfield['intensity_mins'].convert(value, invalid),
-                            moderate_activity=self._subfield['moderate_activity'].convert(value, invalid))
-
-
-class VigorousActivityMinsField(Field):
-    _units = [ 'min', 'min' ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
-        self._subfield['intensity_mins'] = IntensityMinsField(FieldStats.stats_all)
-        self._subfield['vigorous_activity'] = TimeMinField('vigorous_activity', FieldStats.stats_all)
-
-    def convert(self, value, invalid, english_units=False):
-        return FieldValue(self, ['intensity_mins', 'vigorous_activity'], invalid=invalid,
-                            value=self.convert_many(value), orig=value,
-                            intensity_mins=self._subfield['intensity_mins'].convert(value * 2, invalid),
-                            vigorous_activity=self._subfield['vigorous_activity'].convert(value, invalid))
 
 
 class DistanceField(Field):

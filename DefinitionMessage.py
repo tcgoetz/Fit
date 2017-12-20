@@ -98,8 +98,8 @@ class DefinitionMessage(Data):
                     29 : DurationField(),
                     31 : ClimbField('ascent', FieldStats.stats_all),
                     32 : ClimbField('descent', FieldStats.stats_all),
-                    33 : ModerateActivityMinsField(),
-                    34 : VigorousActivityMinsField(),
+                    33 : TimeMinField('moderate_activity_mins'),
+                    34 : TimeMinField('vigorous_activity_mins'),
                     35 : ClimbField('cum_ascent', FieldStats.stats_commulative_daily),
                     36 : ClimbField('cum_descent', FieldStats.stats_commulative_daily)
                 }
@@ -153,6 +153,14 @@ class DefinitionMessage(Data):
         206 : [ 'field_description', {} ],
         207 : [ 'dev_data_id', {} ],
         208 : [ 'magnetometer_data', {} ],
+        209 : [ 'barometer_data', {} ],
+        210 : [ 'one_d_sensor_calibration', {} ],
+        227 : [ 'stress_level', {} ],
+        258 : [ 'dive_settings', {} ],
+        259 : [ 'dive_gas', {} ],
+        262 : [ 'dive_alarm', {} ],
+        264 : [ 'exercise_title', {} ],
+        268 : [ 'dive_summary', {} ],
         0xFF00  : 'mfg_range_min',
         0xFFFE  : 'mfg_range_max',
     }
