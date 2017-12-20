@@ -94,14 +94,14 @@ class DefinitionMessage(Data):
                     19 : ActiveCaloriesField(),
                     24 : ActivityTypeIntensityField('current_activity_type_intensity'),
                     26 : TimeSField('timestamp_16'),
-                    27 : HeartRateField('heart_rate', FieldStats.stats_all),
+                    27 : HeartRateField('heart_rate'),
                     29 : DurationField(),
-                    31 : ClimbField('ascent', FieldStats.stats_all),
-                    32 : ClimbField('descent', FieldStats.stats_all),
+                    31 : ClimbField('ascent'),
+                    32 : ClimbField('descent'),
                     33 : TimeMinField('moderate_activity_mins'),
                     34 : TimeMinField('vigorous_activity_mins'),
-                    35 : ClimbField('cum_ascent', FieldStats.stats_commulative_daily),
-                    36 : ClimbField('cum_descent', FieldStats.stats_commulative_daily)
+                    35 : ClimbField('cum_ascent'),
+                    36 : ClimbField('cum_descent')
                 }
             ],
         72  : [ 'training_file', {} ], # timestamp, serial_number, creation_time, product_ID, session_style

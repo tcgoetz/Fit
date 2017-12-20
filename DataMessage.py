@@ -7,7 +7,6 @@
 import collections
 
 from Field import Field
-from FieldStats import FieldStats
 from DataField import DataField
 
 

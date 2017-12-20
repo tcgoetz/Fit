@@ -8,7 +8,6 @@ import logging
 from datetime import tzinfo, timedelta, datetime
 
 from OutputData import OutputData
-from FieldStats import *
 
 
 logger = logging.getLogger(__name__)

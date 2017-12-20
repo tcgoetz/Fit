@@ -10,7 +10,6 @@ from time import time, gmtime, localtime, strftime
 from datetime import tzinfo, timedelta, datetime
 
 from FieldValue import FieldValue
-from FieldStats import FieldStats
 
 
 class Field():
@@ -26,7 +25,7 @@ class Field():
     is_dependant_field = False
     dependant_field_control_field = None
 
-    def __init__(self, name='', stats_mode=FieldStats.stats_none):
+    def __init__(self, name=''):
         self.name = name
         if self.__class__.__name__ == 'Field':
             self.type = 'number'
@@ -36,7 +35,6 @@ class Field():
             self.name = self.type
         self._subfield = {}
         self.units_type = self.attr_units_type_default
-        self._stats_mode = stats_mode
 
     def name(self):
         return self._name
@@ -429,12 +427,11 @@ class ActiveCaloriesField(CaloriesField):
     dependant_field_control_field = 'activity_type'
 
     def __init__(self, *args, **kwargs):
-        CaloriesField.__init__(self, name='active_calories', stats_mode=FieldStats.stats_commulative, *args, **kwargs)
+        CaloriesField.__init__(self, name='active_calories', *args, **kwargs)
 
     def dependant_field(self, activity_type_index):
         dependant_field_name = self.name + "_" + ActivityTypeField._type[activity_type_index]
-        dependant_field_stats_mode = ActivityTypeField._stats_mode[activity_type_index]
-        return CaloriesField(name=dependant_field_name, stats_mode=dependant_field_stats_mode)
+        return CaloriesField(name=dependant_field_name)
 
 
 class CaloriesDayField(Field):
@@ -492,12 +489,11 @@ class CumActiveTimeField(TimeMsField):
     dependant_field_control_field = 'activity_type'
 
     def __init__(self, *args, **kwargs):
-        TimeMsField.__init__(self, name='cum_active_time', stats_mode=FieldStats.stats_commulative_daily, *args, **kwargs)
+        TimeMsField.__init__(self, name='cum_active_time', *args, **kwargs)
 
     def dependant_field(self, activity_type_index):
         dependant_field_name = self.name + "_" + ActivityTypeField._type[activity_type_index]
-        dependant_field_stats_mode = ActivityTypeField._stats_mode[activity_type_index]
-        return TimeMsField(name=dependant_field_name, stats_mode=dependant_field_stats_mode)
+        return TimeMsField(name=dependant_field_name)
 
 
 class TimeSField(Field):
@@ -521,8 +517,7 @@ class DurationField(TimeMinField):
 
     def dependant_field(self, activity_type_index):
         dependant_field_name = self.name + "_" + ActivityTypeField._type[activity_type_index]
-        dependant_field_stats_mode = ActivityTypeField._stats_mode[activity_type_index]
-        return TimeMinField(name=dependant_field_name, stats_mode=dependant_field_stats_mode)
+        return TimeMinField(name=dependant_field_name)
 
 
 class DistanceField(Field):
@@ -541,8 +536,7 @@ class MonitoringDistanceField(DistanceField):
 
     def dependant_field(self, activity_type_index):
         dependant_field_name = self.name + "_" + ActivityTypeField._type[activity_type_index]
-        dependant_field_stats_mode = ActivityTypeField._stats_mode[activity_type_index]
-        return DistanceField(name=dependant_field_name, stats_mode=dependant_field_stats_mode)
+        return DistanceField(name=dependant_field_name)
 
 
 class SpeedField(Field):
@@ -595,13 +589,11 @@ class CyclesBaseField(Field):
     dependant_field_control_field = 'activity_type'
 
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, name='cycles', stats_mode=FieldStats.stats_none, *args, **kwargs)
+        Field.__init__(self, name='cycles', *args, **kwargs)
 
     def dependant_field(self, activity_type_index):
         dependant_field_name = ActivityTypeField._type[activity_type_index]
-        dependant_field_stats_mode = ActivityTypeField._stats_mode[activity_type_index]
-        return CyclesBaseField._dependant_field[activity_type_index](name=dependant_field_name,
-                                                                     stats_mode=dependant_field_stats_mode)
+        return CyclesBaseField._dependant_field[activity_type_index](name=dependant_field_name)
 
 
 class ActivityField(Field):
@@ -645,19 +637,6 @@ class ActivityTypeField(Field):
         9 : 'cycles',
         245 : 'cycles'
     }
-    _stats_mode = {
-        0 : FieldStats.stats_none,
-        1 : FieldStats.stats_commulative,
-        2 : FieldStats.stats_commulative,
-        3 : FieldStats.stats_none,
-        4 : FieldStats.stats_none,
-        5 : FieldStats.stats_commulative,
-        6 : FieldStats.stats_commulative,
-        7 : FieldStats.stats_none,
-        8 : FieldStats.stats_none,
-        9 : FieldStats.stats_none,
-        245 : FieldStats.stats_none
-    }
     def __init__(self):
         Field.__init__(self, 'activity_type')
 
@@ -678,7 +657,7 @@ class ActivityTypeIntensityField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
         self._subfield['activity_type'] = ActivityTypeField()
-        self._subfield['intensity'] = IntensityField(stats_mode=FieldStats.stats_all_hourly)
+        self._subfield['intensity'] = IntensityField()
 
     def convert(self, value, invalid, english_units=False):
         activity_type = value & 0x1f
