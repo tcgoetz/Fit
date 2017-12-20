@@ -6,7 +6,7 @@
 
 import collections, logging
 
-from Data import Data
+from Data import *
 from Field import *
 from FieldDefinition import FieldDefinition
 
@@ -16,12 +16,12 @@ logger.setLevel(logging.INFO)
 
 
 class DefinitionMessage(Data):
-    primary_schema = collections.OrderedDict(
+    primary_schema = Schema(collections.OrderedDict(
         [ ('reserved', ['UINT8', 1, '%x']), ('architecture', ['UINT8', 1, '%x']) ]
-    )
-    secondary_schema = collections.OrderedDict(
+    ))
+    secondary_schema = Schema(collections.OrderedDict(
         [ ('global_message_number', ['UINT16', 1, '%x']), ('fields', ['UINT8', 1, '%x']) ]
-    )
+    ))
     known_messages = {
         0   : [ 'file_id', { 0: FileField('type'), 1 : ManufacturerField(), 2 : ProductField('product'),
                              3 : Field('serial_number'), 4: TimestampField('time_created'), 5 : Field('number'),

@@ -6,12 +6,12 @@
 
 import logging, collections
 
-from Data import Data
+from Data import *
 
 
 class RecordHeader(Data):
 
-    schema = collections.OrderedDict( [ ('record_header', ['UINT8', 1, '%x']) ] )
+    schema = Schema(collections.OrderedDict( [ ('record_header', ['UINT8', 1, '%x']) ] ))
     message_type_string = [ 'data', 'definition' ]
 
     def __init__(self, file):

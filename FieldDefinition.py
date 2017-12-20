@@ -12,9 +12,9 @@ from Data import *
 
 class FieldDefinition(Data):
 
-    schema = collections.OrderedDict(
+    schema = Schema(collections.OrderedDict(
         [ ('field_definition_number', ['UINT8', 1, '%x']), ('size', ['UINT8', 1, '%x']), ('base_type', ['UINT8', 1, '%x']) ]
-    )
+    ))
     base_type_data = {
         0x00 : [ False, 'enum',     0xFF,               'UINT8'],
         0x01 : [ False, 'sint8',    0x7F,               'INT8'],

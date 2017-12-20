@@ -6,7 +6,7 @@
 
 import collections
 
-from Data import Data
+from Data import *
 
 
 class DataField(Data):
@@ -21,7 +21,7 @@ class DataField(Data):
         endian = definition_message.architecture()
         type = field_definition.type_string()
         count = field_definition.type_count()
-        schema = collections.OrderedDict( [ (self.field.name, [type, count, '%d']) ] )
+        schema = Schema(collections.OrderedDict( [ (self.field.name, [type, count, '%d']) ] ))
 
         Data.__init__(self, file, schema, None, endian)
 

@@ -44,28 +44,31 @@ class Schema():
     def decode(self, data):
         decoded_data = {}
         index = 0
-        for key in self.ordered_dict:
-            (type, count, format) = self.ordered_dict[key]
+        for (key,(type, count, format)) in self.ordered_dict.items():
             if count > 1:
-                decoded_data[key] = []
-                for repeat in xrange(count):
-                    decoded_data[key].append(data[index])
-                    index += 1
+                decoded_data[key] = [data[index + repeat] for repeat in xrange(count)]
+                index += count
             else:
-                    decoded_data[key] = data[index]
-                    index += 1
+                decoded_data[key] = data[index]
+                index += 1
         return decoded_data
+
+    def printable_data(self, decoded_data):
+        printable_data = {}
+        for (key,(type, count, format)) in self.ordered_dict.items():
+            if count > 1:
+                printable_data[key] = [(format % data[index + repeat]) for repeat in xrange(count)]
+            else:
+                printable_data[key] = (format % decoded_data[key])
+        return printable_data
 
 
 class Data():
 
     def __init__(self, file, primary_schema, optional_schema=None, endian=False):
         self.file = file
-        self.primary_schema = Schema(primary_schema)
-        if optional_schema:
-            self.optional_schema = Schema(optional_schema)
-        else:
-            self.optional_schema = None
+        self.primary_schema = primary_schema
+        self.optional_schema = optional_schema
         self.endian = endian
 
         self.decoded_data = {}
@@ -93,26 +96,12 @@ class Data():
     def convert(self):
         pass
 
-    def __string(self, schema):
-        printable_data = {}
-        for key in schema:
-            (type, count, format) = schema[key]
-            if count > 1:
-                printable_data[key] = []
-                for index in xrange(count):
-                    values = self.decoded_data[key]
-                    printable_data[key].append(format % values[index])
-            else:
-                printable_data[key] = (format % self.decoded_data[key])
-        self.printable_data.update(printable_data)
-
     def __getitem__(self, key):
         return self.decoded_data[key]
 
     def __str__(self):
-        self.printable_data = {}
-        self.__string(self.primary_schema)
+        self.printable_data = self.primary_schema.printable_data(self.decoded_data)
         if self.decode_optional():
-            self.__string(self.optional_schema)
+            self.printable_data.update(self.optional_schema.printable_data(self.decoded_data))
         return str(self.printable_data)
 

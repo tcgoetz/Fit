@@ -6,18 +6,18 @@
 
 import logging, collections
 
-from Data import Data
+from Data import *
 
 class FileHeader(Data):
 
-    primary_schema = collections.OrderedDict(
+    primary_schema = Schema(collections.OrderedDict(
         [ ('header_size', ['UINT8', 1, '%d']), ('protocol_version', ['UINT8', 1, '%x']),
           ('profile_version', ['UINT16', 1, '%d']), ('data_size', ['UINT32', 1, '%d']),
           ('data_type', ['CHAR', 4, '%c']) ]
-    )
-    optional_schema = collections.OrderedDict(
+    ))
+    optional_schema = Schema(collections.OrderedDict(
         [ ('crc', ['UINT16', 1, '%x']) ]
-    )
+    ))
     profile_version_str = { 100: 'activity', 1602 : 'device'}
 
     min_file_header_size = 12
