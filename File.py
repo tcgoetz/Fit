@@ -17,6 +17,8 @@ from DeviceOutputData import DeviceOutputData
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+#logger.setLevel(logging.DEBUG)
+
 
 class FitParseError(Exception):
     def __init__(self, message):
@@ -42,14 +44,6 @@ class File():
             self.parse()
         except IndexError as error:
             raise FitParseError(str(error) + " in " + filename)
-
-    def add_message_stats(self, message):
-        timestamp = entry['timestamp']
-        date = timestamp.replace(hour=0, minute=0, second=0, microsecond=0)
-        if date != self.last_date:
-            self._days[date] = self._stats.copy()
-            self.last_date = date
-        self.last_entry = entry
 
     def timestamp16_to_timestamp(self, timestamp_16):
         if self.matched_timestamp_16:
@@ -96,6 +90,7 @@ class File():
                 definition_message = self._definition_messages[local_message_num]
                 try:
                     data_message = DataMessage(definition_message, self.file, self.english_units)
+                    logger.debug("  Message: %s" % str(data_message))
                 except:
                     raise FitParseError("Failed to parse " + definition_message.name())
 
@@ -128,6 +123,7 @@ class File():
 
             logger.debug("Record %d: consumed %d of %s %r" %
                             (self.record_count, data_consumed, self.data_size, self.english_units))
+        logger.debug("File %s: %s -> %s" % (self.filename, self.time_created_timestamp, self.last_message_timestamp))
 
     def type(self):
         return self['file_id'][0]['type'].value()
