@@ -357,12 +357,19 @@ class ProductField(Field):
         2413 : 'fenix3_hr',
         2429 : 'index_smart_scale',
         2431 : 'fr235',
+        2432 : 'Fenix 3 Chronos',
         2441 : 'oregon7xx',
         2444 : 'rino7xx',
         2496 : 'nautix',
         2530 : 'edge_820',
         2531 : 'edge_explore_820',
+        2544 : 'Fenix 5s',
+        2593 : 'Running Dynamics Pod',
+        2604 : 'Fenix 5X',
+        2606 : 'VivoFit Jr',
+        2691 : 'FR935',
         2697 : 'Fenix 5 Sapphire',
+        2700 : 'VivoActive 3',
         10007 : 'sdm4',
         10014 : 'edge_remote',
         20119 : 'training_center',
@@ -795,10 +802,10 @@ class SessionTriggerField(Field):
 
 
 class SportField(Field):
-    _type = { 
+    _type = {
         0 : 'generic', 1 : 'running', 2 : 'cycling', 3 : 'transition', 4 : 'fitness_equipment', 5 : 'swimming',
         6 : 'basketball', 7 : 'soccer', 8 : 'tennis', 9 : 'american_football', 10 : 'training', 11 : 'walking',
-        12 : 'cross_country_skiing', 13 : 'alpine_skiing', 14 : 'snowboarding', 15 : 'rowing', 16 : 'mountaineering', 17 : 'hiking', 
+        12 : 'cross_country_skiing', 13 : 'alpine_skiing', 14 : 'snowboarding', 15 : 'rowing', 16 : 'mountaineering', 17 : 'hiking',
         18 : 'multisport', 19 : 'paddling', 20 : 'flying', 21 : 'e_biking', 22 : 'motorcycling', 23 : 'boating', 24 : 'driving',
         25 : 'golf', 26 : 'hang_gliding', 27 : 'horseback_riding', 28 : 'hunting', 29 : 'fishing', 30 : 'inline_skating', 31 : 'rock_climbing',
         32 : 'sailing', 33 : 'ice_skating', 34 : 'sky_diving', 35 : 'snowshoeing', 36 : 'snowmobiling', 37 : 'stand_up_paddleboarding', 38 : 'surfing',
@@ -818,7 +825,7 @@ class SportField(Field):
 
 
 class SubSportField(Field):
-    _type = { 
+    _type = {
         0 : 'generic', 1 : 'treadmill', 2 : 'street', 3 : 'trail', 4 : 'track', 5 : 'spiin',
         6 : 'indoor_cycling', 7 : 'road', 8 : 'mountain', 9 : 'downhill', 10 : 'recumbent',
         11 : 'cyclocross', 12 : 'hand_cycling', 13 : 'track_cycling', 14 : 'indoor_rowing', 15 : 'elliptical',
