@@ -18,7 +18,7 @@ class Field():
     attr_units_type_default = attr_units_type_metric
 
     known_field = True
-    _units = [ '', '' ]
+    _units = [ None, None ]
     _conversion_factor = [ 1, 1 ]
     _scale_factor = [ 1, 1 ]
 
@@ -40,7 +40,9 @@ class Field():
         return self._name
 
     def units(self, value):
-        return self.convert_many_units(value)
+        if self._units[self.units_type]:
+            return self.convert_many_units(value)
+        return None
 
     def sub_field(self, name):
         return _sub_field[name]
@@ -74,8 +76,113 @@ class Field():
         return FieldValue(self, invalid=invalid, value=self.convert_many(value), orig=value)
 
 
-class ManufacturerField(Field):
-    manufacturer = {
+#
+# Special fields
+#
+class UnknownField(Field):
+    known_field = False
+    def __init__(self, index):
+        Field.__init__(self, "unknown_" + str(index))
+
+
+#
+# Basic field types
+#
+class BoolField(Field):
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, *args, **kwargs)
+
+    def convert_single(self, value):
+        try:
+            return bool(value)
+        except:
+            return value
+
+
+class EnumField(Field):
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, *args, **kwargs)
+
+    def convert_single(self, value):
+        try:
+            return self.enum[value]
+        except:
+            return value
+
+
+class SwitchField(EnumField):
+    enum = {
+        0 : 'off',
+        1 : 'on',
+        2 : 'auto',
+        255 : 'invalid'
+    }
+
+
+class BitField(Field):
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, *args, **kwargs)
+
+    def convert_single(self, value):
+        if value in self.bits:
+            return self.bits[value]
+        return [self.bits[bit] for bit in self.bits if ((bit & value) == bit)]
+
+
+class PercentField(Field):
+    _units = [ '%', '%' ]
+    _conversion_factor = [ 100.0, 100.0 ]
+    def __init__(self, name):
+        Field.__init__(self, name)
+
+
+class StringField(Field):
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, *args, **kwargs)
+
+    def convert_many(self, value):
+        if isinstance(value, list):
+            converted_value = ""
+            for character in value:
+                converted_value += chr(character)
+        else:
+            converted_value = str(value)
+        return converted_value
+
+
+class DistanceField(Field):
+    _units = [ 'm', 'ft' ]
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, *args, **kwargs)
+
+
+#
+#
+#
+class FitBaseUnitField(EnumField):
+    enum = {
+        0 : 'other',
+        1 : 'kg',
+        2 : 'lb',
+        255 : 'invalid'
+    }
+
+
+class FitBaseUnitField(Field):
+
+    def convert_single(self, value):
+        try:
+            return FieldDefinition.base_type_data[value]
+        except:
+            return value
+
+
+
+#
+# Hardware related fields
+#
+class ManufacturerField(EnumField):
+    enum = {
         1 : 'garmin',
         2 : 'garmin_fr405_antfs',
         3 : 'zephyr',
@@ -208,19 +315,9 @@ class ManufacturerField(Field):
         5759 : 'actigraphcorp'
     }
 
-    def __init__(self):
-        Field.__init__(self, name='manufacturer')
 
-    def convert_single(self, value):
-        try:
-            manufacturer = ManufacturerField.manufacturer[value]
-        except:
-            manufacturer = value
-        return manufacturer
-
-
-class ProductField(Field):
-    product = {
+class ProductField(EnumField):
+    enum = {
         1 : 'hrm1',
         2 : 'axh01',
         3 : 'axb01',
@@ -378,15 +475,52 @@ class ProductField(Field):
         65534 : 'connect'
     }
 
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
 
-    def convert_single(self, value):
-        try:
-            product = ProductField.product[value]
-        except:
-            product = value
-        return product
+class DisplayOrientationField(EnumField):
+    enum = {
+        0 : 'auto',
+        1 : 'portrait',
+        2 : 'landscape',
+        3 : 'portrait_flipped',
+        4 : 'landscape_flipped',
+        255 : 'invalid'
+    }
+
+
+class SideField(EnumField):
+    enum = {
+        0 : 'right',
+        1 : 'left',
+        255 : 'invalid'
+    }
+    def __init__(self, *args, **kwargs):
+        EnumField.__init__(self, name='side', *args, **kwargs)
+
+
+class BacklightModeField(EnumField):
+    enum = {
+        0 : 'off',
+        1 : 'manual',
+        2 : 'key_and_messages',
+        3 : 'auto_brightness',
+        4 : 'smart_notifications',
+        5 : 'key_and_messages_night',
+        6 : 'key_and_messages_and_smart_notifications',
+        255 : 'invalid'
+    }
+    def __init__(self, *args, **kwargs):
+        EnumField.__init__(self, name='backlight_mode', *args, **kwargs)
+
+
+class AntNetworkField(EnumField):
+    enum = {
+        0 : 'public',
+        1 : 'ant+',
+        2 : 'antfs',
+        255 : 'invalid'
+    }
+    def __init__(self, *args, **kwargs):
+        EnumField.__init__(self, name='ant_network', *args, **kwargs)
 
 
 class BatteryVoltageField(Field):
@@ -397,27 +531,63 @@ class BatteryVoltageField(Field):
         Field.__init__(self, *args, **kwargs)
 
 
-class GenderField(Field):
-    gender = { 0 : 'female', 1 : 'male' }
+class BatteryStatusField(EnumField):
+    enum = {
+        1 : 'new',
+        2 : 'good',
+        3 : 'ok',
+        4 : 'low',
+        5 : 'critical',
+        6 : 'charging',
+        7 : 'unknown',
+        255 : 'invalid'
+    }
+    def __init__(self, *args, **kwargs):
+        EnumField.__init__(self, name='battery_status', *args, **kwargs)
 
-    def __init__(self):
-        Field.__init__(self)
 
-    def convert_single(self, value, invalid):
-        return GenderField.gender[value]
+class AutoSyncFrequencyField(EnumField):
+    enum = {
+        0 : 'never',
+        1 : 'occasionally',
+        2 : 'frequent',
+        3 : 'once_a_day',
+        4 : 'remote',
+        255 : 'invalid'
+    }
+    def __init__(self, *args, **kwargs):
+        EnumField.__init__(self, name='auto_sync_frequency', *args, **kwargs)
 
 
-class HeightField(Field):
-    _units = [ 'm', 'ft' ]
-    _conversion_factor = [ 100.0, 100.0 ]
+class AutoActivityDetectField(BitField):
+    bits = {
+        0x00000000 : 'none',
+        0x00000001 : 'running',
+        0x00000002 : 'cycling',
+        0x00000004 : 'swimming',
+        0x00000008 : 'walking',
+        0x00000020 : 'elliptical',
+        0x00000400 : 'sedentary',
+        0xffffffff : 'invalid'
+    }
+    def __init__(self, *args, **kwargs):
+        BitField.__init__(self, name='auto_activity_detect', *args, **kwargs)
 
-    def __init__(self):
-        Field.__init__(self)
+
+#
+# USer related fields
+#
+class GenderField(EnumField):
+    enum = { 0 : 'female', 1 : 'male' }
+
+
+class HeightField(DistanceField):
+    _conversion_factor = [ 100.0, 30.48 ]
 
 
 class WeightField(Field):
     _units = [ 'kg', 'lbs' ]
-    _conversion_factor = [ 100.0, 45.45 ]
+    _conversion_factor = [ 10.0, 4.545 ]
 
     def __init__(self):
         Field.__init__(self)
@@ -430,15 +600,8 @@ class CaloriesField(Field):
 
 
 class ActiveCaloriesField(CaloriesField):
-#    is_dependant_field = True
-    dependant_field_control_field = 'activity_type'
-
     def __init__(self, *args, **kwargs):
         CaloriesField.__init__(self, name='active_calories', *args, **kwargs)
-
-    def dependant_field(self, activity_type_index):
-        dependant_field_name = self.name + "_" + ActivityTypeField._type[activity_type_index]
-        return CaloriesField(name=dependant_field_name)
 
 
 class CaloriesDayField(Field):
@@ -466,6 +629,53 @@ class HeartRateField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
+class HeartRateZoneCalcField(EnumField):
+    enum = {
+        0 : 'custom',
+        1 : 'percent_max_hr',
+        2 : 'percent_hrr',
+        255 : 'invalid'
+    }
+    def __init__(self):
+        EnumField.__init__(self, 'hr_calc_type')
+
+
+class PowerCalcField(EnumField):
+    enum = {
+        0 : 'custom',
+        1 : 'percent_ftp',
+        255 : 'invalid'
+    }
+    def __init__(self):
+        EnumField.__init__(self, 'pwr_calc_type')
+
+
+#
+# Time related fields
+#
+class DateModeField(EnumField):
+    enum = {
+        0 : 'day_month',
+        1 : 'month_day',
+        255 : 'invalid'
+    }
+    def __init__(self, *args, **kwargs):
+        EnumField.__init__(self, name='date_mode', *args, **kwargs)
+
+
+class TimeModeField(EnumField):
+    enum = {
+        0 : '12_hour',
+        1 : '24_hour',
+        2 : 'military',
+        3 : '12_hour_secs',
+        4 : '24_hour_secs',
+        5 : 'utc',
+        255 : 'invalid'
+    }
+    def __init__(self, *args, **kwargs):
+        EnumField.__init__(self, name='time_mode', *args, **kwargs)
+
 
 class TimestampField(Field):
     def __init__(self, name='timestamp', utc=True):
@@ -492,15 +702,8 @@ class TimeMsField(Field):
 
 
 class CumActiveTimeField(TimeMsField):
-#    is_dependant_field = True
-    dependant_field_control_field = 'activity_type'
-
     def __init__(self, *args, **kwargs):
         TimeMsField.__init__(self, name='cum_active_time', *args, **kwargs)
-
-    def dependant_field(self, activity_type_index):
-        dependant_field_name = self.name + "_" + ActivityTypeField._type[activity_type_index]
-        return TimeMsField(name=dependant_field_name)
 
 
 class TimeSField(Field):
@@ -516,15 +719,8 @@ class TimeMinField(Field):
 
 
 class DurationField(TimeMinField):
-#    is_dependant_field = True
-    dependant_field_control_field = 'activity_type'
-
     def __init__(self, *args, **kwargs):
         TimeMinField.__init__(self, name='duration', *args, **kwargs)
-
-    def dependant_field(self, activity_type_index):
-        dependant_field_name = self.name + "_" + ActivityTypeField._type[activity_type_index]
-        return TimeMinField(name=dependant_field_name)
 
 
 class DistanceField(Field):
@@ -535,15 +731,8 @@ class DistanceField(Field):
 
 
 class MonitoringDistanceField(DistanceField):
-#    is_dependant_field = True
-    dependant_field_control_field = 'activity_type'
-
     def __init__(self, *args, **kwargs):
         DistanceField.__init__(self, name='distance', *args, **kwargs)
-
-    def dependant_field(self, activity_type_index):
-        dependant_field_name = self.name + "_" + ActivityTypeField._type[activity_type_index]
-        return DistanceField(name=dependant_field_name)
 
 
 class SpeedField(Field):
@@ -611,10 +800,9 @@ class ActivityField(Field):
 
     def convert_single(self, value):
         try:
-            newvalue = ActivityField._type[value]
+            return ActivityField._type[value]
         except:
-            newvalue = value
-        return newvalue
+            return value
 
 
 class ActivityTypeField(Field):
@@ -675,29 +863,9 @@ class ActivityTypeIntensityField(Field):
                           intensity=self._subfield['intensity'].convert(intensity, 0xff, english_units))
 
 
-class PercentField(Field):
-    _units = [ '%', '%' ]
-    _conversion_factor = [ 100.0, 100.0 ]
-    def __init__(self, name):
-        Field.__init__(self, name)
-
-
-class StringField(Field):
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
-
-    def convert_single(self, value):
-        return str(value)
-
-
-class UnknownField(Field):
-    known_field = False
-    def __init__(self, index):
-        Field.__init__(self, "unknown_" + str(index))
-
-
-class FileField(Field):
-    file_types = {
+class FileField(EnumField):
+    enum = {
+        0 : 'unknown0',
         1 : 'device',
         2 : 'settings',
         3 : 'sport',
@@ -716,14 +884,9 @@ class FileField(Field):
         34 : 'segment',
         35 : 'segment_list',
         40 : 'exd_configuration',
-        44 : 'unknown44'
+        44 : 'unknown44',
+        64 : 'unknown64'
     }
-
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
-
-    def convert_single(self, value):
-        return FileField.file_types[value]
 
 
 class VersionField(Field):
@@ -732,8 +895,8 @@ class VersionField(Field):
         Field.__init__(self, *args, **kwargs)
 
 
-class EventField(Field):
-    _event = {
+class EventField(EnumField):
+    enum = {
         0 : 'timer', 3 : 'workout', 4 : 'workout_step', 5 : 'power_down', 6 : 'power_up', 7 : 'off_course',
         8 : 'session', 9 : 'lap', 10 : 'course_point', 11 : 'battery', 12 : 'virtual_partner_pace',
         13 : 'hr_high_alert', 14 : 'hr_low_alert', 15 : 'speed_high_alert', 16 : 'speed_low_alert',
@@ -744,65 +907,25 @@ class EventField(Field):
         44 : 'rider_position_change', 45 : 'elev_high_alert', 46 : 'elev_low_alert', 47 : 'comm_timeout'
     }
 
-    def __init__(self):
-        Field.__init__(self)
 
-    def convert_single(self, value):
-        try:
-            newvalue = EventField._event[value]
-        except:
-            newvalue = value
-        return newvalue
-
-
-class EventTypeField(Field):
-    _type = {
+class EventTypeField(EnumField):
+    enum = {
         0 : 'start', 1 : 'stop', 2 : 'consecutive_depreciated', 3 : 'marker', 4 : 'stop_all', 5 : 'begin_depreciated',
         6 : 'end_depreciated', 7 : 'end_all_depreciated', 8 : 'stop_disable', 9 : 'stop_disable_all'
     }
 
-    def __init__(self):
-        Field.__init__(self)
 
-    def convert_single(self, value):
-        try:
-            newvalue = EventTypeField._type[value]
-        except:
-            newvalue = value
-        return newvalue
-
-
-class LapTriggerField(Field):
-    _type = { 0 : 'manual', 1 : 'time', 2 : 'distance', 3 : 'position_start', 4 : 'position_lap',
+class LapTriggerField(EnumField):
+    enum = { 0 : 'manual', 1 : 'time', 2 : 'distance', 3 : 'position_start', 4 : 'position_lap',
               5 : 'position_waypoint', 6 : 'position_marked', 7 : 'session_end', 8 : 'fitness_equipment' }
 
-    def __init__(self):
-        Field.__init__(self)
 
-    def convert_single(self, value):
-        try:
-            newvalue = LapTriggerField._type[value]
-        except:
-            newvalue = value
-        return newvalue
+class SessionTriggerField(EnumField):
+    enum = { 0 : 'activity_end', 1 : 'manual', 2 : 'auto_multi_sport', 3 : 'fitness_equipment' }
 
 
-class SessionTriggerField(Field):
-    _type = { 0 : 'activity_end', 1 : 'manual', 2 : 'auto_multi_sport', 3 : 'fitness_equipment' }
-
-    def __init__(self):
-        Field.__init__(self)
-
-    def convert_single(self, value):
-        try:
-            newvalue = SessionTriggerField._type[value]
-        except:
-            newvalue = value
-        return newvalue
-
-
-class SportField(Field):
-    _type = {
+class SportField(EnumField):
+    enum = {
         0 : 'generic', 1 : 'running', 2 : 'cycling', 3 : 'transition', 4 : 'fitness_equipment', 5 : 'swimming',
         6 : 'basketball', 7 : 'soccer', 8 : 'tennis', 9 : 'american_football', 10 : 'training', 11 : 'walking',
         12 : 'cross_country_skiing', 13 : 'alpine_skiing', 14 : 'snowboarding', 15 : 'rowing', 16 : 'mountaineering', 17 : 'hiking',
@@ -813,19 +936,9 @@ class SportField(Field):
         46 : 'jumpmaster', 47 : 'boxing', 48 : 'floor_climbing'
     }
 
-    def __init__(self):
-        Field.__init__(self)
-
-    def convert_single(self, value):
-        try:
-            newvalue = SportField._type[value]
-        except:
-            newvalue = value
-        return newvalue
-
 
 class SubSportField(Field):
-    _type = {
+    enum = {
         0 : 'generic', 1 : 'treadmill', 2 : 'street', 3 : 'trail', 4 : 'track', 5 : 'spiin',
         6 : 'indoor_cycling', 7 : 'road', 8 : 'mountain', 9 : 'downhill', 10 : 'recumbent',
         11 : 'cyclocross', 12 : 'hand_cycling', 13 : 'track_cycling', 14 : 'indoor_rowing', 15 : 'elliptical',
@@ -838,16 +951,6 @@ class SubSportField(Field):
         45 : 'indoor_running', 46 : 'gravel_cycling', 47 : 'e_bike_mountain', 48 : 'commuting', 49 : 'mixed_surface',
         50 : 'navigate', 51 : 'track_me', 52 : 'map', 254 : 'all'
     }
-
-    def __init__(self):
-        Field.__init__(self)
-
-    def convert_single(self, value):
-        try:
-            newvalue = SubSportField._type[value]
-        except:
-            newvalue = value
-        return newvalue
 
 
 class PosField(Field):

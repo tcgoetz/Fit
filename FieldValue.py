@@ -55,12 +55,13 @@ class FieldValue():
         return self._value.values()
 
     def __str__(self):
-        field_string = self.name() + " " + str(self['value'])
+        field_string = self.name() + "(" + str(self['value'])
         if self.units():
             field_string += " " + str(self.units())
         field_string += " (" + str(self['orig']) + ")"
         if self.invalid():
             field_string += " [invalid]"
+        field_string += ")"
         return field_string
 
     def __repr__(self):

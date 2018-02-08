@@ -7,6 +7,7 @@
 import sys, logging, collections, traceback
 from datetime import tzinfo, timedelta, datetime
 
+from FitExceptions import *
 from FileHeader import FileHeader
 from RecordHeader import RecordHeader
 from DefinitionMessage import DefinitionMessage
@@ -16,17 +17,6 @@ from DeviceOutputData import DeviceOutputData
 
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-#logger.setLevel(logging.DEBUG)
-
-
-class FitParseError(Exception):
-    def __init__(self, message):
-        self.message = message
-        self.tb = traceback.format_exc()
-
-    def __str__(self):
-        return repr(self.message + ": " + self.tb)
 
 
 class File():
@@ -40,10 +30,7 @@ class File():
         self.matched_timestamp_16 = None
 
         self.file = open(filename, 'rb')
-        try:
-            self.parse()
-        except IndexError as error:
-            raise FitParseError(str(error) + " in " + filename)
+        self.parse()
 
     def timestamp16_to_timestamp(self, timestamp_16):
         if self.matched_timestamp_16:
@@ -62,9 +49,6 @@ class File():
 
     def parse(self):
         self.file_header = FileHeader(self.file)
-        if not self.file_header.check():
-            logger.error("Bad header: " + str(self.file_header))
-            return False
 
         self.data_size = self.file_header.get_data_size()
 
@@ -88,11 +72,8 @@ class File():
 
             elif record_header.data_message():
                 definition_message = self._definition_messages[local_message_num]
-                try:
-                    data_message = DataMessage(definition_message, self.file, self.english_units)
-                    logger.debug("  Message: %s" % str(data_message))
-                except:
-                    raise FitParseError("Failed to parse " + definition_message.name())
+                data_message = DataMessage(definition_message, self.file, self.english_units)
+                logger.debug("  Message: %s" % str(data_message))
 
                 data_consumed += data_message.file_size
 
@@ -105,16 +86,13 @@ class File():
 
                 message_timestamp = data_message['timestamp']
                 if message_timestamp:
-                    message_timestamp_value = message_timestamp['value']
-                    self.track_dates(message_timestamp_value)
+                    self.track_dates(message_timestamp['value'])
                 else:
                     message_timestamp_16 = data_message['timestamp_16']
                     if message_timestamp_16:
-                        message_timestamp_16_value = message_timestamp_16['value']
-                        message_timestamp_value = self.timestamp16_to_timestamp(message_timestamp_16_value)
+                        data_message._timestamp = self.timestamp16_to_timestamp(message_timestamp_16['value'])
                     else:
-                        message_timestamp_value = self.last_message_timestamp
-                data_message._timestamp = message_timestamp_value
+                        data_message._timestamp = self.last_message_timestamp
 
                 try:
                     self._data_messages[data_message_name].append(data_message)
@@ -143,12 +121,14 @@ class File():
     def date_span(self):
         return (self.time_created_timestamp, self.last_message_timestamp)
 
+    def message_types(self):
+        return self._data_messages.keys()
+
     def get_device(self):
         return DeviceOutputData(self)
 
     def __getitem__(self, name):
-        if name in self._data_messages:
-            return self._data_messages[name]
-        return None
+        return self._data_messages.get(name, None)
 
-
+    def __str__(self):
+        return "Type: " + self.type()

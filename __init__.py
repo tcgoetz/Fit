@@ -1,4 +1,5 @@
 from File import File
+from FitExceptions import *
 from MonitoringInfoOutputData import MonitoringInfoOutputData
 from MonitoringOutputData import MonitoringOutputData
 from DeviceOutputData import DeviceOutputData

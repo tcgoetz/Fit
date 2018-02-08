@@ -70,6 +70,9 @@ class DataMessage():
     def items(self):
         return self._fields.items()
 
+    def iteritems(self):
+        return self._fields.iteritems()
+
     def values(self):
         return self._fields.values()
 

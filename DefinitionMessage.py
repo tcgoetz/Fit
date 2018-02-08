@@ -23,20 +23,71 @@ class DefinitionMessage(Data):
         [ ('global_message_number', ['UINT16', 1, '%x']), ('fields', ['UINT8', 1, '%x']) ]
     ))
     known_messages = {
-        0   : [ 'file_id', { 0: FileField('type'), 1 : ManufacturerField(), 2 : ProductField('product'),
-                             3 : Field('serial_number'), 4: TimestampField('time_created'), 5 : Field('number'),
-                             7 : StringField('product_name') } ],
+        0   : [ 'file_id', {
+                    0: FileField('type'),
+                    1 : ManufacturerField(),
+                    2 : ProductField('product'),
+                    3 : Field('serial_number'),
+                    4: TimestampField('time_created'),
+                    5 : Field('number'),
+                    7 : StringField('product_name')
+                }
+            ],
         1   : [ 'capabilities', {} ],
-        2   : [ 'device_settings', {} ],
-        3   : [ 'user_profile', { 1 : GenderField(), 2 : Field('age'), 3 : HeightField(), 4 : WeightField(), 22 : Field('local_id') } ],
+        2   : [ 'device_settings', {
+                    0 : Field('active_time_zone'),
+                    1 : Field('utc_offset'),
+                    2 : Field('time_offset'),
+                    4 : TimeModeField(),
+                    5 : Field('time_zone_offset'),
+                    12 : BacklightModeField(),
+                    36 : BoolField('activity_tracker_enabled'),
+                    39 : TimestampField('clock_time'),
+                    40 : Field('pages_enabled'),
+                    46 : BoolField('move_alert_enabled'),
+                    47 : DateModeField(),
+                    55 : DisplayOrientationField('display_orientation'),
+                    56 : SideField(),
+                    57 : Field('default_page'),
+                    58 : Field('autosync_min_steps'),
+                    59 : Field('autosync_min_time'),
+                    80 : BoolField('lactate_threshold_autodetect_enabled'),
+                    86 : BoolField('ble_auto_upload_enabled'),
+                    89 : AutoSyncFrequencyField(),
+                    90 : AutoActivityDetectField(),
+                    94 : Field('number_of_screens'),
+                    95 : DisplayOrientationField('smart_notification_display_orientation'),
+                    134 : SwitchField('tap_interface'),
+                }
+            ],
+        3   : [ 'user_profile', {
+                    1 : GenderField(),
+                    2 : Field('age'),
+                    3 : HeightField(),
+                    4 : WeightField(),
+                    22 : Field('local_id')
+                }
+            ],
         4   : [ 'hrm_profile', {} ],
         5   : [ 'sdm_profile', {} ],
         6   : [ 'bike_profile', {} ],
-        7   : [ 'zones_target', {} ],
+        7   : [ 'zones_target', {
+                    1 : Field('max_heart_rate'),
+                    2 : Field('threshold_heart_rate'),
+                    3 : Field('functional_threshold_power'),
+                    5 : HeartRateZoneCalcField(),
+                    7 : PowerCalcField()
+                }
+            ],
         8   : [ 'hr_zone', {} ],
         9   : [ 'power_zone', {} ],
         10  : [ 'met_zone', {} ],
-        12  : [ 'sport', {} ],
+        12  : [ 'sport', {
+                    0 : SportField('sport'),
+                    1 : SubSportField('sub_sport'),
+                    3 : StringField('name')
+                }
+            ],
         15  : [ 'goal', {} ],
         18  : [ 'session', { 0 : EventField(), 1 : EventTypeField(), 2: TimestampField('start_time'),
                              3 : PosField('start_position_lat'), 4 : PosField('start_position_long'),
@@ -58,14 +109,42 @@ class DefinitionMessage(Data):
         20  : [ 'record', { 0 : PosField('position_lat'), 1 : PosField('position_long'), 2 : AltField('altitude'),
                             3 : HeartRateField('heart_rate'), 4 : Field('cadence'), 5 : DistanceField('distance'),
                             6 : SpeedField('speed'), } ],
-        21  : [ 'event', { 0 : EventField(), 1 : EventTypeField(), 2 : Field('data'), 3 : Field('timer_trigger'),
-                           4 : Field('event_group') } ],
+        21  : [ 'event', {
+                        0 : EventField(),
+                        1 : EventTypeField(),
+                        2 : Field('data'),
+                        3 : Field('timer_trigger'),
+                        4 : Field('event_group'),
+                        7 : Field('score'),
+                        8 : Field('opponent_score'),
+                        9 : Field('front_gear_num'),
+                        10 : Field('front_gear'),
+                        11 : Field('rear_gear_num'),
+                        12 : Field('rear_gear'),
+                        13 : Field('device_index')
+                    }
+                ],
         22  : [ 'source', {} ],
-        23  : [ 'device_info', { 2 : ManufacturerField(), 3 : Field('serial_number'),
-                                 4 : ProductField('garmin_product'), 5 : VersionField('software_version'),
-                                 6 : Field('hardware_version'), 7 : TimeSField('cum_operating_time'),
-                                 10 : BatteryVoltageField('battery_voltage') } ],
-        24  : [ 'unknown',  { } ],
+        23  : [ 'device_info', {
+                    0 : Field('device_index'),
+                    1 : Field('device_type'),
+                    2 : ManufacturerField(),
+                    3 : Field('serial_number'),
+                    4 : ProductField('garmin_product'),
+                    5 : VersionField('software_version'),
+                    6 : Field('hardware_version'),
+                    7 : TimeSField('cum_operating_time'),
+                    10 : BatteryVoltageField('battery_voltage'),
+                    11 : BatteryStatusField(),
+                    18 : Field('sensor_position'),
+                    19 : StringField('descriptor'),
+                    20 : Field('ant_transmission_type'),
+                    21 : Field('ant_device_number'),
+                    22 : Field('ant_network'),
+                    25 : Field('source_type'),
+                    27 : StringField('product_name'),
+                }
+            ],
         25  : [ 'workout', {} ],
         26  : [ 'workout', { 6 : Field('num_valid_steps'), 8 : StringField('wkt_name'), } ],
         25  : [ 'workout_step', {} ],
@@ -75,13 +154,20 @@ class DefinitionMessage(Data):
         31  : [ 'course', {} ],
         32  : [ 'course_point', {} ],
         33  : [ 'totals', {} ],
-        34  : [ 'activity', { 0 : TimeMsField('total_timer_time'), 1 : Field('num_sessions'), 2 : ActivityField(),
-                              3 : EventField(), 4 : EventTypeField(), 5 : TimestampField('local_timestamp', False) } ],
+        34  : [ 'activity', {
+                    0 : TimeMsField('total_timer_time'),
+                    1 : Field('num_sessions'),
+                    2 : ActivityField(),
+                    3 : EventField(),
+                    4 : EventTypeField(),
+                    5 : TimestampField('local_timestamp', False)
+                }
+            ],
         35  : [ 'software', { 3 : VersionField('version') } ],
         37  : [ 'file_capabilities', {} ],
         38  : [ 'mesg_capabilities', {} ],
         39  : [ 'field_capabilities', {} ],
-        49  : [ 'file_creator', { 0 : VersionField('software_version')} ],
+        49  : [ 'file_creator', { 0 : VersionField('software_version'), 1 : VersionField('hardware_version')} ],
         51  : [ 'blood_pressure', {} ],
         53  : [ 'speed_zone', {} ],
         55  : [ 'monitoring', {
@@ -150,12 +236,39 @@ class DefinitionMessage(Data):
         200 : [ 'exd_screen_configuration', {} ],
         201 : [ 'exd_data_field_configuration', {} ],
         202 : [ 'exd_data_concept_configuration', {} ],
-        206 : [ 'field_description', {} ],
-        207 : [ 'dev_data_id', {} ],
+        206 : [ 'field_description', {
+                    0 : Field('developer_data_index'),
+                    1 : Field('field_definition_number'),
+                    2 : FitBaseUnitField('fit_base_type_id'),
+                    3 : StringField('field_name'),
+                    4 : Field('array'),
+                    5 : StringField('components'),
+                    6 : Field('scale'),
+                    7 : Field('offset'),
+                    8 : StringField('units'),
+                    9 : StringField('bits'),
+                    10 : StringField('accumulate'),
+                    13 : FitBaseUnitField('fit_base_unit_id'),
+                    14 : Field('native_message_num'),
+                    15 : Field('native_field_num')
+                }
+            ],
+        207 : [ 'dev_data_id', {
+                    0 : Field('developer_id'),
+                    1 : Field('application_id'),
+                    2 : ManufacturerField(),
+                    3 : Field('developer_data_index'),
+                    4 : Field('application_version')
+                }
+            ],
         208 : [ 'magnetometer_data', {} ],
         209 : [ 'barometer_data', {} ],
         210 : [ 'one_d_sensor_calibration', {} ],
-        227 : [ 'stress_level', {} ],
+        227 : [ 'stress_level', {
+                    0 : Field('stress_level_value'),
+                    1 : TimestampField('stress_level_time', False),
+                }
+            ],
         258 : [ 'dive_settings', {} ],
         259 : [ 'dive_gas', {} ],
         262 : [ 'dive_alarm', {} ],
@@ -164,7 +277,6 @@ class DefinitionMessage(Data):
         0xFF00  : 'mfg_range_min',
         0xFFFE  : 'mfg_range_max',
     }
-    unknown_message = ['Unknown_msg', {}]
     reserved_field_indexes = {
         250 : Field('part_index'),
         253 : TimestampField(),
@@ -176,11 +288,12 @@ class DefinitionMessage(Data):
         Data.__init__(self, file, DefinitionMessage.primary_schema, DefinitionMessage.secondary_schema)
         self.record_header = record_header
 
-        if self.message_number() in DefinitionMessage.known_messages:
-            self.message_data = DefinitionMessage.known_messages[self.message_number()]
+        msg_num = self.message_number()
+        if msg_num in DefinitionMessage.known_messages:
+            self.message_data = DefinitionMessage.known_messages[msg_num]
         else:
-            logger.info("Unknown message number %d: %s" % (self.message_number(), str(self.decoded_data)))
-            self.message_data = DefinitionMessage.unknown_message
+            logger.info("Unknown message number %d: %s" % (msg_num, str(self.decoded_data)))
+            self.message_data = ['unknown_msg_' + str(msg_num), {}]
 
         self.field_definitions = []
         for index in xrange(self.field_count()):
