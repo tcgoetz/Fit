@@ -12,7 +12,6 @@ from FileHeader import FileHeader
 from RecordHeader import RecordHeader
 from DefinitionMessage import DefinitionMessage
 from DataMessage import DataMessage
-from MonitoringOutputData import MonitoringOutputData
 from DeviceOutputData import DeviceOutputData
 
 
@@ -99,8 +98,7 @@ class File():
                 except:
                     self._data_messages[data_message_name] = [ data_message ]
 
-            logger.debug("Record %d: consumed %d of %s %r" %
-                            (self.record_count, data_consumed, self.data_size, self.english_units))
+            logger.debug("Record %d: consumed %d of %s %r" % (self.record_count, data_consumed, self.data_size, self.english_units))
         logger.debug("File %s: %s -> %s" % (self.filename, self.time_created_timestamp, self.last_message_timestamp))
 
     def type(self):

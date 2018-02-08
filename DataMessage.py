@@ -56,6 +56,15 @@ class DataMessage():
     def timestamp(self):
         return self._timestamp
 
+    def parsed(self):
+        fields = {}
+        for field_name, field in self._fields.iteritems():
+            if field_name == 'timestamp_16':
+                fields['timestamp'] = self._timestamp
+            else:
+                fields[field_name] = field.value()
+        return fields
+
     def __getitem__(self, name):
         if name in self._fields:
             return self._fields[name]
