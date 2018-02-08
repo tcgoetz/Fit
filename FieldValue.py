@@ -16,7 +16,7 @@ class FieldValue():
                 self._value[key] = value
 
     def invalid(self):
-        return (self['value'] == self['invalid'])
+        return (self['orig'] == self['invalid'])
 
     def name(self):
         return self.field.name

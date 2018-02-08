@@ -523,6 +523,20 @@ class AntNetworkField(EnumField):
         EnumField.__init__(self, name='ant_network', *args, **kwargs)
 
 
+class SourceTypeField(EnumField):
+    enum = {
+        0 : 'ant',
+        1 : 'ant+',
+        2 : 'bluetooth',
+        3 : 'bluetooth_low_energy',
+        4 : 'wifi',
+        5 : 'local',
+        255 : 'invalid'
+    }
+    def __init__(self, *args, **kwargs):
+        EnumField.__init__(self, name='source_type', *args, **kwargs)
+
+
 class BatteryVoltageField(Field):
     _units = [ 'v', 'v' ]
     _conversion_factor = [ 256.0, 256.0 ]
@@ -559,6 +573,52 @@ class AutoSyncFrequencyField(EnumField):
         EnumField.__init__(self, name='auto_sync_frequency', *args, **kwargs)
 
 
+class BodyLocationField(EnumField):
+    enum = {
+        0 : 'left_leg',
+        1 : 'left_calf',
+        2 : 'left_shin',
+        3 : 'left_hamstring',
+        4 : 'left_quad',
+        5 : 'left_glute',
+        6 : 'right_leg',
+        7 : 'right_calf',
+        8 : 'right_shin',
+        9 : 'right_hamstring',
+        10 : 'right_quad',
+        11 : 'right_glut',
+        12 : 'torso_back',
+        13 : 'left_lower_back',
+        14 : 'left_upper_back',
+        15 : 'right_lower_back',
+        16 : 'right_upper_back',
+        17 : 'torso_front',
+        18 : 'left_abdomen',
+        19 : 'left_chest',
+        20 : 'right_abdomen',
+        21 : 'right_chest',
+        22 : 'left_arm',
+        23 : 'left_shoulder',
+        24 : 'left_bicep',
+        25 : 'left_tricep',
+        26 : 'left_brachioradialis',
+        27 : 'left_forearm_extensors',
+        28 : 'right_arm',
+        29 : 'right_shoulder',
+        30 : 'right_bicep',
+        31 : 'right_tricep',
+        32 : 'right_brachioradialis',
+        33 : 'right_forearm_extensors',
+        34 : 'neck',
+        35 : 'throat',
+        36 : 'waist_mid_back',
+        37 : 'waist_front',
+        38 : 'waist_left',
+        39 : 'waist_right',
+        255 : 'invalid'
+    }
+
+
 class AutoActivityDetectField(BitField):
     bits = {
         0x00000000 : 'none',
@@ -574,8 +634,18 @@ class AutoActivityDetectField(BitField):
         BitField.__init__(self, name='auto_activity_detect', *args, **kwargs)
 
 
+class MsssageIndexField(Field):
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, name='message_index', *args, **kwargs)
+
+    def convert_single(self, value):
+        converted_value = {}
+        converted_value['selected'] = ((value & 0x8000) == 0x8000)
+        converted_value['value'] = (value & 0x0FFF)
+        return converted_value
+
 #
-# USer related fields
+# User related fields
 #
 class GenderField(EnumField):
     enum = { 0 : 'female', 1 : 'male' }
@@ -589,9 +659,8 @@ class WeightField(Field):
     _units = [ 'kg', 'lbs' ]
     _conversion_factor = [ 10.0, 4.545 ]
 
-    def __init__(self):
-        Field.__init__(self)
-
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, *args, **kwargs)
 
 class CaloriesField(Field):
     _units = [ 'kcal', 'kcal' ]
@@ -897,22 +966,73 @@ class VersionField(Field):
 
 class EventField(EnumField):
     enum = {
-        0 : 'timer', 3 : 'workout', 4 : 'workout_step', 5 : 'power_down', 6 : 'power_up', 7 : 'off_course',
-        8 : 'session', 9 : 'lap', 10 : 'course_point', 11 : 'battery', 12 : 'virtual_partner_pace',
-        13 : 'hr_high_alert', 14 : 'hr_low_alert', 15 : 'speed_high_alert', 16 : 'speed_low_alert',
-        17 : 'cad_high_alert', 18 : 'cad_low_alert', 19 : 'power_high_alert', 20 : 'power_low_alert',
-        21 : 'recovery_hr', 22 : 'battery_low', 23 : 'time_duration_alert', 24 : 'distance_duration_alert',
-        25 : 'calorie_duration_alert', 26 : 'activity', 27 : 'fitness_equipment', 28 : 'length', 32 : 'user_marker',
-        33 : 'sport_point', 36 : 'calibration', 41 : 'unknown', 42 : 'front_gear_change', 43 : 'rear_gear_change',
-        44 : 'rider_position_change', 45 : 'elev_high_alert', 46 : 'elev_low_alert', 47 : 'comm_timeout'
+        0 : 'timer',
+        3 : 'workout',
+        4 : 'workout_step',
+        5 : 'power_down',
+        6 : 'power_up',
+        7 : 'off_course',
+        8 : 'session',
+        9 : 'lap',
+        10 : 'course_point',
+        11 : 'battery',
+        12 : 'virtual_partner_pace',
+        13 : 'hr_high_alert',
+        14 : 'hr_low_alert',
+        15 : 'speed_high_alert',
+        16 : 'speed_low_alert',
+        17 : 'cad_high_alert',
+        18 : 'cad_low_alert',
+        19 : 'power_high_alert',
+        20 : 'power_low_alert',
+        21 : 'recovery_hr',
+        22 : 'battery_low',
+        23 : 'time_duration_alert',
+        24 : 'distance_duration_alert',
+        25 : 'calorie_duration_alert',
+        26 : 'activity',
+        27 : 'fitness_equipment',
+        28 : 'length',
+        32 : 'user_marker',
+        33 : 'sport_point',
+        36 : 'calibration',
+        41 : 'unknown',
+        42 : 'front_gear_change',
+        43 : 'rear_gear_change',
+        44 : 'rider_position_change',
+        45 : 'elev_high_alert',
+        46 : 'elev_low_alert',
+        47 : 'comm_timeout'
     }
 
 
 class EventTypeField(EnumField):
     enum = {
-        0 : 'start', 1 : 'stop', 2 : 'consecutive_depreciated', 3 : 'marker', 4 : 'stop_all', 5 : 'begin_depreciated',
-        6 : 'end_depreciated', 7 : 'end_all_depreciated', 8 : 'stop_disable', 9 : 'stop_disable_all'
+        0 : 'start',
+        1 : 'stop',
+        2 : 'consecutive_depreciated',
+        3 : 'marker',
+        4 : 'stop_all',
+        5 : 'begin_depreciated',
+        6 : 'end_depreciated',
+        7 : 'end_all_depreciated',
+        8 : 'stop_disable',
+        9 : 'stop_disable_all'
     }
+
+class EventDataField(Field):
+    _dependant_field = {
+        0 : Field('timer_trigger'),
+        245 : CyclesField
+    }
+    is_dependant_field = True
+    dependant_field_control_field = 'event'
+
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, name='event_data', *args, **kwargs)
+
+    def dependant_field(self, event_index):
+        return EventDataField._dependant_field[event_index]
 
 
 class LapTriggerField(EnumField):
