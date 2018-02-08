@@ -48,33 +48,35 @@ class Field():
     def sub_field(self, name):
         return _sub_field[name]
 
-    def convert_single(self, value):
+    def convert_single(self, value, invalid):
+        if value == invalid:
+            return None
         return (value / self._conversion_factor[self.units_type]) + self._conversion_constant[self.units_type]
 
-    def _convert_many(self, _convert_single, value):
+    def _convert_many(self, _convert_single, value, invalid):
         if isinstance(value, list):
             converted_value = []
             for index, sub_value in enumerate(value):
-                converted_value.append(_convert_single(value[index]))
+                converted_value.append(_convert_single(value[index], invalid))
         else:
-            converted_value = _convert_single(value)
+            converted_value = _convert_single(value, invalid)
         return converted_value
 
-    def convert_many(self, value):
-        return self._convert_many(self.convert_single, value)
+    def convert_many(self, value, invalid):
+        return self._convert_many(self.convert_single, value, invalid)
 
-    def convert_single_units(self, value):
+    def convert_single_units(self, value, invalid):
         return self._units[self.units_type]
 
     def convert_many_units(self, value):
-        return self._convert_many(self.convert_single_units, value)
+        return self._convert_many(self.convert_single_units, value, None)
 
     def convert(self, value, invalid, english_units=False):
         if english_units:
             self.units_type = Field.attr_units_type_english
         else:
             self.units_type = Field.attr_units_type_metric
-        return FieldValue(self, invalid=invalid, value=self.convert_many(value), orig=value)
+        return FieldValue(self, invalid=invalid, value=self.convert_many(value, invalid), orig=value)
 
 
 #
@@ -93,7 +95,7 @@ class BoolField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def convert_single(self, value):
+    def convert_single(self, value, invalid):
         try:
             return bool(value)
         except:
@@ -104,7 +106,7 @@ class EnumField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def convert_single(self, value):
+    def convert_single(self, value, invalid):
         try:
             return self.enum[value]
         except:
@@ -124,7 +126,7 @@ class BitField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def convert_single(self, value):
+    def convert_single(self, value, invalid):
         if value in self.bits:
             return self.bits[value]
         return [self.bits[bit] for bit in self.bits if ((bit & value) == bit)]
@@ -141,7 +143,7 @@ class StringField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def convert_many(self, value):
+    def convert_many(self, value, invalid):
         if isinstance(value, list):
             converted_value = ""
             for character in value:
@@ -151,10 +153,14 @@ class StringField(Field):
         return converted_value
 
 
-class DistanceField(Field):
+class DistanceMetersField(Field):
+    _conversion_factor = [ 1.0, .3048 ]
     _units = [ 'm', 'ft' ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+
+
+class DistanceCentimetersField(Field):
+    _conversion_factor = [ 100.0, 30.48 ]
+    _units = [ 'm', 'ft' ]
 
 
 #
@@ -170,8 +176,7 @@ class FitBaseUnitField(EnumField):
 
 
 class FitBaseUnitField(Field):
-
-    def convert_single(self, value):
+    def convert_single(self, value, invalid):
         try:
             return FieldDefinition.base_type_data[value]
         except:
@@ -315,6 +320,8 @@ class ManufacturerField(EnumField):
         277 : 'falco_e_motors',
         5759 : 'actigraphcorp'
     }
+    def __init__(self, *args, **kwargs):
+        EnumField.__init__(self, name='manufacturer', *args, **kwargs)
 
 
 class ProductField(EnumField):
@@ -446,7 +453,7 @@ class ProductField(EnumField):
         2266 : 'approach_s20',
         2276 : 'varia_remote',
         2327 : 'hrm4_run',
-        2337 : 'vivo_active_hr',
+        2337 : 'VivoActive HR',
         2347 : 'vivo_smart_gps_hr',
         2348 : 'vivo_smart_hr',
         2368 : 'vivo_move',
@@ -475,6 +482,8 @@ class ProductField(EnumField):
         65532 : 'android_antplus_plugin',
         65534 : 'connect'
     }
+    def __init__(self, *args, **kwargs):
+        EnumField.__init__(self, name='product', *args, **kwargs)
 
 
 class DisplayOrientationField(EnumField):
@@ -639,7 +648,7 @@ class MsssageIndexField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, name='message_index', *args, **kwargs)
 
-    def convert_single(self, value):
+    def convert_single(self, value, invalid):
         converted_value = {}
         converted_value['selected'] = ((value & 0x8000) == 0x8000)
         converted_value['value'] = (value & 0x0FFF)
@@ -652,7 +661,7 @@ class GenderField(EnumField):
     enum = { 0 : 'female', 1 : 'male' }
 
 
-class HeightField(DistanceField):
+class HeightField(DistanceMetersField):
     _conversion_factor = [ 100.0, 30.48 ]
 
 
@@ -752,7 +761,7 @@ class TimestampField(Field):
         self.utc = utc
         Field.__init__(self, name)
 
-    def convert_single(self, value):
+    def convert_single(self, value, invalid):
         if self.utc:
             timestamp = time()
             time_now = datetime.fromtimestamp(timestamp)
@@ -793,23 +802,19 @@ class DurationField(TimeMinField):
         TimeMinField.__init__(self, name='duration', *args, **kwargs)
 
 
-class DistanceField(Field):
-    _units = [ 'm', 'ft' ]
-    _conversion_factor = [ 100.0, 100.0 ]
+class MonitoringDistanceField(DistanceMetersField):
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+        DistanceMetersField.__init__(self, name='distance', *args, **kwargs)
 
 
-class MonitoringDistanceField(DistanceField):
-    def __init__(self, *args, **kwargs):
-        DistanceField.__init__(self, name='distance', *args, **kwargs)
-
-
-class SpeedField(Field):
+class SpeedKphField(Field):
     _units = [ 'km/h', 'm/h' ]
     _conversion_factor = [ 277.8, 172.6 ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+
+
+class SpeedMpsField(Field):
+    _units = [ 'm/s', 'ft/s' ]
+    _conversion_factor = [ 1000.0, 304.8 ]
 
 
 class CyclesField(Field):
@@ -868,7 +873,7 @@ class ActivityField(Field):
     def __init__(self):
         Field.__init__(self)
 
-    def convert_single(self, value):
+    def convert_single(self, value, invalid):
         try:
             return ActivityField._type[value]
         except:
@@ -905,7 +910,7 @@ class ActivityTypeField(Field):
     def __init__(self):
         Field.__init__(self, 'activity_type')
 
-    def convert_single(self, value):
+    def convert_single(self, value, invalid):
         return ActivityTypeField._type[value]
 
     def convert_single_units(self, value):
@@ -928,7 +933,7 @@ class ActivityTypeIntensityField(Field):
         activity_type = value & 0x1f
         intensity = value >> 5
         return FieldValue(self, ['activity_type', 'intensity'],
-                          invalid=invalid, value=self.convert_many(value), orig=value,
+                          invalid=invalid, value=self.convert_many(value, invalid), orig=value,
                           activity_type=self._subfield['activity_type'].convert(activity_type, 0xff, english_units),
                           intensity=self._subfield['intensity'].convert(intensity, 0xff, english_units))
 
@@ -1056,11 +1061,13 @@ class SportField(EnumField):
         39 : 'wakeboarding', 40 : 'water_skiing', 41 : 'kayaking', 42 : 'rafting', 43 : 'windsurfing', 44 : 'kitesurfing', 45 : 'tactical',
         46 : 'jumpmaster', 47 : 'boxing', 48 : 'floor_climbing'
     }
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, name='sport', *args, **kwargs)
 
 
 class SubSportField(Field):
     enum = {
-        0 : 'generic', 1 : 'treadmill', 2 : 'street', 3 : 'trail', 4 : 'track', 5 : 'spiin',
+        0 : 'generic', 1 : 'treadmill', 2 : 'street', 3 : 'trail', 4 : 'track', 5 : 'spin',
         6 : 'indoor_cycling', 7 : 'road', 8 : 'mountain', 9 : 'downhill', 10 : 'recumbent',
         11 : 'cyclocross', 12 : 'hand_cycling', 13 : 'track_cycling', 14 : 'indoor_rowing', 15 : 'elliptical',
         16 : 'stair_climbing', 17 : 'lap_swimming', 18 : 'open_water', 19 : 'flexibility_training',
@@ -1072,6 +1079,8 @@ class SubSportField(Field):
         45 : 'indoor_running', 46 : 'gravel_cycling', 47 : 'e_bike_mountain', 48 : 'commuting', 49 : 'mixed_surface',
         50 : 'navigate', 51 : 'track_me', 52 : 'map', 254 : 'all'
     }
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, name='sub_sport', *args, **kwargs)
 
 
 class PosField(Field):
@@ -1090,8 +1099,10 @@ class AltField(Field):
 class ClimbField(Field):
     _units = [ 'm', 'ft' ]
     _conversion_factor = [ 1000.0, 304.79 ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+
+
+class ClimbMetersField(DistanceMetersField):
+    _units = [ 'm', 'ft' ]
 
 
 class TemperatureField(Field):
@@ -1100,3 +1111,6 @@ class TemperatureField(Field):
     _conversion_constant = [ 0, 32 ]
     def __init__(self, name='temperature',  *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
+
+class TrainingeffectField(Field):
+    _conversion_factor = [ 10.0, 10.0 ]

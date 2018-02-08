@@ -12,7 +12,6 @@ from FileHeader import FileHeader
 from RecordHeader import RecordHeader
 from DefinitionMessage import DefinitionMessage
 from DataMessage import DataMessage
-from DeviceOutputData import DeviceOutputData
 
 
 logger = logging.getLogger(__name__)
@@ -121,9 +120,6 @@ class File():
 
     def message_types(self):
         return self._data_messages.keys()
-
-    def get_device(self):
-        return DeviceOutputData(self)
 
     def __getitem__(self, name):
         return self._data_messages.get(name, None)

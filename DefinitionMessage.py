@@ -12,7 +12,6 @@ from FieldDefinition import FieldDefinition
 
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 
 class DefinitionMessage(Data):
@@ -26,7 +25,7 @@ class DefinitionMessage(Data):
         0   : [ 'file_id', {
                     0: FileField('type'),
                     1 : ManufacturerField(),
-                    2 : ProductField('product'),
+                    2 : ProductField(),
                     3 : Field('serial_number'),
                     4: TimestampField('time_created'),
                     5 : Field('number'),
@@ -83,8 +82,8 @@ class DefinitionMessage(Data):
         9   : [ 'power_zone', {} ],
         10  : [ 'met_zone', {} ],
         12  : [ 'sport', {
-                    0 : SportField('sport'),
-                    1 : SubSportField('sub_sport'),
+                    0 : SportField(),
+                    1 : SubSportField(),
                     3 : StringField('name')
                 }
             ],
@@ -99,21 +98,21 @@ class DefinitionMessage(Data):
                     6 : SubSportField(),
                     7 : TimeMsField('total_elapsed_time'),
                     8 : TimeMsField('total_timer_time'),
-                    9 : DistanceField('total_distance'),
+                    9 : DistanceCentimetersField('total_distance'),
                     10 : CyclesField('total_cycles'),
                     11 : CaloriesField('total_calories'),
                     13 : CaloriesField('total_fat_calories'),
-                    14 : SpeedField('avg_speed'),
-                    15 : SpeedField('max_speed'),
+                    14 : SpeedMpsField('avg_speed'),
+                    15 : SpeedMpsField('max_speed'),
                     16 : Field('avg_heart_rate'),
                     17 : Field('max_heart_rate'),
                     18 : Field('avg_cadence'),
                     19 : Field('max_cadence'),
                     20 : Field('avg_power'),
                     21 : Field('max_power'),
-                    22 : DistanceField('total_ascent'),
-                    23 : DistanceField('total_descent'),
-                    24 : Field('total_training_effect'),
+                    22 : ClimbMetersField('total_ascent'),
+                    23 : ClimbMetersField('total_descent'),
+                    24 : TrainingeffectField('total_training_effect'),
                     25 : Field('first_lap_index'),
                     26 : Field('num_laps'),
                     27 : Field('event_group'),
@@ -148,20 +147,20 @@ class DefinitionMessage(Data):
                     6 : PosField('end_position_long'),
                     7 : TimeMsField('total_elapsed_time'),
                     8 : TimeMsField('total_timer_time'),
-                    9 : DistanceField('total_distance'),
+                    9 : DistanceCentimetersField('total_distance'),
                     10 : CyclesField('total_cycles'),
                     11 : CaloriesField('total_calories'),
                     12 : CaloriesField('total_fat_calories'),
-                    13 : SpeedField('avg_speed'),
-                    14 : SpeedField('max_speed'),
+                    13 : SpeedMpsField('avg_speed'),
+                    14 : SpeedMpsField('max_speed'),
                     15 : Field('avg_heart_rate'),
                     16 : Field('max_heart_rate'),
                     17 : Field('avg_cadence'),
                     18 : Field('max_cadence'),
                     19 : Field('avg_power'),
                     20 : Field('max_power'),
-                    21 : DistanceField('total_ascent'),
-                    22 : DistanceField('total_descent'),
+                    21 : ClimbMetersField('total_ascent'),
+                    22 : ClimbMetersField('total_descent'),
                     24 : LapTriggerField(),
                     25 : SportField()
                 }
@@ -172,8 +171,8 @@ class DefinitionMessage(Data):
                     2 : AltField('altitude'),
                     3 : HeartRateField('heart_rate'),
                     4 : Field('cadence'),
-                    5 : DistanceField('distance'),
-                    6 : SpeedField('speed'),
+                    5 : DistanceCentimetersField('distance'),
+                    6 : SpeedMpsField('speed'),
                     13 : TemperatureField(),
                     53 : Field('fractional_cadence'),
                 }
@@ -199,7 +198,7 @@ class DefinitionMessage(Data):
                     1 : Field('device_type'),
                     2 : ManufacturerField(),
                     3 : Field('serial_number'),
-                    4 : ProductField('garmin_product'),
+                    4 : ProductField(),
                     5 : VersionField('software_version'),
                     6 : Field('hardware_version'),
                     7 : TimeSField('cum_operating_time'),
@@ -219,7 +218,21 @@ class DefinitionMessage(Data):
         25  : [ 'workout_step', {} ],
         28  : [ 'schedule', {} ],
         29  : [ 'location', {} ],
-        30  : [ 'weight_scale', { 0 : WeightField(), 1 : PercentField('percent_fat'), 12 : Field('user_profile_index') } ],
+        30  : [ 'weight_scale', {
+                    0 : WeightField(),
+                    1 : PercentField('percent_fat'),
+                    2 : PercentField('percent_hydration'),
+                    3 : WeightField('visceral_fat_mass'),
+                    4 : WeightField('bone_mass'),
+                    5 : WeightField('muscle_mass'),
+                    7 : Field('basal_met'),
+                    8 : Field('physique_rating'),
+                    9 : Field('active_met'),
+                    10 : Field('metabolic_age'),
+                    11 : Field('visceral_fat_rating'),
+                    12 : Field('user_profile_index')
+                }
+            ],
         31  : [ 'course', {} ],
         32  : [ 'course_point', {} ],
         33  : [ 'totals', {} ],
@@ -274,7 +287,7 @@ class DefinitionMessage(Data):
                     5 : CaloriesDayField('resting_metabolic_rate')
                 }
             ],
-        104 : [ 'battery', {} ],
+        104 : [ 'battery', {0 : TimeMinField('remaining_mins'), 2 : PercentField('charge')} ],
         105 : [ 'pad', {} ],
         106 : [ 'slave_device', {} ],
         127 : [ 'connectivity', {} ],
@@ -284,7 +297,7 @@ class DefinitionMessage(Data):
         132 : [ 'hr', {} ],
         142 : [ 'segment_lap', {} ],
         145 : [ 'memo_glob', {} ],
-        147 : [ 'sensor', {} ],
+        147 : [ 'sensor', {0 : Field('value')} ],
         148 : [ 'segment_id', {} ],
         149 : [ 'segment_leaderboard_entry', {} ],
         150 : [ 'segment_point', {} ],
