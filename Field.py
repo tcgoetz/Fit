@@ -20,6 +20,7 @@ class Field():
     known_field = True
     _units = [ None, None ]
     _conversion_factor = [ 1, 1 ]
+    _conversion_constant = [ 0, 0 ]
     _scale_factor = [ 1, 1 ]
 
     is_dependant_field = False
@@ -48,7 +49,7 @@ class Field():
         return _sub_field[name]
 
     def convert_single(self, value):
-        return value / self._conversion_factor[self.units_type]
+        return (value / self._conversion_factor[self.units_type]) + self._conversion_constant[self.units_type]
 
     def _convert_many(self, _convert_single, value):
         if isinstance(value, list):
@@ -1090,4 +1091,12 @@ class ClimbField(Field):
     _units = [ 'm', 'ft' ]
     _conversion_factor = [ 1000.0, 304.79 ]
     def __init__(self, *args, **kwargs):
+        Field.__init__(self, *args, **kwargs)
+
+
+class TemperatureField(Field):
+    _units = [ 'C', 'F' ]
+    _conversion_factor = [ 1, 1.8 ]
+    _conversion_constant = [ 0, 32 ]
+    def __init__(self, name='temperature',  *args, **kwargs):
         Field.__init__(self, *args, **kwargs)

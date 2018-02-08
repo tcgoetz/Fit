@@ -159,7 +159,8 @@ class DefinitionMessage(Data):
                     17 : Field('avg_cadence'),
                     18 : Field('max_cadence'),
                     19 : Field('avg_power'),
-                    20 : Field('max_power'),                    21 : DistanceField('total_ascent'),
+                    20 : Field('max_power'),
+                    21 : DistanceField('total_ascent'),
                     22 : DistanceField('total_descent'),
                     24 : LapTriggerField(),
                     25 : SportField()
@@ -173,7 +174,7 @@ class DefinitionMessage(Data):
                     4 : Field('cadence'),
                     5 : DistanceField('distance'),
                     6 : SpeedField('speed'),
-                    13 : Field('temperature'),
+                    13 : TemperatureField(),
                     53 : Field('fractional_cadence'),
                 }
             ],
