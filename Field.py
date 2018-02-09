@@ -42,7 +42,7 @@ class Field():
 
     def units(self, value):
         if self._units[self.units_type]:
-            return self.convert_many_units(value)
+            return self.convert_many_units(value, None)
         return None
 
     def sub_field(self, name):
@@ -68,8 +68,8 @@ class Field():
     def convert_single_units(self, value, invalid):
         return self._units[self.units_type]
 
-    def convert_many_units(self, value):
-        return self._convert_many(self.convert_single_units, value, None)
+    def convert_many_units(self, value, invalid):
+        return self._convert_many(self.convert_single_units, value, invalid)
 
     def convert(self, value, invalid, english_units=False):
         if english_units:
@@ -913,7 +913,7 @@ class ActivityTypeField(Field):
     def convert_single(self, value, invalid):
         return ActivityTypeField._type[value]
 
-    def convert_single_units(self, value):
+    def convert_single_units(self, value, invalid):
         return ActivityTypeField._units[value]
 
 

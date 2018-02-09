@@ -31,7 +31,7 @@ class FieldValue():
         return self['value']
 
     def reconvert(self):
-        self._value['value'] = self.field.convert_many(self._value['orig'])
+        self._value['value'] = self.field.convert_many(self._value['orig'], self['invalid'])
 
     def units(self):
         return self.field.units(self['orig'])

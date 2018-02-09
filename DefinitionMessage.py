@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class DefinitionMessage(Data):
+    max_gmn = 0xFFFE
     primary_schema = Schema(collections.OrderedDict(
         [ ('reserved', ['UINT8', 1, '%x']), ('architecture', ['UINT8', 1, '%x']) ]
     ))
@@ -358,7 +359,7 @@ class DefinitionMessage(Data):
         264 : [ 'exercise_title', {} ],
         268 : [ 'dive_summary', {} ],
         0xFF00  : 'mfg_range_min',
-        0xFFFE  : 'mfg_range_max',
+        max_gmn  : 'mfg_range_max',
     }
     reserved_field_indexes = {
         250 : Field('part_index'),
@@ -372,11 +373,7 @@ class DefinitionMessage(Data):
         self.record_header = record_header
 
         msg_num = self.message_number()
-        if msg_num in DefinitionMessage.known_messages:
-            self.message_data = DefinitionMessage.known_messages[msg_num]
-        else:
-            logger.info("Unknown message number %d: %s" % (msg_num, str(self.decoded_data)))
-            self.message_data = ['unknown_msg_' + str(msg_num), {}]
+        self.message_data = DefinitionMessage.known_messages.get(msg_num, ['unknown_msg_' + str(msg_num), {}])
 
         self.field_definitions = []
         for index in xrange(self.field_count()):
@@ -399,7 +396,7 @@ class DefinitionMessage(Data):
 
     def message_number(self):
         gmn = self['global_message_number']
-        if (gmn < 0) or (gmn > 0xFFFE):
+        if (gmn < 0) or (gmn > self.max_gmn):
             raise ValueError('Definition Message message number out of bounds: %d' % gmn)
         return gmn
 
@@ -410,16 +407,7 @@ class DefinitionMessage(Data):
         return self.message_data[1]
 
     def field(self, field_number):
-        # first check for reserved indexes
-        if field_number in DefinitionMessage.reserved_field_indexes:
-            field = DefinitionMessage.reserved_field_indexes[field_number]
-        else:
-            fields = self.fields()
-            if field_number in fields:
-                field = fields[field_number]
-            else:
-                field = UnknownField(field_number)
-        return (field)
+        return DefinitionMessage.reserved_field_indexes.get(field_number, self.fields().get(field_number, UnknownField(field_number)))
 
     def __str__(self):
         return ("%s: %s (%d) %d %s fields" %
