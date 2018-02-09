@@ -1108,8 +1108,7 @@ class TemperatureField(Field):
     _units = [ 'C', 'F' ]
     _conversion_factor = [ 1, 1.8 ]
     _conversion_constant = [ 0, 32 ]
-    def __init__(self, name='temperature',  *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+
 
 class TrainingeffectField(Field):
     _conversion_factor = [ 10.0, 10.0 ]
