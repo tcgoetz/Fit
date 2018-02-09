@@ -353,6 +353,7 @@ class DefinitionMessage(Data):
                     1 : TimestampField('stress_level_time', False),
                 }
             ],
+        241 : [ 'unknown_241', {0 : TimestampField('ts_0')} ],
         258 : [ 'dive_settings', {} ],
         259 : [ 'dive_gas', {} ],
         262 : [ 'dive_alarm', {} ],

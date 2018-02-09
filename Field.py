@@ -127,9 +127,7 @@ class BitField(Field):
         Field.__init__(self, *args, **kwargs)
 
     def convert_single(self, value, invalid):
-        if value in self.bits:
-            return self.bits[value]
-        return [self.bits[bit] for bit in self.bits if ((bit & value) == bit)]
+        return self.bits.get(value, [self.bits[bit] for bit in self.bits if ((bit & value) == bit)])
 
 
 class PercentField(Field):
@@ -960,7 +958,8 @@ class FileField(EnumField):
         35 : 'segment_list',
         40 : 'exd_configuration',
         44 : 'unknown44',
-        64 : 'unknown64'
+        64 : 'unknown64',
+        255 : 'invalid'
     }
 
 
