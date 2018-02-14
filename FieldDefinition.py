@@ -50,7 +50,7 @@ class FieldDefinition(Data):
     def base_type(self):
         if self.base_type_value() in FieldDefinition.base_type_data:
             return FieldDefinition.base_type_data[self.base_type_value()]
-        raise IndexError("Unknown base type index %d" % self.base_type_value())
+        raise IndexError("Unknown base type index %x" % self.base_type_value())
 
     def type_endian(self):
         return (self.base_type())[0]
