@@ -9,7 +9,7 @@ import collections, logging
 from Data import *
 from Field import *
 from FieldDefinition import FieldDefinition
-from DeveloperFieldDescription import DeveloperFieldDescription
+from DeveloperFieldDefinition import DeveloperFieldDefinition
 
 
 logger = logging.getLogger(__name__)
@@ -433,8 +433,7 @@ class DefinitionMessage(Data):
     )
 
     def __init__(self, record_header, dev_field_dict, file):
-        Data.__init__(self, file, DefinitionMessage.dm_primary_schema,
-                [(DefinitionMessage.dm_secondary_schema, self.decode_secondary), (DefinitionMessage.dm_dev_schema, record_header.developer_data)] )
+        Data.__init__(self, file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.decode_secondary)] )
 
         msg_num = self.message_number()
         self.message_data = DefinitionMessageData.get_message(msg_num)
@@ -446,13 +445,14 @@ class DefinitionMessage(Data):
             self.field_definitions.append(field_definition)
 
         self.has_dev_fields = record_header.developer_data()
-        self.dev_field_descriptions = []
+        self.dev_field_definitions = []
         if self.has_dev_fields:
+            self.decode(DefinitionMessage.dm_dev_schema)
             logger.debug("Adding %d dev fields" % (self.dev_fields))
             for index in xrange(self.dev_fields):
-                dev_field_desc = DeveloperFieldDescription(dev_field_dict, file)
-                self.file_size += dev_field_desc.file_size
-                self.dev_field_descriptions.append(dev_field_desc)
+                dev_field_definition = DeveloperFieldDefinition(dev_field_dict, file)
+                self.file_size += dev_field_definition.file_size
+                self.dev_field_definitions.append(dev_field_definition)
 
     def decode_secondary(self):
         self.endian = self.architecture

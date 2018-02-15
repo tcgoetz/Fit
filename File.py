@@ -93,7 +93,7 @@ class File():
                         data_message.timestamp = self.last_message_timestamp
 
                 if data_message_name == 'field_description':
-                    self._dev_fields[data_message['field_definition_number']] = data_message
+                    self._dev_fields[data_message['field_definition_number'].value()] = data_message
 
                 try:
                     self._data_messages[data_message_name].append(data_message)

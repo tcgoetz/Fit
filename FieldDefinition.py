@@ -15,7 +15,11 @@ class FieldDefinition(Data, BaseType):
     fd_schema = Schema(
         'fd',
         collections.OrderedDict(
-            [ ('field_definition_number', ['UINT8', 1, '%x']), ('size', ['UINT8', 1, '%x']), ('base_type', ['UINT8', 1, '%x']) ]
+            [
+                ('field_definition_number', ['UINT8', 1, '%x']),
+                ('size', ['UINT8', 1, '%x']),
+                ('base_type', ['UINT8', 1, '%x'])
+            ]
         )
     )
 
@@ -42,5 +46,4 @@ class FieldDefinition(Data, BaseType):
         return (self.size / type_size)
 
     def __str__(self):
-        return ("%s: type %d: %d of %s" %
-            (self.__class__.__name__, self.field_definition_number, self.size, self.type_string()));
+        return ("%s: type %d: %d of %s" % (self.__class__.__name__, self.field_definition_number, self.type_count(), self.type_string()));

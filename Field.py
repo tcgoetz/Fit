@@ -13,6 +13,9 @@ from FieldValue import FieldValue
 from FieldDefinition import FieldDefinition
 
 
+logger = logging.getLogger(__name__)
+
+
 class Field():
     attr_units_type_metric = 0
     attr_units_type_english = 1
@@ -22,7 +25,6 @@ class Field():
     _units = [ None, None ]
     _conversion_factor = [ 1, 1 ]
     _conversion_constant = [ 0, 0 ]
-    _scale_factor = [ 1, 1 ]
 
     is_dependant_field = False
     dependant_field_control_field = None
@@ -90,10 +92,16 @@ class UnknownField(Field):
 
 
 class DevField(Field):
-    def __init__(self, name, units, scale, offset):
+    def __init__(self, name, units, scale, offset, *args, **kwargs):
         self._units = [units, units]
-        self._conversion_factor = [scale, scale]
-        self._conversion_constant = [offset, offset]
+        if scale is not None:
+            self._conversion_factor = [scale, scale]
+        else:
+            self._conversion_factor = [1, 1]
+        if offset is not None:
+            self._conversion_constant = [offset, offset]
+        else:
+            self._conversion_constant = [0, 0]
         Field.__init__(self, name=name, *args, **kwargs)
 
 
@@ -154,7 +162,8 @@ class StringField(Field):
         if isinstance(value, list):
             converted_value = ""
             for character in value:
-                converted_value += chr(character)
+                if character != 0:
+                    converted_value += chr(character)
         else:
             converted_value = str(value)
         return converted_value

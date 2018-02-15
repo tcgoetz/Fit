@@ -78,7 +78,7 @@ class Data():
 
         self.file_size = 0
 
-        self.decode()
+        self.decode_all()
         self.convert()
 
     def read(self, schema):
@@ -86,17 +86,17 @@ class Data():
         self.file_size += file_size
         return struct.unpack(unpack_format, self.file.read(file_size))
 
-    def __decode(self, schema):
+    def decode(self, schema):
         #logger.debug("Decoding: " + schema.name)
         self.__dict__.update(schema.decode(self.read(schema)))
         #logger.debug("Decoded: " + str(self.file_size) + " bytes")
 
-    def decode(self):
-        self.__decode(self.primary_schema)
+    def decode_all(self):
+        self.decode(self.primary_schema)
         if self.secondary_schemas is not None:
             for schema, control_func in self.secondary_schemas:
                 if control_func():
-                    self.__decode(schema)
+                    self.decode(schema)
 
     def convert(self):
         pass

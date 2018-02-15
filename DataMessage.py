@@ -55,7 +55,7 @@ class DataMessage():
         if definition_message.has_dev_fields:
             logger.debug("%s: processing %d dev fields" % (self.name(), definition_message.dev_fields))
             for index in xrange(definition_message.dev_fields):
-                data_field = DevDataField(file, definition_message, definition_message.dev_field_descriptions[index], english_units)
+                data_field = DevDataField(file, definition_message, definition_message.dev_field_definitions[index], english_units)
                 self.file_size += data_field.file_size
 
     def type(self):

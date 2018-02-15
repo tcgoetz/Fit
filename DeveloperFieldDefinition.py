@@ -11,7 +11,7 @@ from BaseType import BaseType
 from Field import DevField
 
 
-class DeveloperFieldDescription(Data, BaseType):
+class DeveloperFieldDefinition(Data, BaseType):
 
     dfd_schema = Schema(
         'dfd_schema',
@@ -25,29 +25,26 @@ class DeveloperFieldDescription(Data, BaseType):
     )
 
     def __init__(self, dev_field_dict, file):
-        Data.__init__(self, file, DeveloperFieldDescription.dfd_schema)
+        Data.__init__(self, file, DeveloperFieldDefinition.dfd_schema)
         self.dev_field = dev_field_dict[self.field_number]
 
-    def type_string(self):
-        return self.dev_field['fit_base_type_id']
+    def base_type_value(self):
+        return self.dev_field['fit_base_type_id'].value()
 
     def field_name(self):
-        return self.dev_field['field_name']
+        return self.dev_field['field_name'].value()
 
     def units(self):
-        return self.dev_field['units']
+        return self.dev_field['units'].value()
 
     def offset(self):
-        return self.dev_field['offset']
+        return self.dev_field['offset'].value()
 
     def scale(self):
-        return self.dev_field['scale']
+        return self.dev_field['scale'].value()
 
     def field(self):
         return DevField(self.field_name(), self.units(), self.scale(), self.offset())
-
-    def base_type_value(self):
-        return self.dev_field['fit_base_type_id']
 
     def base_type(self):
         return self._base_type(self.base_type_value())
@@ -69,5 +66,4 @@ class DeveloperFieldDescription(Data, BaseType):
         return (self.size / type_size)
 
     def __str__(self):
-        return ("%s: type %d: %d of %s" %
-            (self.__class__.__name__, self.field_number, self.size, self.type_string()));
+        return ("%s: type %d: %d %d of %s" % (self.__class__.__name__, self.field_number, self.developer_data_index, self.type_count(), self.type_string()))
