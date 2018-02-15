@@ -23,7 +23,6 @@ class DataMessage():
         self.timestamp = None
 
         message_fields = {}
-        logger.debug("%s: processing %d fields" % (self.name(), definition_message.fields))
         for index in xrange(definition_message.fields):
             data_field = DataField(file, definition_message, definition_message.field_definitions[index], english_units)
             self.file_size += data_field.file_size
@@ -53,7 +52,6 @@ class DataMessage():
                 self._fields[field_value.name()] = field_value
 
         if definition_message.has_dev_fields:
-            logger.debug("%s: processing %d dev fields" % (self.name(), definition_message.dev_fields))
             for index in xrange(definition_message.dev_fields):
                 data_field = DevDataField(file, definition_message, definition_message.dev_field_definitions[index], english_units)
                 self.file_size += data_field.file_size
@@ -70,7 +68,7 @@ class DataMessage():
             if field_name == 'timestamp_16':
                 fields['timestamp'] = self.timestamp
             else:
-                fields[field_name] = field.value()
+                fields[field_name] = field.value
         return fields
 
     def __getitem__(self, name):

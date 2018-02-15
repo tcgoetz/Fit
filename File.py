@@ -79,44 +79,44 @@ class File():
 
                 time_created_timestamp = data_message['time_created']
                 if time_created_timestamp:
-                    self.time_created_timestamp = time_created_timestamp['value']
+                    self.time_created_timestamp = time_created_timestamp.value
                     self.track_dates(self.time_created_timestamp)
 
                 message_timestamp = data_message['timestamp']
                 if message_timestamp:
-                    self.track_dates(message_timestamp['value'])
+                    self.track_dates(message_timestamp.value)
                 else:
                     message_timestamp_16 = data_message['timestamp_16']
                     if message_timestamp_16:
-                        data_message.timestamp = self.timestamp16_to_timestamp(message_timestamp_16['value'])
+                        data_message.timestamp = self.timestamp16_to_timestamp(message_timestamp_16.value)
                     else:
                         data_message.timestamp = self.last_message_timestamp
 
                 if data_message_name == 'field_description':
-                    self._dev_fields[data_message['field_definition_number'].value()] = data_message
+                    self._dev_fields[data_message['field_definition_number'].value] = data_message
 
                 try:
                     self._data_messages[data_message_name].append(data_message)
                 except:
                     self._data_messages[data_message_name] = [ data_message ]
 
-            logger.debug("Record %d: consumed %d of %s %r" % (self.record_count, data_consumed, self.data_size, self.english_units))
+            #logger.debug("Record %d: consumed %d of %s %r" % (self.record_count, data_consumed, self.data_size, self.english_units))
         logger.debug("File %s: %s -> %s" % (self.filename, self.time_created_timestamp, self.last_message_timestamp))
 
     def type(self):
-        return self['file_id'][0]['type'].value()
+        return self['file_id'][0]['type'].value
 
     def product(self):
-        return self['file_id'][0]['product'].value()
+        return self['file_id'][0]['product'].value
 
     def serial_number(self):
-        return self['file_id'][0]['serial_number'].value()
+        return self['file_id'][0]['serial_number'].value
 
     def device(self):
         return self.product() + "_" + str(self.serial_number())
 
     def time_created(self):
-        return self['file_id'][0]['time_created'].value()
+        return self['file_id'][0]['time_created'].value
 
     def date_span(self):
         return (self.time_created_timestamp, self.last_message_timestamp)

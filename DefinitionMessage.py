@@ -448,7 +448,6 @@ class DefinitionMessage(Data):
         self.dev_field_definitions = []
         if self.has_dev_fields:
             self.decode(DefinitionMessage.dm_dev_schema)
-            logger.debug("Adding %d dev fields" % (self.dev_fields))
             for index in xrange(self.dev_fields):
                 dev_field_definition = DeveloperFieldDefinition(dev_field_dict, file)
                 self.file_size += dev_field_definition.file_size

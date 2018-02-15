@@ -208,8 +208,7 @@ class FitBaseUnitField(EnumField):
 class FitBaseTypeField(Field):
     def convert_single(self, value, invalid):
         try:
-            #return FieldDefinition._type_name(value)
-            return value
+            return FieldDefinition._type_name(value)
         except:
             return value
 

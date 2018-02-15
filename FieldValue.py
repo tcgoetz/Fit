@@ -10,9 +10,7 @@ class FieldValue():
         self.field = field
         self._subfield_names = subfield_names
 
-        self._value = {}
-        if kwargs is not None:
-            self._value.update(kwargs)
+        self.__dict__.update(kwargs)
 
     def invalid(self):
         return (self['orig'] == self['invalid'])
@@ -26,39 +24,21 @@ class FieldValue():
     def type(self):
         return self.field.type
 
-    def value(self):
-        return self['value']
-
     def reconvert(self):
-        self._value['value'] = self.field.convert_many(self._value['orig'], self['invalid'])
+        self.value = self.field.convert_many(self.orig, self.invalid)
 
     def units(self):
-        return self.field.units(self['orig'])
+        return self.field.units(self.orig)
 
     def stats(self):
         return self.field.stats()
 
-    def __getitem__(self, name):
-        return self._value[name]
-
-    def __iter__(self):
-        return iter(self._value)
-
-    def keys(self):
-        return self._value.keys()
-
-    def items(self):
-        return self._value.items()
-
-    def values(self):
-        return self._value.values()
-
     def __str__(self):
-        field_string = self.name() + "(" + str(self['value'])
+        field_string = self.name() + "(" + str(self.value)
         if self.units():
             field_string += " " + str(self.units())
-        field_string += " (" + str(self['orig']) + ")"
-        if self.invalid():
+        field_string += " (" + str(self.orig) + ")"
+        if self.invalid:
             field_string += " [invalid]"
         field_string += ")"
         return field_string

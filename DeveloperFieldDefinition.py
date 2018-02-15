@@ -29,19 +29,19 @@ class DeveloperFieldDefinition(Data, BaseType):
         self.dev_field = dev_field_dict[self.field_number]
 
     def base_type_value(self):
-        return self.dev_field['fit_base_type_id'].value()
+        return self.dev_field['fit_base_type_id'].orig
 
     def field_name(self):
-        return self.dev_field['field_name'].value()
+        return self.dev_field['field_name'].value
 
     def units(self):
-        return self.dev_field['units'].value()
+        return self.dev_field['units'].value
 
     def offset(self):
-        return self.dev_field['offset'].value()
+        return self.dev_field['offset'].orig
 
     def scale(self):
-        return self.dev_field['scale'].value()
+        return self.dev_field['scale'].orig
 
     def field(self):
         return DevField(self.field_name(), self.units(), self.scale(), self.offset())
