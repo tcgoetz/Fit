@@ -4,10 +4,14 @@
 # copyright Tom Goetz
 #
 
-import collections
+import collections, logging
 
 from Field import Field
 from DataField import DataField
+from DevDataField import DevDataField
+
+
+logger = logging.getLogger(__name__)
 
 
 class DataMessage():
@@ -19,6 +23,7 @@ class DataMessage():
         self._timestamp = None
 
         field_values = {}
+        logger.debug("Processing " + str(definition_message.field_count()) + " fields")
         for index in xrange(definition_message.field_count()):
             data_field = DataField(file, definition_message, definition_message.field_definitions[index], english_units)
             self.file_size += data_field.file_size
@@ -47,6 +52,12 @@ class DataMessage():
             else:
                 self._fields[field_value.name()] = field_value
 
+        logger.debug("Processing " + str(definition_message.dev_field_count()) + " dev fields")
+        for index in xrange(definition_message.dev_field_count()):
+            data_field = DevDataField(file, definition_message, definition_message.dev_field_descriptions[index], english_units)
+            self.file_size += data_field.file_size
+
+
     def type(self):
         return self.definition_message.message_number()
 
@@ -66,9 +77,7 @@ class DataMessage():
         return fields
 
     def __getitem__(self, name):
-        if name in self._fields:
-            return self._fields[name]
-        return None
+        return self._fields.get(name, None)
 
     def __iter__(self):
         return iter(self._fields)

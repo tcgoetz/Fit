@@ -4,11 +4,16 @@
 # copyright Tom Goetz
 #
 
-import struct
+import struct, logging
+
+
+logger = logging.getLogger(__name__)
+
 
 class Schema():
 
-    def __init__(self, ordered_dict):
+    def __init__(self, name, ordered_dict):
+        self.name = name
         self.ordered_dict = ordered_dict
         self.file_size = 0
         self.unpack_format = None
@@ -21,9 +26,9 @@ class Schema():
 
     @classmethod
     def type_to_unpack_format(cls, type):
-        type_size = { 'CHAR' : 'B', 'INT8' : 'b', 'UINT8' : 'B', 'INT16' : 'h', 'UINT16' : 'H', 'INT32' : 'i',
+        type_format = { 'CHAR' : 'B', 'INT8' : 'b', 'UINT8' : 'B', 'INT16' : 'h', 'UINT16' : 'H', 'INT32' : 'i',
                       'UINT32' : 'I', 'INT64' : 'q', 'UINT64' : 'Q', 'FLOAT32' : 'f', 'FLOAT64' : 'd'}
-        return type_size[type]
+        return type_format[type]
 
     def compile_unpack(self, endian):
         if endian:
@@ -44,7 +49,7 @@ class Schema():
     def decode(self, data):
         decoded_data = {}
         index = 0
-        for (key,(type, count, format)) in self.ordered_dict.items():
+        for (key, (type, count, format)) in self.ordered_dict.iteritems():
             if count > 1:
                 decoded_data[key] = [data[index + repeat] for repeat in xrange(count)]
                 index += count
@@ -55,9 +60,9 @@ class Schema():
 
     def printable_data(self, decoded_data):
         printable_data = {}
-        for (key,(type, count, format)) in self.ordered_dict.items():
+        for (key,(type, count, format)) in self.ordered_dict.iteritems():
             if count > 1:
-                printable_data[key] = [(format % data[index + repeat]) for repeat in xrange(count)]
+                printable_data[key] = [(format % decoded_data[index + repeat]) for repeat in xrange(count)]
             else:
                 printable_data[key] = (format % decoded_data[key])
         return printable_data
@@ -65,10 +70,10 @@ class Schema():
 
 class Data():
 
-    def __init__(self, file, primary_schema, optional_schema=None, endian=False):
+    def __init__(self, file, primary_schema, secondary_schemas=None, endian=False):
         self.file = file
         self.primary_schema = primary_schema
-        self.optional_schema = optional_schema
+        self.secondary_schemas = secondary_schemas
         self.endian = endian
 
         self.decoded_data = {}
@@ -83,15 +88,16 @@ class Data():
         return struct.unpack(unpack_format, self.file.read(file_size))
 
     def __decode(self, schema):
+        #logger.debug("Decoding: " + schema.name)
         self.decoded_data.update(schema.decode(self.read(schema)))
+        #logger.debug("Decoded: " + str(self.file_size) + " bytes")
 
     def decode(self):
         self.__decode(self.primary_schema)
-        if self.decode_optional():
-            self.__decode(self.optional_schema)
-
-    def decode_optional(self):
-        return (self.optional_schema != None)
+        if self.secondary_schemas is not None:
+            for schema, control_func in self.secondary_schemas:
+                if control_func():
+                    self.__decode(schema)
 
     def convert(self):
         pass
@@ -101,7 +107,9 @@ class Data():
 
     def __str__(self):
         self.printable_data = self.primary_schema.printable_data(self.decoded_data)
-        if self.decode_optional():
-            self.printable_data.update(self.optional_schema.printable_data(self.decoded_data))
+        if self.secondary_schemas is not None:
+            for schema, control_func in self.secondary_schemas:
+                if control_func():
+                    self.printable_data.update(schema.printable_data(self.decoded_data))
         return str(self.printable_data)
 

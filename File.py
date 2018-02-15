@@ -51,6 +51,7 @@ class File():
         self.data_size = self.file_header.get_data_size()
 
         self._definition_messages = {}
+        self._dev_fields = {}
         self._data_messages = {}
         data_consumed = 0
         self.record_count = 0
@@ -64,14 +65,13 @@ class File():
             self.record_count += 1
 
             if record_header.definition_message():
-                definition_message = DefinitionMessage(record_header, self.file)
+                definition_message = DefinitionMessage(record_header, self._dev_fields, self.file)
                 data_consumed += definition_message.file_size
                 self._definition_messages[local_message_num] = definition_message
-
-            elif record_header.data_message():
+            else:
                 definition_message = self._definition_messages[local_message_num]
                 data_message = DataMessage(definition_message, self.file, self.english_units)
-                logger.debug("  Message: %s" % str(data_message))
+                logger.debug("  Message [%d]: %s" % (local_message_num, str(data_message)))
 
                 data_consumed += data_message.file_size
 
@@ -91,6 +91,9 @@ class File():
                         data_message._timestamp = self.timestamp16_to_timestamp(message_timestamp_16['value'])
                     else:
                         data_message._timestamp = self.last_message_timestamp
+
+                if data_message_name == 'field_description':
+                    self._dev_fields[data_message['field_definition_number']] = data_message
 
                 try:
                     self._data_messages[data_message_name].append(data_message)

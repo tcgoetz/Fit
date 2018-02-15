@@ -9,19 +9,17 @@ import collections, logging
 from Data import *
 from Field import *
 from FieldDefinition import FieldDefinition
+from DeveloperFieldDescription import DeveloperFieldDescription
 
 
 logger = logging.getLogger(__name__)
 
 
-class DefinitionMessage(Data):
-    max_gmn = 0xFFFE
-    primary_schema = Schema(collections.OrderedDict(
-        [ ('reserved', ['UINT8', 1, '%x']), ('architecture', ['UINT8', 1, '%x']) ]
-    ))
-    secondary_schema = Schema(collections.OrderedDict(
-        [ ('global_message_number', ['UINT16', 1, '%x']), ('fields', ['UINT8', 1, '%x']) ]
-    ))
+class DefinitionMessageData():
+
+    max_mfg_gfn = 0xFF00
+    max_gmn     = 0xFFFE
+
     known_messages = {
         0   : [ 'file_id', {
                     0: FileField('type'),
@@ -165,7 +163,7 @@ class DefinitionMessage(Data):
                     122 : Field('avg_cadence_position'),
                     123 : Field('max_cadence_position'),
                     133 : Field('avg_stance_time_balance'),
-                    137 : Field('total_anaerobic_training_effect'),
+                    137 : TrainingeffectField('total_anaerobic_training_effect'),
                 }
             ],
         19  : [ 'lap', {
@@ -353,7 +351,7 @@ class DefinitionMessage(Data):
         206 : [ 'field_description', {
                     0 : Field('developer_data_index'),
                     1 : Field('field_definition_number'),
-                    2 : FitBaseUnitField('fit_base_type_id'),
+                    2 : FitBaseTypeField('fit_base_type_id'),
                     3 : StringField('field_name'),
                     4 : Field('array'),
                     5 : StringField('components'),
@@ -369,7 +367,7 @@ class DefinitionMessage(Data):
             ],
         207 : [ 'dev_data_id', {
                     0 : Field('developer_id'),
-                    1 : Field('application_id'),
+                    1 : BytesField('application_id'),
                     2 : ManufacturerField(),
                     3 : Field('developer_data_index'),
                     4 : Field('application_version')
@@ -389,22 +387,57 @@ class DefinitionMessage(Data):
         262 : [ 'dive_alarm', {} ],
         264 : [ 'exercise_title', {} ],
         268 : [ 'dive_summary', {} ],
-        0xFF00  : 'mfg_range_min',
-        max_gmn  : 'mfg_range_max',
+        max_mfg_gfn  : [ 'mfg_range_min', {} ],
+        max_gmn  : [ 'mfg_range_max', {} ],
     }
     reserved_field_indexes = {
         250 : Field('part_index'),
         253 : TimestampField(),
         254 : MsssageIndexField()
     }
+    index_msg_name = 0
     architecture_table = { 0 : 'Little Endian', 1 : 'Big Endian'}
 
-    def __init__(self, record_header, file):
-        Data.__init__(self, file, DefinitionMessage.primary_schema, DefinitionMessage.secondary_schema)
-        self.record_header = record_header
+    @classmethod
+    def get_message(cls, msg_num):
+        return cls.known_messages.get(msg_num, ['unknown_msg_' + str(msg_num), {}])
+
+    @classmethod
+    def get_message_name(cls, msg_num):
+        return cls.get_message(msg_num)[self.index_msg_name]
+
+    @classmethod
+    def get_architecture(cls, value):
+        return self.architecture_table[value]
+
+
+class DefinitionMessage(Data):
+
+    dm_primary_schema = Schema(
+        'dm_primary',
+        collections.OrderedDict(
+            [ ('reserved', ['UINT8', 1, '%x']), ('architecture', ['UINT8', 1, '%x']) ]
+        )
+    )
+    dm_secondary_schema = Schema(
+        'dm_secondary',
+        collections.OrderedDict(
+            [ ('global_message_number', ['UINT16', 1, '%x']), ('fields', ['UINT8', 1, '%x']) ]
+        )
+    )
+    dm_dev_schema = Schema(
+        'dm_dev',
+        collections.OrderedDict(
+            [ ('dev_fields', ['UINT8', 1, '%x']) ]
+        )
+    )
+
+    def __init__(self, record_header, dev_fields, file):
+        Data.__init__(self, file, DefinitionMessage.dm_primary_schema,
+                [(DefinitionMessage.dm_secondary_schema, self.decode_secondary), (DefinitionMessage.dm_dev_schema, record_header.developer_data)] )
 
         msg_num = self.message_number()
-        self.message_data = DefinitionMessage.known_messages.get(msg_num, ['unknown_msg_' + str(msg_num), {}])
+        self.message_data = DefinitionMessageData.get_message(msg_num)
 
         self.field_definitions = []
         for index in xrange(self.field_count()):
@@ -412,7 +445,19 @@ class DefinitionMessage(Data):
             self.file_size += field_definition.file_size
             self.field_definitions.append(field_definition)
 
-    def decode_optional(self):
+        self.dev_field_descriptions = []
+        if record_header.developer_data():
+            print "Processing dev data"
+            for index in xrange(self.dev_field_count()):
+                dev_field_desc = DeveloperFieldDescription(dev_fields, file)
+                self.file_size += dev_field_desc.file_size
+                self.dev_field_descriptions.append(dev_field_desc)
+
+    def decode_secondary(self):
+        self.endian = self.architecture()
+        return True
+
+    def decode_developer(self):
         self.endian = self.architecture()
         return True
 
@@ -420,26 +465,29 @@ class DefinitionMessage(Data):
         return self['architecture']
 
     def architecture_str(self):
-        return DefinitionMessage.architecture_table[self.architecture()]
+        return DefinitionMessageData.get_architecture(self.architecture())
 
     def field_count(self):
         return self['fields']
 
+    def dev_field_count(self):
+        return self.decoded_data.get('dev_fields', 0)
+
     def message_number(self):
         gmn = self['global_message_number']
-        if (gmn < 0) or (gmn > self.max_gmn):
+        if (gmn < 0) or (gmn > DefinitionMessageData.max_mfg_gfn):
             raise ValueError('Definition Message message number out of bounds: %d' % gmn)
         return gmn
 
     def name(self):
-        return self.message_data[0]
+        return self.message_data[DefinitionMessageData.index_msg_name]
 
     def fields(self):
         return self.message_data[1]
 
     def field(self, field_number):
-        return DefinitionMessage.reserved_field_indexes.get(field_number, self.fields().get(field_number, UnknownField(field_number)))
+        return DefinitionMessageData.reserved_field_indexes.get(field_number, self.fields().get(field_number, UnknownField(field_number)))
 
     def __str__(self):
         return ("%s: %s (%d) %d %s fields" %
-                (self.__class__.__name__, self.name(), self.message_number(), self.field_count(), self.architecture_str()))
+                (self.__class__.__name__, self.name(), self.msg_num, self.field_count(), self.architecture_str()))

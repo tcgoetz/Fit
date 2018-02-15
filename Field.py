@@ -10,6 +10,7 @@ from time import time, gmtime, localtime, strftime
 from datetime import tzinfo, timedelta, datetime
 
 from FieldValue import FieldValue
+from FieldDefinition import FieldDefinition
 
 
 class Field():
@@ -88,6 +89,14 @@ class UnknownField(Field):
         Field.__init__(self, "unknown_" + str(index))
 
 
+class DevField(Field):
+    def __init__(self, name, units, scale, offset):
+        self._units = [units, units]
+        self._conversion_factor = [scale, scale]
+        self._conversion_constant = [offset, offset]
+        Field.__init__(self, name=name, *args, **kwargs)
+
+
 #
 # Basic field types
 #
@@ -151,6 +160,20 @@ class StringField(Field):
         return converted_value
 
 
+class BytesField(Field):
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, *args, **kwargs)
+
+    def convert_many(self, value, invalid):
+        if isinstance(value, list):
+            converted_value = bytearray()
+            for character in value:
+                converted_value.append(character)
+        else:
+            converted_value = bytearray(value)
+        return converted_value
+
+
 class DistanceMetersField(Field):
     _conversion_factor = [ 1.0, .3048 ]
     _units = [ 'm', 'ft' ]
@@ -173,10 +196,20 @@ class FitBaseUnitField(EnumField):
     }
 
 
-class FitBaseUnitField(Field):
+class FitBaseTypeField(Field):
     def convert_single(self, value, invalid):
         try:
-            return FieldDefinition.base_type_data[value]
+            #return FieldDefinition._type_name(value)
+            return value
+        except:
+            return value
+
+
+class MessageNumberField(Field):
+    def convert_single(self, value, invalid):
+        try:
+            #return DefinitionMessageData.get_message_name(value)
+            return value
         except:
             return value
 
@@ -941,7 +974,7 @@ class FileField(EnumField):
         0 : 'unknown0',
         1 : 'device',
         2 : 'settings',
-        3 : 'sport',
+        3 : 'sport_settings',
         4 : 'activity',
         5 : 'workout',
         6 : 'course',

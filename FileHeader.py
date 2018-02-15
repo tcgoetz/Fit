@@ -15,14 +15,20 @@ logger = logging.getLogger(__name__)
 
 class FileHeader(Data):
 
-    primary_schema = Schema(collections.OrderedDict(
-        [ ('header_size', ['UINT8', 1, '%d']), ('protocol_version', ['UINT8', 1, '%x']),
-          ('profile_version', ['UINT16', 1, '%d']), ('data_size', ['UINT32', 1, '%d']),
-          ('data_type', ['CHAR', 4, '%c']) ]
-    ))
-    optional_schema = Schema(collections.OrderedDict(
-        [ ('crc', ['UINT16', 1, '%x']) ]
-    ))
+    fh_primary_schema = Schema(
+        'fh_primary',
+        collections.OrderedDict(
+            [
+                ('header_size', ['UINT8', 1, '%d']), ('protocol_version', ['UINT8', 1, '%x']),
+                ('profile_version', ['UINT16', 1, '%d']), ('data_size', ['UINT32', 1, '%d']),
+                ('data_type', ['CHAR', 4, '%c'])
+            ]
+        )
+    )
+    fh_optional_schema = Schema(
+        'fh_optional',
+        collections.OrderedDict( [ ('crc', ['UINT16', 1, '%x']) ] )
+    )
     profile_version_str = { 100 : 'activity', 1602 : 'device'}
 
     min_file_header_size = 12
@@ -32,10 +38,10 @@ class FileHeader(Data):
 #    file_data_type = ['.', 'F', 'I', 'T']
 
     def __init__(self, file):
-        Data.__init__(self, file, FileHeader.primary_schema, FileHeader.optional_schema)
+        Data.__init__(self, file, FileHeader.fh_primary_schema, [(FileHeader.fh_optional_schema, self.decode_secondary)] )
         self.check()
 
-    def decode_optional(self):
+    def decode_secondary(self):
         return (self['header_size'] >= FileHeader.opt_file_header_size)
 
     def get_header_size(self):
