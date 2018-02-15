@@ -16,46 +16,38 @@ class DeveloperFieldDescription(Data, BaseType):
     dfd_schema = Schema(
         'dfd_schema',
         collections.OrderedDict(
-            [ ('field_number', ['UINT8', 1, '%x']), ('size', ['UINT8', 1, '%x']), ('developer_data_index', ['UINT8', 1, '%x']) ]
+            [
+                ('field_number', ['UINT8', 1, '%x']),
+                ('size', ['UINT8', 1, '%x']),
+                ('developer_data_index', ['UINT8', 1, '%x'])
+            ]
         )
     )
 
-    def __init__(self, dev_fields, file):
-        self.dev_fields = dev_fields
+    def __init__(self, dev_field_dict, file):
         Data.__init__(self, file, DeveloperFieldDescription.dfd_schema)
-
-    def field_number(self):
-        return self['field_number']
-
-    def size_value(self):
-        return self['size']
-
-    def developer_data_index(self):
-        return self['developer_data_index']
-
-    def dev_field(self):
-        return self.dev_fields[self.field_number()]
+        self.dev_field = dev_field_dict[self.field_number]
 
     def type_string(self):
-        return self.dev_field()['fit_base_type_id']
+        return self.dev_field['fit_base_type_id']
 
     def field_name(self):
-        return self.dev_field()['field_name']
+        return self.dev_field['field_name']
 
     def units(self):
-        return self.dev_field()['units']
+        return self.dev_field['units']
 
     def offset(self):
-        return self.dev_field()['offset']
+        return self.dev_field['offset']
 
     def scale(self):
-        return self.dev_field()['scale']
+        return self.dev_field['scale']
 
     def field(self):
         return DevField(self.field_name(), self.units(), self.scale(), self.offset())
 
     def base_type_value(self):
-        return self.dev_field()['fit_base_type_id']
+        return self.dev_field['fit_base_type_id']
 
     def base_type(self):
         return self._base_type(self.base_type_value())
@@ -74,8 +66,8 @@ class DeveloperFieldDescription(Data, BaseType):
 
     def type_count(self):
         type_size = Schema.type_to_size(self.type_string())
-        return (self.size_value() / type_size)
+        return (self.size / type_size)
 
     def __str__(self):
         return ("%s: type %d: %d of %s" %
-            (self.__class__.__name__, self.fdn_value(), self.size_value(), self.type_string()));
+            (self.__class__.__name__, self.field_number, self.size, self.type_string()));

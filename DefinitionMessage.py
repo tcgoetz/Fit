@@ -432,7 +432,7 @@ class DefinitionMessage(Data):
         )
     )
 
-    def __init__(self, record_header, dev_fields, file):
+    def __init__(self, record_header, dev_field_dict, file):
         Data.__init__(self, file, DefinitionMessage.dm_primary_schema,
                 [(DefinitionMessage.dm_secondary_schema, self.decode_secondary), (DefinitionMessage.dm_dev_schema, record_header.developer_data)] )
 
@@ -440,53 +440,40 @@ class DefinitionMessage(Data):
         self.message_data = DefinitionMessageData.get_message(msg_num)
 
         self.field_definitions = []
-        for index in xrange(self.field_count()):
+        for index in xrange(self.fields):
             field_definition = FieldDefinition(file)
             self.file_size += field_definition.file_size
             self.field_definitions.append(field_definition)
 
+        self.has_dev_fields = record_header.developer_data()
         self.dev_field_descriptions = []
-        if record_header.developer_data():
-            print "Processing dev data"
-            for index in xrange(self.dev_field_count()):
-                dev_field_desc = DeveloperFieldDescription(dev_fields, file)
+        if self.has_dev_fields:
+            logger.debug("Adding %d dev fields" % (self.dev_fields))
+            for index in xrange(self.dev_fields):
+                dev_field_desc = DeveloperFieldDescription(dev_field_dict, file)
                 self.file_size += dev_field_desc.file_size
                 self.dev_field_descriptions.append(dev_field_desc)
 
     def decode_secondary(self):
-        self.endian = self.architecture()
+        self.endian = self.architecture
         return True
-
-    def decode_developer(self):
-        self.endian = self.architecture()
-        return True
-
-    def architecture(self):
-        return self['architecture']
 
     def architecture_str(self):
-        return DefinitionMessageData.get_architecture(self.architecture())
-
-    def field_count(self):
-        return self['fields']
-
-    def dev_field_count(self):
-        return self.decoded_data.get('dev_fields', 0)
+        return DefinitionMessageData.get_architecture(self.architecture)
 
     def message_number(self):
-        gmn = self['global_message_number']
-        if (gmn < 0) or (gmn > DefinitionMessageData.max_mfg_gfn):
-            raise ValueError('Definition Message message number out of bounds: %d' % gmn)
-        return gmn
+        if (self.global_message_number < 0) or (self.global_message_number > DefinitionMessageData.max_mfg_gfn):
+            raise ValueError('Definition Message message number out of bounds: %d' % self.global_message_number)
+        return self.global_message_number
 
     def name(self):
         return self.message_data[DefinitionMessageData.index_msg_name]
 
-    def fields(self):
+    def field_list(self):
         return self.message_data[1]
 
     def field(self, field_number):
-        return DefinitionMessageData.reserved_field_indexes.get(field_number, self.fields().get(field_number, UnknownField(field_number)))
+        return DefinitionMessageData.reserved_field_indexes.get(field_number, self.field_list().get(field_number, UnknownField(field_number)))
 
     def __str__(self):
         return ("%s: %s (%d) %d %s fields" %

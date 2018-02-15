@@ -48,7 +48,7 @@ class File():
     def parse(self):
         self.file_header = FileHeader(self.file)
 
-        self.data_size = self.file_header.get_data_size()
+        self.data_size = self.file_header.data_size
 
         self._definition_messages = {}
         self._dev_fields = {}
@@ -88,9 +88,9 @@ class File():
                 else:
                     message_timestamp_16 = data_message['timestamp_16']
                     if message_timestamp_16:
-                        data_message._timestamp = self.timestamp16_to_timestamp(message_timestamp_16['value'])
+                        data_message.timestamp = self.timestamp16_to_timestamp(message_timestamp_16['value'])
                     else:
-                        data_message._timestamp = self.last_message_timestamp
+                        data_message.timestamp = self.last_message_timestamp
 
                 if data_message_name == 'field_description':
                     self._dev_fields[data_message['field_definition_number']] = data_message

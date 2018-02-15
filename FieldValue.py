@@ -12,8 +12,7 @@ class FieldValue():
 
         self._value = {}
         if kwargs is not None:
-            for key, value in kwargs.iteritems():
-                self._value[key] = value
+            self._value.update(kwargs)
 
     def invalid(self):
         return (self['orig'] == self['invalid'])

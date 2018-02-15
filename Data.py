@@ -76,7 +76,6 @@ class Data():
         self.secondary_schemas = secondary_schemas
         self.endian = endian
 
-        self.decoded_data = {}
         self.file_size = 0
 
         self.decode()
@@ -89,7 +88,7 @@ class Data():
 
     def __decode(self, schema):
         #logger.debug("Decoding: " + schema.name)
-        self.decoded_data.update(schema.decode(self.read(schema)))
+        self.__dict__.update(schema.decode(self.read(schema)))
         #logger.debug("Decoded: " + str(self.file_size) + " bytes")
 
     def decode(self):
@@ -101,9 +100,6 @@ class Data():
 
     def convert(self):
         pass
-
-    def __getitem__(self, key):
-        return self.decoded_data[key]
 
     def __str__(self):
         self.printable_data = self.primary_schema.printable_data(self.decoded_data)

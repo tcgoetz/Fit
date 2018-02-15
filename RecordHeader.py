@@ -17,17 +17,14 @@ class RecordHeader(Data):
     def __init__(self, file):
         Data.__init__(self, file, RecordHeader.rh_schema)
 
-    def record_header(self):
-        return self['record_header']
-
     def compressed_timestamp(self):
-        return (self.record_header() & 0x80) == 0x80
+        return (self.record_header & 0x80) == 0x80
 
     def message_type(self):
-        return (self.record_header() & 0x40) == 0x40
+        return (self.record_header & 0x40) == 0x40
 
     def developer_data(self):
-        return (self.record_header() & 0x60) == 0x60
+        return (self.record_header & 0x60) == 0x60
 
     def message_type_str(self):
         return RecordHeader.message_type_string[self.message_type()]
@@ -39,7 +36,7 @@ class RecordHeader(Data):
         return not self.definition_message()
 
     def local_message(self):
-        return (self.record_header() & 0x0f)
+        return (self.record_header & 0x0f)
 
     def __str__(self):
         return ("%s: Local %s message %d (Compressed %d)" %

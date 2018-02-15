@@ -20,43 +20,43 @@ class DataMessage():
 
         self._fields = {}
         self.file_size = 0
-        self._timestamp = None
+        self.timestamp = None
 
-        field_values = {}
-        logger.debug("Processing " + str(definition_message.field_count()) + " fields")
-        for index in xrange(definition_message.field_count()):
+        message_fields = {}
+        logger.debug("%s: processing %d fields" % (self.name(), definition_message.fields))
+        for index in xrange(definition_message.fields):
             data_field = DataField(file, definition_message, definition_message.field_definitions[index], english_units)
             self.file_size += data_field.file_size
 
             # expand subfields?
-            field_value = data_field.value()
+            field_value = data_field._field_value()
             subfield_names = field_value.subfield_names()
             if subfield_names:
                 for subfield_name in subfield_names:
                     subfield_value = field_value[subfield_name]
                     subfield_formal_name = subfield_value.field.name
-                    if subfield_formal_name in field_values:
-                        field_values[subfield_formal_name]._value['value'] += subfield_value._value['value']
+                    if subfield_formal_name in message_fields:
+                        message_fields[subfield_formal_name]._value['value'] += subfield_value._value['value']
                     else:
-                        field_values[subfield_formal_name] = subfield_value
+                        message_fields[subfield_formal_name] = subfield_value
             else:
-                field_values[data_field.name()] = data_field.value()
+                message_fields[data_field._field_name()] = data_field._field_value()
 
-        for field_value in field_values.values():
+        for field_value in message_fields.values():
             field = field_value.field
             if field_value.field.is_dependant_field:
-                control_value = field_values[field.dependant_field_control_field]['orig']
+                control_value = message_fields[field.dependant_field_control_field]['orig']
                 field_value.field = field.dependant_field(control_value)
                 field_value.reconvert()
                 self._fields[field_value.field.name] = field_value
             else:
                 self._fields[field_value.name()] = field_value
 
-        logger.debug("Processing " + str(definition_message.dev_field_count()) + " dev fields")
-        for index in xrange(definition_message.dev_field_count()):
-            data_field = DevDataField(file, definition_message, definition_message.dev_field_descriptions[index], english_units)
-            self.file_size += data_field.file_size
-
+        if definition_message.has_dev_fields:
+            logger.debug("%s: processing %d dev fields" % (self.name(), definition_message.dev_fields))
+            for index in xrange(definition_message.dev_fields):
+                data_field = DevDataField(file, definition_message, definition_message.dev_field_descriptions[index], english_units)
+                self.file_size += data_field.file_size
 
     def type(self):
         return self.definition_message.message_number()
@@ -64,14 +64,11 @@ class DataMessage():
     def name(self):
         return self.definition_message.name()
 
-    def timestamp(self):
-        return self._timestamp
-
     def parsed(self):
         fields = {}
         for field_name, field in self._fields.iteritems():
             if field_name == 'timestamp_16':
-                fields['timestamp'] = self._timestamp
+                fields['timestamp'] = self.timestamp
             else:
                 fields[field_name] = field.value()
         return fields

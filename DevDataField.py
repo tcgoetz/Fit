@@ -15,7 +15,7 @@ class DevDataField(Data):
         self.dev_field_description = dev_field_description
         self.english_units = english_units
 
-        endian = definition_message.architecture()
+        endian = definition_message.architecture
 
         self.field = dev_field_description.field()
         type = dev_field_description.type_string()
@@ -25,7 +25,7 @@ class DevDataField(Data):
         Data.__init__(self, file, schema, None, endian)
 
     def convert(self, english_units=False):
-        self.value_obj = self.field.convert(self[self.field.name], self.dev_field_description.invalid(), self.english_units)
+        self.value_obj = self.field.convert(self.__dict__[self.field.name], self.dev_field_description.invalid(), self.english_units)
 
     def name(self):
         return self.value_obj.name()
