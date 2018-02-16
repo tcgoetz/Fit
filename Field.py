@@ -167,6 +167,8 @@ class StringField(Field):
             for character in value:
                 if character != 0:
                     converted_value += chr(character)
+                else:
+                    break
         else:
             converted_value = str(value)
         return converted_value.strip()
@@ -195,8 +197,8 @@ class EnhancedDistanceMetersField(Field):
 
 
 class DistanceCentimetersField(Field):
-    _conversion_factor = [ 100.0, 30.48 ]
-    _units = [ 'm', 'ft' ]
+    _conversion_factor = [ 100000.0, 160934.4 ]
+    _units = [ 'km', 'mi' ]
 
 
 class DistanceMillimetersField(Field):
@@ -924,10 +926,10 @@ class TimestampField(Field):
 
 
 class TimeMsField(Field):
-    _units = [ 's', 's' ]
-    _conversion_factor = [ 1000.0, 1000.0 ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+    def convert_single(self, value, invalid):
+        if value == invalid:
+            return None
+        return (datetime.datetime.min +  datetime.timedelta(0, 0, 0, value)).time()
 
 
 class CumActiveTimeField(TimeMsField):
@@ -945,6 +947,8 @@ class TimeMinField(Field):
 
 class TimeOfDayField(Field):
     def convert_single(self, value, invalid):
+        if value == invalid:
+            return None
         return (datetime.datetime.min +  datetime.timedelta(0, value)).time()
 
 
@@ -964,40 +968,29 @@ class SpeedKphField(Field):
 
 
 class SpeedMpsField(Field):
-    _units = [ 'm/s', 'ft/s' ]
-    _conversion_factor = [ 1000.0, 304.8 ]
+    _units = [ 'kmph', 'mph' ]
+    _conversion_factor = [ 277.77, 447.04 ]
 
 
 class CyclesField(Field):
     _units = ['cycles', 'cycles' ]
     _conversion_factor = [ 2.0, 2.0 ]
-    def __init__(self, name='cycles', *args, **kwargs):
-        field_name = self._units[0]
-        Field.__init__(self, name=field_name, *args, **kwargs)
 
 
 class FractionalCyclesField(Field):
     _units = ['cycles', 'cycles' ]
     _conversion_factor = [ 128.0, 128.0 ]
-    def __init__(self, name='cycles', *args, **kwargs):
-        field_name = self._units[0]
-        Field.__init__(self, name=field_name, *args, **kwargs)
 
 
 class StepsField(Field):
     _units = ['steps', 'steps' ]
     _conversion_factor = [ 1.0, 1.0 ]
-    def __init__(self, name, *args, **kwargs):
-        field_name = self._units[0]
-        Field.__init__(self, name=field_name, *args, **kwargs)
 
 
 class StrokesField(Field):
     _units = ['strokes', 'strokes' ]
     _conversion_factor = [ 2.0, 2.0 ]
-    def __init__(self, name, *args, **kwargs):
-        field_name = self._units[0]
-        Field.__init__(self, name=field_name, *args, **kwargs)
+
 
 class CyclesBaseField(Field):
     _units = ['cycles', 'cycles' ]
@@ -1335,7 +1328,8 @@ class SubSportField(EnumField):
 
 
 class PosField(Field):
-    _units = [ 'semicircles', 'semicircles' ]
+    _units = [ 'degrees', 'degrees' ]
+    _conversion_factor = [ 11930326.891, 11930326.891 ]
 
 
 class CadenceField(Field):
@@ -1381,7 +1375,7 @@ class ClimbMetersField(DistanceMetersField):
 
 class TemperatureField(Field):
     _units = [ 'C', 'F' ]
-    _conversion_factor = [ 1, 1.8 ]
+    _conversion_factor = [ 1, 0.55555555556 ]
     _conversion_constant = [ 0, 32 ]
 
 

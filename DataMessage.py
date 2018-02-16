@@ -62,7 +62,7 @@ class DataMessage():
     def name(self):
         return self.definition_message.name()
 
-    def parsed(self):
+    def to_dict(self):
         fields = {}
         for field_name, field in self._fields.iteritems():
             if field_name == 'timestamp_16':
