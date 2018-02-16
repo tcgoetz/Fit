@@ -30,7 +30,7 @@ class DevDataField(Data):
     def name(self):
         return self.value_obj.name()
 
-    def value(self):
+    def _field_value(self):
         return self.value_obj
 
     def __iter__(self):

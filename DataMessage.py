@@ -55,6 +55,8 @@ class DataMessage():
             for index in xrange(definition_message.dev_fields):
                 data_field = DevDataField(file, definition_message, definition_message.dev_field_definitions[index], english_units)
                 self.file_size += data_field.file_size
+                field_value = data_field._field_value()
+                self._fields[field_value.name()] = field_value
 
     def type(self):
         return self.definition_message.message_number()
@@ -64,11 +66,11 @@ class DataMessage():
 
     def to_dict(self):
         fields = {}
-        for field_name, field in self._fields.iteritems():
+        for field_name, field_value in self._fields.iteritems():
             if field_name == 'timestamp_16':
                 fields['timestamp'] = self.timestamp
             else:
-                fields[field_name] = field.value
+                fields[field_name] = field_value.value
         return fields
 
     def __getitem__(self, name):
