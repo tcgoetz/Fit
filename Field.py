@@ -4,10 +4,10 @@
 # copyright Tom Goetz
 #
 
-import logging, time
+import logging, time, datetime
 
-from time import time, gmtime, localtime, strftime
-from datetime import tzinfo, timedelta, datetime
+#from time import time, gmtime, localtime, strftime
+#from datetime import tzinfo, timedelta, datetime
 
 from FieldValue import FieldValue
 from FieldDefinition import FieldDefinition
@@ -169,7 +169,7 @@ class StringField(Field):
                     converted_value += chr(character)
         else:
             converted_value = str(value)
-        return converted_value
+        return converted_value.strip()
 
 
 class BytesField(Field):
@@ -770,7 +770,7 @@ class MsssageIndexField(Field):
 # User related fields
 #
 class GenderField(EnumField):
-    enum = { 0 : 'female', 1 : 'male' }
+    enum = {0 : 'female', 1 : 'male' }
 
 
 class HeightField(DistanceMetersField):
@@ -880,8 +880,6 @@ class LanguageField(EnumField):
         254 : 'Custom',
         255 : 'Invalid'
     }
-    def __init__(self):
-        EnumField.__init__(self, 'language')
 
 
 #
@@ -918,14 +916,14 @@ class TimestampField(Field):
 
     def convert_single(self, value, invalid):
         if self.utc:
-            timestamp = time()
-            time_now = datetime.fromtimestamp(timestamp)
-            time_utc = datetime.utcfromtimestamp(timestamp)
+            timestamp = time.time()
+            time_now = datetime.datetime.fromtimestamp(timestamp)
+            time_utc = datetime.datetime.utcfromtimestamp(timestamp)
             utc_offset_secs = (time_now - time_utc).total_seconds()
             # hack - summary of the day messages appear at midnight and we want them to appear in the current day,
             # reimplement properly
             value += (utc_offset_secs - 1)
-        return datetime(1989, 12, 31, 0, 0, 0) +  timedelta(0, value)
+        return datetime.datetime(1989, 12, 31, 0, 0, 0) +  datetime.timedelta(0, value)
 
 
 class TimeMsField(Field):
@@ -946,6 +944,11 @@ class TimeSField(Field):
 
 class TimeMinField(Field):
     _units = [ 'min', 'min' ]
+
+
+class TimeOfDayField(Field):
+    def convert_single(self, value, invalid):
+        return (datetime.datetime.min +  datetime.timedelta(0, value)).time()
 
 
 class DurationField(TimeMinField):
