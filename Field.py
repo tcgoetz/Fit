@@ -150,8 +150,11 @@ class BitField(Field):
 class PercentField(Field):
     _units = [ '%', '%' ]
     _conversion_factor = [ 100.0, 100.0 ]
-    def __init__(self, name):
-        Field.__init__(self, name)
+
+
+class BytePercentField(Field):
+    _units = [ '%', '%' ]
+    _conversion_factor = [ 2.0, 2.0 ]
 
 
 class StringField(Field):
@@ -182,15 +185,23 @@ class BytesField(Field):
             converted_value = bytearray(value)
         return converted_value
 
-
 class DistanceMetersField(Field):
     _conversion_factor = [ 1.0, .3048 ]
+    _units = [ 'm', 'ft' ]
+
+class EnhancedDistanceMetersField(Field):
+    _conversion_factor = [ 1000.0, 304.8 ]
     _units = [ 'm', 'ft' ]
 
 
 class DistanceCentimetersField(Field):
     _conversion_factor = [ 100.0, 30.48 ]
     _units = [ 'm', 'ft' ]
+
+
+class DistanceMillimetersField(Field):
+    _conversion_factor = [ 10.0, 0.3937 ]
+    _units = [ 'mm', 'in' ]
 
 
 #
@@ -201,6 +212,71 @@ class FitBaseUnitField(EnumField):
         0 : 'other',
         1 : 'kg',
         2 : 'lb',
+        255 : 'invalid'
+    }
+
+
+class DisplayMeasureField(EnumField):
+    enum = {
+        0 : 'metric',
+        1 : 'statute',
+        2 : 'nautical',
+        255 : 'invalid'
+    }
+
+class DisplayHeartField(EnumField):
+    enum = {
+        0 : 'bpm',
+        1 : 'max',
+        2 : 'reserve',
+        255 : 'invalid'
+    }
+
+
+class DisplayPositionField(EnumField):
+    enum = {
+        0 : 'degree',
+        1 : 'dregree_minute',
+        2 : 'degree_minute_second',
+        3 : 'australian_grid',
+        4 : 'british_grid',
+        5 : 'dutch_grid',
+        6 : 'hugarian_grid',
+        7 : 'finish_grid',
+        8 : 'german_grid',
+        9 : 'icelandic_grid',
+        10 : 'indonesian_equatorial',
+        11 : 'indonesian_irian',
+        12 : 'indonesian_southern',
+        13 : 'india_zone_0',
+        14 : 'india_zone_ia',
+        15 : 'india_zone_ib',
+        16 : 'india_zone_iia',
+        17 : 'india_zone_iib',
+        18 : 'india_zone_iiia',
+        19 : 'india_zone_iiib',
+        20 : 'india_zone_iva',
+        21 : 'india_zone_ivb',
+        22 : 'irish_traverse',
+        23 : 'irish_grid',
+        24 : 'loran',
+        25 : 'maidenhead_grid',
+        26 : 'mgrs_grid',
+        27 : 'new_zealand_grid',
+        28 : 'new_zealand_traverse',
+        29 : 'qatar_grid',
+        30 : 'modified_swedish_grid',
+        31 : 'swedish_grid',
+        32 : 'south_african_grid',
+        33 : 'swiss_grid',
+        34 : 'tiawan_grid',
+        35 : 'united_stated_grid',
+        36 : 'utm_ups_grid',
+        37 : 'west_malayan',
+        38 : 'borneo_rso',
+        39 : 'estonian_grid',
+        40 : 'latvian_grid',
+        41 : 'swedish_ref_99_grid',
         255 : 'invalid'
     }
 
@@ -590,9 +666,6 @@ class BatteryVoltageField(Field):
     _units = [ 'v', 'v' ]
     _conversion_factor = [ 256.0, 256.0 ]
 
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
-
 
 class BatteryStatusField(EnumField):
     enum = {
@@ -708,13 +781,9 @@ class WeightField(Field):
     _units = [ 'kg', 'lbs' ]
     _conversion_factor = [ 10.0, 4.545 ]
 
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
 
 class CaloriesField(Field):
     _units = [ 'kcal', 'kcal' ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
 
 
 class ActiveCaloriesField(CaloriesField):
@@ -766,6 +835,53 @@ class PowerCalcField(EnumField):
     }
     def __init__(self):
         EnumField.__init__(self, 'pwr_calc_type')
+
+
+class LanguageField(EnumField):
+    enum = {
+        0 :'English',
+        1 : 'French',
+        2 : 'Italian',
+        3 : 'German',
+        4 : 'Spanish',
+        5 : 'Croation',
+        6 : 'Czech',
+        7 : 'Danish',
+        8 : 'Dutch',
+        9 : 'Finnish',
+        10 : 'Greek',
+        11 : 'Hungarian',
+        12 : 'Norwegian',
+        13 : 'Polish',
+        14 : 'Portuguese',
+        15 : 'Slovakian',
+        16 : 'Slovenian',
+        17 : 'Swedish',
+        18 : 'Russian',
+        19 : 'Turkish',
+        20 : 'Latvian',
+        21 : 'Ukranian',
+        22 : 'Arabic',
+        23 : 'Farsi',
+        24 : 'Bulgarian',
+        25 : 'Romanian',
+        26 : 'Chinese',
+        27 : 'Japanese',
+        28 : 'Korean',
+        29 : 'Taiwanese',
+        30 : 'Thai',
+        31 : 'Hebrew',
+        32 : 'Brazialn_Portuguese',
+        33 : 'Indonesian',
+        34 : 'Maylasian',
+        35 : 'Vietnamese',
+        36 : 'Burmese',
+        37 : 'Mongolian',
+        254 : 'Custom',
+        255 : 'Invalid'
+    }
+    def __init__(self):
+        EnumField.__init__(self, 'language')
 
 
 #
@@ -826,14 +942,10 @@ class CumActiveTimeField(TimeMsField):
 
 class TimeSField(Field):
     _units = [ 's', 's' ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
 
 
 class TimeMinField(Field):
     _units = [ 'min', 'min' ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
 
 
 class DurationField(TimeMinField):
@@ -859,6 +971,14 @@ class SpeedMpsField(Field):
 class CyclesField(Field):
     _units = ['cycles', 'cycles' ]
     _conversion_factor = [ 2.0, 2.0 ]
+    def __init__(self, name='cycles', *args, **kwargs):
+        field_name = self._units[0]
+        Field.__init__(self, name=field_name, *args, **kwargs)
+
+
+class FractionalCyclesField(Field):
+    _units = ['cycles', 'cycles' ]
+    _conversion_factor = [ 128.0, 128.0 ]
     def __init__(self, name='cycles', *args, **kwargs):
         field_name = self._units[0]
         Field.__init__(self, name=field_name, *args, **kwargs)
@@ -909,9 +1029,6 @@ class CyclesBaseField(Field):
 class ActivityField(Field):
     _type = { 0 : 'manual', 1 : 'auto_multi_sport' }
 
-    def __init__(self):
-        Field.__init__(self)
-
     def convert_single(self, value, invalid):
         try:
             return ActivityField._type[value]
@@ -954,6 +1071,16 @@ class ActivityTypeField(Field):
 
     def convert_single_units(self, value, invalid):
         return ActivityTypeField._units[value]
+
+
+class ActivityClassField(Field):
+    def convert_single(self, value, invalid):
+        if value & 0x80:
+            activity_class = "athlete "
+        else:
+            activity_class = ""
+        activity_class += str(value & 0x7f)
+        return activity_class
 
 
 class IntensityField(Field):
@@ -1125,15 +1252,38 @@ class SubSportField(Field):
 
 class PosField(Field):
     _units = [ 'semicircles', 'semicircles' ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
 
 
-class AltField(Field):
+class CadenceField(Field):
+    _units = [ 'rpm', 'rpm' ]
+
+
+class FractionalCadenceField(Field):
+    _units = [ 'rpm', 'rpm' ]
+    _conversion_factor = [ 128.0, 128.0 ]
+
+
+class PowerField(Field):
+    _units = [ 'watts', 'watts' ]
+
+
+class WorkField(Field):
+    _units = [ 'J', 'J' ]
+
+
+class AltitudeField(Field):
     _units = [ 'm', 'ft' ]
     _conversion_factor = [ 13.986, 4.262 ]
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+
+
+class EnhancedAltitudeField(Field):
+    _units = [ 'm', 'ft' ]
+    _conversion_factor = [ 6993, 2131 ]
+
+
+class OscillationMMField(Field):
+    _units = [ 'mm', 'ft' ]
+    _conversion_factor = [ 10.0, 3.0479 ]
 
 
 class ClimbField(Field):
