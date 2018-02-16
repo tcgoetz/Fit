@@ -35,7 +35,7 @@ class DataMessage():
                     subfield_value = field_value[subfield_name]
                     subfield_formal_name = subfield_value.field.name
                     if subfield_formal_name in message_fields:
-                        message_fields[subfield_formal_name]._value['value'] += subfield_value._value['value']
+                        message_fields[subfield_formal_name]._value.value += subfield_value._value.value
                     else:
                         message_fields[subfield_formal_name] = subfield_value
             else:
@@ -44,7 +44,7 @@ class DataMessage():
         for field_value in message_fields.values():
             field = field_value.field
             if field_value.field.is_dependant_field:
-                control_value = message_fields[field.dependant_field_control_field]['orig']
+                control_value = message_fields[field.dependant_field_control_field].orig
                 field_value.field = field.dependant_field(control_value)
                 field_value.reconvert()
                 self._fields[field_value.field.name] = field_value

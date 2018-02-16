@@ -33,6 +33,9 @@ class FieldValue():
     def stats(self):
         return self.field.stats()
 
+    def __getitem__(self, key):
+        return self.__dict__[key]
+
     def __str__(self):
         field_string = self.name() + "(" + str(self.value)
         if self.units():
