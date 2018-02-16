@@ -756,10 +756,7 @@ class AutoActivityDetectField(BitField):
         BitField.__init__(self, name='auto_activity_detect', *args, **kwargs)
 
 
-class MsssageIndexField(Field):
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, name='message_index', *args, **kwargs)
-
+class MessageIndexField(Field):
     def convert_single(self, value, invalid):
         converted_value = {}
         converted_value['selected'] = ((value & 0x8000) == 0x8000)
