@@ -81,6 +81,9 @@ class Field():
             self.units_type = Field.attr_units_type_metric
         return FieldValue(self, invalid=invalid, value=self.convert_many(value, invalid), orig=value)
 
+    def __repr__(self):
+        return self.__class__.__name__ + '(' + self.name + ')'
+
 
 #
 # Special fields
@@ -96,12 +99,8 @@ class DevField(Field):
         self._units = [units, units]
         if scale is not None:
             self._conversion_factor = [scale, scale]
-        else:
-            self._conversion_factor = [1, 1]
         if offset is not None:
             self._conversion_constant = [offset, offset]
-        else:
-            self._conversion_constant = [0, 0]
         Field.__init__(self, name=name, *args, **kwargs)
 
 

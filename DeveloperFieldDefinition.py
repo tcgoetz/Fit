@@ -9,6 +9,8 @@ import logging, collections
 from Data import *
 from BaseType import BaseType
 from Field import DevField
+from Field import DevField
+from DefinitionMessageData import DefinitionMessageData
 
 
 class DeveloperFieldDefinition(Data, BaseType):
@@ -27,24 +29,22 @@ class DeveloperFieldDefinition(Data, BaseType):
     def __init__(self, dev_field_dict, file):
         Data.__init__(self, file, DeveloperFieldDefinition.dfd_schema)
         self.dev_field = dev_field_dict[self.field_number]
+        self.field_name = self.dev_field['field_name'].value
+        self.native_message_num = self.dev_field['native_message_num'].value
+        self.native_field_num = self.dev_field['native_field_num'].value
+        self.units = self.dev_field['units'].value
+        self.offset = self.dev_field['offset'].value
+        self.scale = self.dev_field['scale'].value
 
     def base_type_value(self):
         return self.dev_field['fit_base_type_id'].orig
 
-    def field_name(self):
-        return self.dev_field['field_name'].value
-
-    def units(self):
-        return self.dev_field['units'].value
-
-    def offset(self):
-        return self.dev_field['offset'].orig
-
-    def scale(self):
-        return self.dev_field['scale'].orig
-
     def field(self):
-        return DevField(self.field_name(), self.units(), self.scale(), self.offset())
+        # if self.native_message_num is not None and self.native_field_num is not None:
+        #     message_data = DefinitionMessageData.get_message(self.native_message_num)
+        #     field_dict = message_data[1]
+        #     return field_dict[self.native_field_num]
+        return DevField('dev_' + self.field_name, self.units, self.scale, self.offset)
 
     def base_type(self):
         return self._base_type(self.base_type_value())
