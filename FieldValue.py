@@ -12,8 +12,8 @@ class FieldValue():
 
         self.__dict__.update(kwargs)
 
-    def invalid(self):
-        return (self['orig'] == self['invalid'])
+    def is_invalid(self):
+        return (self.orig == self.invalid)
 
     def name(self):
         return self.field.name
@@ -41,7 +41,7 @@ class FieldValue():
         if self.units():
             field_string += " " + str(self.units())
         field_string += " (" + str(self.orig) + ")"
-        if self.invalid:
+        if self.is_invalid():
             field_string += " [invalid]"
         field_string += ")"
         return field_string

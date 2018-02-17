@@ -436,7 +436,7 @@ class DefinitionMessageData():
                     0 : Field('device_index'),
                     1 : CaloriesField('calories'),
                     2 : MonitoringDistanceField(),
-                    3 : CyclesBaseField(),
+                    3 : ActivityBasedCyclesField(),
                     4 : CumActiveTimeField(),
                     5 : ActivityTypeField(),
                     19 : ActiveCaloriesField(),

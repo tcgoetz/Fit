@@ -991,7 +991,7 @@ class StrokesField(Field):
     _conversion_factor = [ 2.0, 2.0 ]
 
 
-class CyclesBaseField(Field):
+class ActivityBasedCyclesField(Field):
     _units = ['cycles', 'cycles' ]
     _conversion_factor = [ 2.0, 2.0 ]
     _dependant_field = {
@@ -1014,7 +1014,7 @@ class CyclesBaseField(Field):
         Field.__init__(self, name='cycles', *args, **kwargs)
 
     def dependant_field(self, activity_type_index):
-        dependant_field_name = ActivityTypeField._type[activity_type_index]
+        dependant_field_name = ActivityTypeField._units[activity_type_index]
         return CyclesBaseField._dependant_field[activity_type_index](name=dependant_field_name)
 
 
