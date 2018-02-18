@@ -43,13 +43,13 @@ class DataMessage():
 
         for field_value in message_fields.values():
             field = field_value.field
-            if field_value.field.is_dependant_field:
-                control_value = message_fields[field.dependant_field_control_field].orig
-                field_value.field = field.dependant_field(control_value)
+            dependant_field_func = getattr(field, 'dependant_field', None)
+            if dependant_field_func:
+                control_value = message_fields[field.dependant_field_control_field].value
+                field_value.field = dependant_field_func(control_value)
                 field_value.reconvert()
                 self._fields[field_value.field.name] = field_value
-            else:
-                self._fields[field_value.name()] = field_value
+            self._fields[field_value.name()] = field_value
 
         if definition_message.has_dev_fields:
             for index in xrange(definition_message.dev_fields):
