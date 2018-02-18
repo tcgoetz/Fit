@@ -155,7 +155,10 @@ class LeftRightBalanceField(Field):
 
 class PercentField(Field):
     _units = [ '%', '%' ]
-    _conversion_factor = [ 100.0, 100.0 ]
+
+    def __init__(self, name, scale=1.0, *args, **kwargs):
+        self. _conversion_factor = [ 100.0 * scale, 100.0 * scale ]
+        Field.__init__(self, name, *args, **kwargs)
 
 
 class BytePercentField(Field):
@@ -1235,7 +1238,7 @@ class SessionTriggerField(EnumField):
 
 class SportBasedCyclesField(Field):
     _units = ['cycles', 'cycles' ]
-    _conversion_factor = [ 2.0, 2.0 ]
+    _conversion_factor = [ 1.0, 1.0 ]
     _dependant_field = {
         0 : CyclesField,
         1 : StepsField,
@@ -1422,11 +1425,6 @@ class AltitudeField(Field):
 class EnhancedAltitudeField(Field):
     _units = [ 'm', 'ft' ]
     _conversion_factor = [ 6993, 2131 ]
-
-
-class OscillationMMField(Field):
-    _units = [ 'mm', 'ft' ]
-    _conversion_factor = [ 10.0, 3.0479 ]
 
 
 class ClimbField(Field):

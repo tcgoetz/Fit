@@ -15,9 +15,6 @@ class FieldValue():
     def is_invalid(self):
         return (self.orig == self.invalid)
 
-    def name(self):
-        return self.field.name
-
     def subfield_names(self):
         return self._subfield_names
 
@@ -37,7 +34,7 @@ class FieldValue():
         return self.__dict__[key]
 
     def __str__(self):
-        field_string = self.name() + "(" + str(self.value)
+        field_string = self.field.name + "(" + str(self.value)
         if self.units():
             field_string += " " + str(self.units())
         field_string += " (" + str(self.orig) + ")"

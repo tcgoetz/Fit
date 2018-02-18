@@ -28,7 +28,7 @@ class DataField(Data):
         self.value_obj = self.field.convert(self.__dict__[self.field.name], self.field_definition.invalid(), self.english_units)
 
     def _field_name(self):
-        return self.value_obj.name()
+        return self.value_obj.field.name
 
     def _field_value(self):
         return self.value_obj

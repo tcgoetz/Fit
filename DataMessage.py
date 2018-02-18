@@ -43,20 +43,20 @@ class DataMessage():
 
         for field_value in message_fields.values():
             field = field_value.field
+            self._fields[field_value.field.name] = field_value
             dependant_field_func = getattr(field, 'dependant_field', None)
             if dependant_field_func:
                 control_value = message_fields[field.dependant_field_control_field].value
                 field_value.field = dependant_field_func(control_value)
                 field_value.reconvert()
                 self._fields[field_value.field.name] = field_value
-            self._fields[field_value.name()] = field_value
 
         if definition_message.has_dev_fields:
             for index in xrange(definition_message.dev_fields):
                 data_field = DevDataField(file, definition_message, definition_message.dev_field_definitions[index], english_units)
                 self.file_size += data_field.file_size
                 field_value = data_field._field_value()
-                self._fields[field_value.name()] = field_value
+                self._fields[field_value.field.name] = field_value
 
     def type(self):
         return self.definition_message.message_number()
