@@ -15,6 +15,19 @@ from FieldDefinition import FieldDefinition
 
 logger = logging.getLogger(__name__)
 
+class Conversions():
+    @classmethod
+    def ms_to_dt_time(cls, time_ms):
+        (datetime.datetime.min +  datetime.timedelta(0, 0, 0, time_ms)).time()
+
+    @classmethod
+    def secs_to_dt_time(cls, time_secs):
+        (datetime.datetime.min +  datetime.timedelta(0, time_secs)).time()
+
+    @classmethod
+    def meters_to_feet(cls, meters):
+        return (meters * 3.2808399)
+
 
 class Field():
     attr_units_type_metric = 0
@@ -948,7 +961,7 @@ class TimeMsField(Field):
     def convert_single(self, value, invalid):
         if value == invalid:
             return None
-        return (datetime.datetime.min +  datetime.timedelta(0, 0, 0, (value / self._conversion_factor))).time()
+        return Conversions.ms_to_dt_time(value / self._conversion_factor)
 
 
 class CumActiveTimeField(TimeMsField):
@@ -968,7 +981,7 @@ class TimeOfDayField(Field):
     def convert_single(self, value, invalid):
         if value == invalid:
             return None
-        return (datetime.datetime.min +  datetime.timedelta(0, value)).time()
+        return Conversions.secs_to_dt_time(value)
 
 
 class DurationField(TimeMinField):
@@ -993,7 +1006,9 @@ class SpeedMpsField(Field):
 
 class CyclesField(Field):
     _units = ['cycles', 'cycles' ]
-    _conversion_factor = [ 2.0, 2.0 ]
+    def __init__(self, name, scale=2.0, *args, **kwargs):
+        self. _conversion_factor = [ scale, scale ]
+        Field.__init__(self, name)
 
 
 class FractionalCyclesField(Field):
@@ -1003,12 +1018,16 @@ class FractionalCyclesField(Field):
 
 class StepsField(Field):
     _units = ['steps', 'steps' ]
-    _conversion_factor = [ 1.0, 1.0 ]
+    def __init__(self, name, scale=1.0, *args, **kwargs):
+        self. _conversion_factor = [ scale, scale ]
+        Field.__init__(self, name)
 
 
 class StrokesField(Field):
     _units = ['strokes', 'strokes' ]
-    _conversion_factor = [ 2.0, 2.0 ]
+    def __init__(self, name, scale=2.0, *args, **kwargs):
+        self. _conversion_factor = [ scale, scale ]
+        Field.__init__(self, name)
 
 
 def cycles_units_to_field(name):
@@ -1030,6 +1049,7 @@ def cycles_activity_to_units(activity):
         'walking' : 'steps',
         'running' : 'steps',
         'hiking' : 'steps',
+        'elliptical' : 'steps',
         # strokes activities
         'cycling' : 'strokes',
         'swimming' : 'strokes',
@@ -1047,15 +1067,16 @@ def cycles_activity_to_units(activity):
 class ActivityBasedCyclesField(Field):
     _units = ['cycles', 'cycles' ]
     _conversion_factor = [ 2.0, 2.0 ]
-    dependant_field_control_field = 'activity_type'
+    dependant_field_control_fields = ['activity_type']
 
     def __init__(self, *args, **kwargs):
         Field.__init__(self, name='cycles', *args, **kwargs)
 
-    def dependant_field(self, activity_type):
+    def dependant_field(self, control_value_list):
+        activity_type = control_value_list[0]
         dependant_field_name_base = cycles_activity_to_units(activity_type)
         dependant_field_name = self.name.replace('cycles', dependant_field_name_base)
-        return cycles_units_to_field(dependant_field_name)(name=dependant_field_name)
+        return cycles_units_to_field(dependant_field_name_base)(name=dependant_field_name)
 
 
 class ActivityField(Field):
@@ -1217,12 +1238,13 @@ class EventDataField(Field):
         'timer' : Field('timer_trigger'),
         245 : CyclesField
     }
-    dependant_field_control_field = 'event'
+    dependant_field_control_fields = ['event']
 
     def __init__(self, *args, **kwargs):
         Field.__init__(self, name='event_data', *args, **kwargs)
 
-    def dependant_field(self, event):
+    def dependant_field(self, control_value_list):
+        event = control_value_list[0]
         return EventDataField._dependant_field[event]
 
 
@@ -1239,25 +1261,20 @@ class SessionTriggerField(EnumField):
 class SportBasedCyclesField(Field):
     _units = ['cycles', 'cycles' ]
     _conversion_factor = [ 1.0, 1.0 ]
-    _dependant_field = {
-        0 : CyclesField,
-        1 : StepsField,
-        2 : StrokesField,
-        3 : CyclesField,
-        4 : CyclesField,
-        5 : StrokesField,
-        6 : StepsField,
-        7 : CyclesField,
-        8 : CyclesField,
-        9 : CyclesField,
-        245 : CyclesField
+    dependant_field_control_fields = ['sport', 'sub_sport']
+    _scale = {
+        'cycles' : 1.0,
+        'steps' : 0.5,
+        'strokes' : 1.0
     }
-    dependant_field_control_field = 'sport'
-
-    def dependant_field(self, sport_type):
-        dependant_field_name_base = cycles_activity_to_units(sport_type)
+    def dependant_field(self, control_value_list):
+        sport = control_value_list[0]
+        dependant_field_name_base = cycles_activity_to_units(sport)
+        if dependant_field_name_base == 'cycles':
+            sub_sport = control_value_list[1]
+            dependant_field_name_base = cycles_activity_to_units(sub_sport)
         dependant_field_name = self.name.replace('cycles', dependant_field_name_base)
-        return cycles_units_to_field(dependant_field_name)(name=dependant_field_name)
+        return cycles_units_to_field(dependant_field_name_base)(dependant_field_name, self._scale[dependant_field_name_base])
 
 
 class SportField(EnumField):

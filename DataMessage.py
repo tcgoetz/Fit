@@ -46,8 +46,8 @@ class DataMessage():
             self._fields[field_value.field.name] = field_value
             dependant_field_func = getattr(field, 'dependant_field', None)
             if dependant_field_func:
-                control_value = message_fields[field.dependant_field_control_field].value
-                field_value.field = dependant_field_func(control_value)
+                control_values = [message_fields[control_field].value for control_field in field.dependant_field_control_fields]
+                field_value.field = dependant_field_func(control_values)
                 field_value.reconvert()
                 self._fields[field_value.field.name] = field_value
 
