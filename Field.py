@@ -18,11 +18,15 @@ logger = logging.getLogger(__name__)
 class Conversions():
     @classmethod
     def ms_to_dt_time(cls, time_ms):
-        (datetime.datetime.min +  datetime.timedelta(0, 0, 0, time_ms)).time()
+        return (datetime.datetime.min + datetime.timedelta(0, 0, 0, time_ms)).time()
 
     @classmethod
     def secs_to_dt_time(cls, time_secs):
-        (datetime.datetime.min +  datetime.timedelta(0, time_secs)).time()
+        return (datetime.datetime.min + datetime.timedelta(0, time_secs)).time()
+
+    @classmethod
+    def min_to_dt_time(cls, time_mins):
+        return cls.secs_to_dt_time(time_mins * 60)
 
     @classmethod
     def meters_to_feet(cls, meters):
@@ -974,7 +978,10 @@ class TimeSField(Field):
 
 
 class TimeMinField(Field):
-    _units = [ 'min', 'min' ]
+    def convert_single(self, value, invalid):
+        if value == invalid:
+            return None
+        return Conversions.min_to_dt_time(value)
 
 
 class TimeOfDayField(Field):
@@ -1263,9 +1270,9 @@ class SportBasedCyclesField(Field):
     _conversion_factor = [ 1.0, 1.0 ]
     dependant_field_control_fields = ['sport', 'sub_sport']
     _scale = {
-        'cycles' : 1.0,
-        'steps' : 0.5,
-        'strokes' : 1.0
+        'cycles'    : 1.0,
+        'steps'     : 0.5,
+        'strokes'   : 1.0
     }
     def dependant_field(self, control_value_list):
         sport = control_value_list[0]

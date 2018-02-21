@@ -380,7 +380,7 @@ class DefinitionMessageData():
                     4 : ProductField(),
                     5 : VersionField('software_version'),
                     6 : Field('hardware_version'),
-                    7 : TimeSField('cum_operating_time'),
+                    7 : TimeMsField('cum_operating_time', 1000.0),
                     10 : BatteryVoltageField('battery_voltage'),
                     11 : BatteryStatusField(),
                     18 : BodyLocationField('sensor_position'),
@@ -446,8 +446,8 @@ class DefinitionMessageData():
                     29 : DurationField(),
                     31 : ClimbField('ascent'),
                     32 : ClimbField('descent'),
-                    33 : TimeMinField('moderate_activity_mins'),
-                    34 : TimeMinField('vigorous_activity_mins'),
+                    33 : TimeMinField('moderate_activity_time'),
+                    34 : TimeMinField('vigorous_activity_time'),
                     35 : ClimbField('cum_ascent'),
                     36 : ClimbField('cum_descent')
                 }
