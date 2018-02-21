@@ -336,7 +336,7 @@ class MessageNumberField(Field):
 #
 class ManufacturerField(EnumField):
     enum = {
-        1 : 'garmin',
+        1 : 'Garmin',
         2 : 'garmin_fr405_antfs',
         3 : 'zephyr',
         4 : 'dayton',
@@ -367,7 +367,7 @@ class ManufacturerField(EnumField):
         29 : 'saxonar',
         30 : 'lemond_fitness',
         31 : 'dexcom',
-        32 : 'wahoo_fitness',
+        32 : 'Wahoo Fitness',
         33 : 'octane_fitness',
         34 : 'archinoetics',
         35 : 'the_hurt_box',
@@ -471,7 +471,7 @@ class ManufacturerField(EnumField):
         EnumField.__init__(self, name='manufacturer', *args, **kwargs)
 
 
-class ProductField(EnumField):
+class GarminProductField(EnumField):
     enum = {
         1 : 'hrm1',
         2 : 'axh01',
@@ -481,8 +481,8 @@ class ProductField(EnumField):
         6 : 'dsi_alf02',
         7 : 'hrm3ss',
         8 : 'hrm_run_single_byte_product_id',
-        9 : 'bsm',
-        10 : 'bcm',
+        9 : 'Bike Speed Sensor',
+        10 : 'Bike Cadence Sensor',
         11 : 'axs01',
         12 : 'hrm_tri_single_byte_product_id',
         14 : 'fr225_single_byte_product_id',
@@ -537,7 +537,7 @@ class ProductField(EnumField):
         1735 : 'virb_elite',
         1736 : 'edge_touring',
         1742 : 'edge510_japan',
-        1743 : 'hrm_tri',
+        1743 : 'HRM-Tri',
         1752 : 'hrm_run',
         1765 : 'fr920xt',
         1821 : 'edge510_asia',
@@ -622,15 +622,34 @@ class ProductField(EnumField):
         2691 : 'FR935',
         2697 : 'Fenix 5 Sapphire',
         2700 : 'VivoActive 3',
-        10007 : 'sdm4',
+        10007 : 'Foot Pod (sdm4)',
         10014 : 'edge_remote',
         20119 : 'training_center',
         65531 : 'connectiq_simulator',
         65532 : 'android_antplus_plugin',
         65534 : 'connect'
     }
-    def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='product', *args, **kwargs)
+
+class WahooFitnessProductField(EnumField):
+    enum = {
+        6 : 'RPM Sensor',
+    }
+
+class ProductField(EnumField):
+    dependant_field_control_fields = ['manufacturer']
+
+    _manufacturer_to_product_fields = {
+        'Garmin'        : GarminProductField,
+        'Wahoo Fitness' : WahooFitnessProductField,
+    }
+
+    def dependant_field(self, control_value_list):
+        manufacturer = control_value_list[0]
+        try:
+            dependant_field_name = self._manufacturer_to_product_fields[manufacturer]
+        except:
+            dependant_field_name = Field
+        return dependant_field_name(name='product')
 
 
 class DisplayOrientationField(EnumField):
