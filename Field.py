@@ -18,19 +18,27 @@ logger = logging.getLogger(__name__)
 class Conversions():
     @classmethod
     def ms_to_dt_time(cls, time_ms):
-        return (datetime.datetime.min + datetime.timedelta(0, 0, 0, time_ms)).time()
+        if time_ms is not None:
+            return (datetime.datetime.min + datetime.timedelta(0, 0, 0, time_ms)).time()
+        return None
 
     @classmethod
     def secs_to_dt_time(cls, time_secs):
-        return (datetime.datetime.min + datetime.timedelta(0, time_secs)).time()
+        if time_secs is not None:
+            return (datetime.datetime.min + datetime.timedelta(0, time_secs)).time()
+        return None
 
     @classmethod
     def min_to_dt_time(cls, time_mins):
-        return cls.secs_to_dt_time(time_mins * 60)
+        if time_mins is not None:
+            return cls.secs_to_dt_time(time_mins * 60)
+        return None
 
     @classmethod
     def meters_to_feet(cls, meters):
-        return (meters * 3.2808399)
+        if meters is not None:
+            return (meters * 3.2808399)
+        return None
 
 
 class Field():
