@@ -6,39 +6,12 @@
 
 import logging, time, datetime
 
-#from time import time, gmtime, localtime, strftime
-#from datetime import tzinfo, timedelta, datetime
-
 from FieldValue import FieldValue
 from FieldDefinition import FieldDefinition
+from Conversions import *
 
 
 logger = logging.getLogger(__name__)
-
-class Conversions():
-    @classmethod
-    def ms_to_dt_time(cls, time_ms):
-        if time_ms is not None:
-            return (datetime.datetime.min + datetime.timedelta(0, 0, 0, time_ms)).time()
-        return None
-
-    @classmethod
-    def secs_to_dt_time(cls, time_secs):
-        if time_secs is not None:
-            return (datetime.datetime.min + datetime.timedelta(0, time_secs)).time()
-        return None
-
-    @classmethod
-    def min_to_dt_time(cls, time_mins):
-        if time_mins is not None:
-            return cls.secs_to_dt_time(time_mins * 60)
-        return None
-
-    @classmethod
-    def meters_to_feet(cls, meters):
-        if meters is not None:
-            return (meters * 3.2808399)
-        return None
 
 
 class Field():
@@ -992,7 +965,7 @@ class TimeMsField(Field):
     def convert_single(self, value, invalid):
         if value == invalid:
             return None
-        return Conversions.ms_to_dt_time(value / self._conversion_factor)
+        return ms_to_dt_time(value / self._conversion_factor)
 
 
 class CumActiveTimeField(TimeMsField):
@@ -1008,14 +981,14 @@ class TimeMinField(Field):
     def convert_single(self, value, invalid):
         if value == invalid:
             return None
-        return Conversions.min_to_dt_time(value)
+        return min_to_dt_time(value)
 
 
 class TimeOfDayField(Field):
     def convert_single(self, value, invalid):
         if value == invalid:
             return None
-        return Conversions.secs_to_dt_time(value)
+        return secs_to_dt_time(value)
 
 
 class DurationField(TimeMinField):
