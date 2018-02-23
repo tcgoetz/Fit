@@ -52,7 +52,7 @@ class File():
 
         self._definition_messages = {}
         self._dev_fields = {}
-        self._data_messages = {}
+        self._data_message_types = []
         data_consumed = 0
         self.record_count = 0
         self.first_message_timestamp = None
@@ -96,9 +96,10 @@ class File():
                     self._dev_fields[data_message['field_definition_number'].value] = data_message
 
                 try:
-                    self._data_messages[data_message_name].append(data_message)
+                    self.__dict__[data_message_name].append(data_message)
                 except:
-                    self._data_messages[data_message_name] = [ data_message ]
+                    self.__dict__[data_message_name] = [ data_message ]
+                    self._data_message_types.append(data_message_name)
 
             #logger.debug("Record %d: consumed %d of %s %r" % (self.record_count, data_consumed, self.data_size, self.english_units))
         logger.debug("File %s: %s -> %s" % (self.filename, self.time_created_timestamp, self.last_message_timestamp))
@@ -122,10 +123,10 @@ class File():
         return (self.time_created_timestamp, self.last_message_timestamp)
 
     def message_types(self):
-        return self._data_messages.keys()
+        return self._data_message_types
 
     def __getitem__(self, name):
-        return self._data_messages.get(name, None)
+        return self.__dict__.get(name, None)
 
     def __str__(self):
         return "Type: " + self.type()

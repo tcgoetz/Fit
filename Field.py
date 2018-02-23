@@ -41,15 +41,13 @@ class Field():
     def units(self, value):
         if self._units[self.units_type]:
             return self.convert_many_units(value, None)
-        return None
 
     def sub_field(self, name):
         return _sub_field[name]
 
     def convert_single(self, value, invalid):
-        if value == invalid:
-            return None
-        return (value / self._conversion_factor[self.units_type]) + self._conversion_constant[self.units_type]
+        if value != invalid:
+            return (value / self._conversion_factor[self.units_type]) + self._conversion_constant[self.units_type]
 
     def _convert_many(self, _convert_single, value, invalid):
         if isinstance(value, list):
@@ -107,12 +105,11 @@ class BoolField(Field):
         Field.__init__(self, *args, **kwargs)
 
     def convert_single(self, value, invalid):
-        if value == invalid:
-            return None
-        try:
-            return bool(value)
-        except:
-            return value
+        if value != invalid:
+            try:
+                return bool(value)
+            except:
+                return value
 
 
 class EnumField(Field):
@@ -120,12 +117,11 @@ class EnumField(Field):
         Field.__init__(self, *args, **kwargs)
 
     def convert_single(self, value, invalid):
-        if value == invalid:
-            return None
-        try:
-            return self.enum[value]
-        except:
-            return value
+        if value != invalid:
+            try:
+                return self.enum[value]
+            except:
+                return value
 
 
 class SwitchField(EnumField):
@@ -142,21 +138,19 @@ class BitField(Field):
         Field.__init__(self, *args, **kwargs)
 
     def convert_single(self, value, invalid):
-        if value == invalid:
-            return None
-        return self.bits.get(value, [self.bits[bit] for bit in self.bits if ((bit & value) == bit)])
+        if value != invalid:
+            return self.bits.get(value, [self.bits[bit] for bit in self.bits if ((bit & value) == bit)])
 
 
 class LeftRightBalanceField(Field):
     def convert_single(self, value, invalid):
-        if value == invalid:
-            return None
-        if value & 0x8000:
-            left_or_right = 'Right'
-        else:
-            left_or_right = 'Left'
-        percentage = (value & 0x3fff) / 100
-        return left_or_right + ' ' + str(percentage) + '%'
+        if value != invalid:
+            if value & 0x8000:
+                left_or_right = 'Right'
+            else:
+                left_or_right = 'Left'
+            percentage = (value & 0x3fff) / 100
+            return left_or_right + ' ' + str(percentage) + '%'
 
 
 class PercentField(Field):
@@ -304,23 +298,21 @@ class DisplayPositionField(EnumField):
 
 class FitBaseTypeField(Field):
     def convert_single(self, value, invalid):
-        if value == invalid:
-            return None
-        try:
-            return FieldDefinition._type_name(value)
-        except:
-            return value
+        if value != invalid:
+            try:
+                return FieldDefinition._type_name(value)
+            except:
+                return value
 
 
 class MessageNumberField(Field):
     def convert_single(self, value, invalid):
-        if value == invalid:
-            return None
-        try:
-            #return DefinitionMessageData.get_message_name(value)
-            return value
-        except:
-            return value
+        if value != invalid:
+            try:
+                #return DefinitionMessageData.get_message_name(value)
+                return value
+            except:
+                return value
 
 
 
@@ -975,9 +967,8 @@ class TimeMsField(Field):
         Field.__init__(self, name)
 
     def convert_single(self, value, invalid):
-        if value == invalid:
-            return None
-        return ms_to_dt_time(value / self._conversion_factor)
+        if value != invalid:
+            return ms_to_dt_time(value / self._conversion_factor)
 
 
 class CumActiveTimeField(TimeMsField):
@@ -996,9 +987,8 @@ class TimeMinField(TimeMsField):
 
 class TimeOfDayField(Field):
     def convert_single(self, value, invalid):
-        if value == invalid:
-            return None
-        return secs_to_dt_time(value)
+        if value != invalid:
+            return secs_to_dt_time(value)
 
 
 class DurationField(TimeMinField):
