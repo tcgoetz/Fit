@@ -107,6 +107,8 @@ class BoolField(Field):
         Field.__init__(self, *args, **kwargs)
 
     def convert_single(self, value, invalid):
+        if value == invalid:
+            return None
         try:
             return bool(value)
         except:
@@ -118,6 +120,8 @@ class EnumField(Field):
         Field.__init__(self, *args, **kwargs)
 
     def convert_single(self, value, invalid):
+        if value == invalid:
+            return None
         try:
             return self.enum[value]
         except:
@@ -138,11 +142,15 @@ class BitField(Field):
         Field.__init__(self, *args, **kwargs)
 
     def convert_single(self, value, invalid):
+        if value == invalid:
+            return None
         return self.bits.get(value, [self.bits[bit] for bit in self.bits if ((bit & value) == bit)])
 
 
 class LeftRightBalanceField(Field):
     def convert_single(self, value, invalid):
+        if value == invalid:
+            return None
         if value & 0x8000:
             left_or_right = 'Right'
         else:
@@ -296,6 +304,8 @@ class DisplayPositionField(EnumField):
 
 class FitBaseTypeField(Field):
     def convert_single(self, value, invalid):
+        if value == invalid:
+            return None
         try:
             return FieldDefinition._type_name(value)
         except:
@@ -304,6 +314,8 @@ class FitBaseTypeField(Field):
 
 class MessageNumberField(Field):
     def convert_single(self, value, invalid):
+        if value == invalid:
+            return None
         try:
             #return DefinitionMessageData.get_message_name(value)
             return value
@@ -958,7 +970,7 @@ class TimestampField(Field):
 
 
 class TimeMsField(Field):
-    def __init__(self, name='time_ms', scale=1.0, utc=True):
+    def __init__(self, name='time_ms', scale=1.0):
         self._conversion_factor = scale
         Field.__init__(self, name)
 
@@ -977,11 +989,9 @@ class TimeSField(Field):
     _units = [ 's', 's' ]
 
 
-class TimeMinField(Field):
-    def convert_single(self, value, invalid):
-        if value == invalid:
-            return None
-        return min_to_dt_time(value)
+class TimeMinField(TimeMsField):
+    def __init__(self, name='time_min', scale=1.0):
+        TimeMsField.__init__(self, name, scale * 60000)
 
 
 class TimeOfDayField(Field):
