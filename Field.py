@@ -1450,9 +1450,9 @@ class EnhancedAltitudeField(Field):
     _conversion_factor = [ 6993, 2131 ]
 
 
-class ClimbField(Field):
-    _units = [ 'm', 'ft' ]
-    _conversion_factor = [ 1000.0, 304.79 ]
+class ClimbField(DistanceMetersField):
+    def __init__(self, *args, **kwargs):
+        DistanceMetersField.__init__(self, scale=1000.0, *args, **kwargs)
 
 
 class ClimbMetersField(DistanceMetersField):
