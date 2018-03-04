@@ -981,7 +981,12 @@ class TimeSField(Field):
 
 class TimeMinField(TimeMsField):
     def __init__(self, name='time_min', scale=1.0):
-        TimeMsField.__init__(self, name, scale * 60000)
+        self._conversion_factor = scale
+        Field.__init__(self, name)
+
+    def convert_single(self, value, invalid):
+        if value != invalid:
+            return min_to_dt_time(value / self._conversion_factor)
 
 
 class TimeOfDayField(Field):
