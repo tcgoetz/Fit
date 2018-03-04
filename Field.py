@@ -204,9 +204,9 @@ class DistanceMetersField(Field):
         Field.__init__(self, name=name, *args, **kwargs)
 
 
-class EnhancedDistanceMetersField(Field):
-    _conversion_factor = [ 1000.0, 304.8 ]
-    _units = [ 'm', 'ft' ]
+class EnhancedDistanceMetersField(DistanceMetersField):
+    def __init__(self, *args, **kwargs):
+        DistanceMetersField.__init__(self, scale=1000.0, *args, **kwargs)
 
 
 class DistanceCentimetersField(Field):
