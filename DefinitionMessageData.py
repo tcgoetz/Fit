@@ -347,7 +347,7 @@ class DefinitionMessageData():
         20  : [ 'record', {
                     0 : PosField('position_lat'),
                     1 : PosField('position_long'),
-                    2 : AltitudeField('altitude'),
+                    2 : AltitudeField(),
                     3 : HeartRateField('heart_rate'),
                     4 : Field('cadence'),
                     5 : DistanceCentimetersField('distance'),

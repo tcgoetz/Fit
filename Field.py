@@ -807,7 +807,6 @@ class GenderField(EnumField):
 
 
 class HeightField(DistanceMetersField):
-    #_conversion_factor = [ 100.0, 30.48 ]
     def __init__(self, *args, **kwargs):
         DistanceMetersField.__init__(self, name='height', scale=100.0, *args, **kwargs)
 
@@ -1441,9 +1440,9 @@ class WorkField(Field):
     _units = [ 'J', 'J' ]
 
 
-class AltitudeField(Field):
-    _units = [ 'm', 'ft' ]
-    _conversion_factor = [ 13.986, 4.262 ]
+class AltitudeField(DistanceMetersField):
+    def __init__(self, *args, **kwargs):
+        DistanceMetersField.__init__(self, name='altitude', scale=500.0, *args, **kwargs)
 
 
 class EnhancedAltitudeField(Field):
