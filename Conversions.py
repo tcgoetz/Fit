@@ -46,3 +46,11 @@ def centimeters_to_meters(centimeters):
 def meters_to_miles(meters):
     if meters is not None:
         return meters_to_feet(meters) / 5280.0
+
+def mps_to_mph(meters_per_sec):
+    if meters_per_sec is not None:
+        return meters_per_sec * 2.236936
+
+def celsius_to_fahrenheit(celsius):
+    if celsius is not None:
+        return (celsius * 1.8) + 32.0
