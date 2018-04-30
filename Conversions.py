@@ -56,10 +56,16 @@ def celsius_to_fahrenheit(celsius):
         return (celsius * 1.8) + 32.0
 
 def dt_to_epoch_ms(dt):
-    return int((dt - datetime.datetime.utcfromtimestamp(0)).total_seconds() * 1000)
+    return int((dt - datetime.datetime.fromtimestamp(0)).total_seconds() * 1000)
 
 def epoch_ms_to_dt(epoch_ms):
-    return datetime.datetime.utcfromtimestamp(epoch_ms / 1000.0)
+    return datetime.datetime.fromtimestamp(epoch_ms / 1000.0)
+
+def dt_to_utc_epoch_ms(dt):
+    return int((dt - datetime.datetime.utcfromtimestamp(0)).total_seconds() * 1000)
+
+def epoch_ms_to_utc_dt(epoch_ms):
+    return datetime.datetime.utcfromtimestamp(epoch_ms / 1000.0).replace(tzinfo=from_zone)
 
 def printable(string_in):
     return filter(lambda x: x in string.printable, string_in)
