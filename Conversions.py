@@ -54,3 +54,9 @@ def mps_to_mph(meters_per_sec):
 def celsius_to_fahrenheit(celsius):
     if celsius is not None:
         return (celsius * 1.8) + 32.0
+
+def dt_to_epoch_ms(dt):
+    return int((dt - datetime.datetime.utcfromtimestamp(0)).total_seconds() * 1000)
+
+def epoch_ms_to_dt(epoch_ms):
+    return datetime.datetime.utcfromtimestamp(epoch_ms / 1000.0)
