@@ -4,7 +4,7 @@
 # copyright Tom Goetz
 #
 
-import time, datetime
+import time, datetime, string
 
 
 def ms_to_dt_time(time_ms):
@@ -60,3 +60,6 @@ def dt_to_epoch_ms(dt):
 
 def epoch_ms_to_dt(epoch_ms):
     return datetime.datetime.utcfromtimestamp(epoch_ms / 1000.0)
+
+def printable(string_in):
+    return filter(lambda x: x in string.printable, string_in)
