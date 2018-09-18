@@ -104,13 +104,16 @@ class DefinitionMessageData():
         8   : [ 'hr_zone', {} ],
         9   : [ 'power_zone', {} ],
         10  : [ 'met_zone', {} ],
+        # 11 is unknown
         12  : [ 'sport', {
                     0 : SportField(),
                     1 : SubSportField(),
                     3 : StringField('name'),
                 }
             ],
+        # 13,14 are unknown
         15  : [ 'goal', {} ],
+        # 16,17 are unknown
         18  : [ 'session', {
                     0 : EventField(),
                     1 : EventTypeField(),
@@ -144,6 +147,7 @@ class DefinitionMessageData():
                     30 : PosField('nec_long'),
                     31 : PosField('swc_lat'),
                     32 : PosField('swc_long'),
+                    33 : Field('length_count'),
                     34 : PowerField('normalized_power'),
                     35 : TrainingeffectField('training_stress_score'),
                     36 : Field('intensity_factor'),
@@ -181,6 +185,9 @@ class DefinitionMessageData():
                     69 : TimeMsField('avg_lap_time'),
                     70 : Field('best_lap_index'),
                     71 : EnhancedAltitudeField('min_altitude'),
+                    78 : Field('total_swim_time'),
+                    79 : Field('average_stroke'),
+                    80 : Field('swolf'),
                     82 : Field('player_score'),
                     83 : Field('opponent_score'),
                     84 : StringField('opponent_name'),
@@ -296,7 +303,10 @@ class DefinitionMessageData():
                     61 : Field('repetition_num'),
                     62 : EnhancedAltitudeField('min_altitude'),
                     63 : HeartRateField('min_heart_rate'),
+                    70 : Field('swim_time'),
                     71 : MessageIndexField('wkt_step_index'),
+                    72 : Field('average_stroke'),
+                    73 : Field('swolf'),
                     74 : Field('opponent_score'),
                     75 : Field('stroke_count'),
                     76 : Field('zone_count'),
@@ -392,9 +402,10 @@ class DefinitionMessageData():
                     27 : StringField('product_name'),
                 }
             ],
+        # 24 not known
         25  : [ 'workout', {} ],
         26  : [ 'workout', { 6 : Field('num_valid_steps'), 8 : StringField('wkt_name'), } ],
-        25  : [ 'workout_step', {} ],
+        27  : [ 'workout_step', {} ],
         28  : [ 'schedule', {} ],
         29  : [ 'location', {} ],
         30  : [ 'weight_scale', {
@@ -426,12 +437,16 @@ class DefinitionMessageData():
                 }
             ],
         35  : [ 'software', { 3 : VersionField('version') } ],
+        # 36 not known
         37  : [ 'file_capabilities', {} ],
         38  : [ 'mesg_capabilities', {} ],
         39  : [ 'field_capabilities', {} ],
+        # 40-48 not known
         49  : [ 'file_creator', { 0 : VersionField('software_version'), 1 : VersionField('hardware_version')} ],
         51  : [ 'blood_pressure', {} ],
+        # 52 not known
         53  : [ 'speed_zone', {} ],
+        # 53,54 not known
         55  : [ 'monitoring', {
                     0 : Field('device_index'),
                     1 : CaloriesField('calories'),
@@ -452,12 +467,20 @@ class DefinitionMessageData():
                     36 : ClimbField('cum_descent')
                 }
             ],
+        # 56-71 not known
         72  : [ 'training_file', {} ], # timestamp, serial_number, creation_time, product_ID, session_style
-        78  : [ 'hrv', {} ],
+        # 73-77 not known
+        78  : [ 'hrv', {
+                    0 : TimeMsField('time'),
+            }
+        ],
+        # 79 not known
         80  : [ 'ant_rx', {} ],
         81  : [ 'ant_tx', {} ],
         82  : [ 'ant_channel_id', {} ],
+        # 83-100 not known
         101 : [ 'length', {} ],
+        # 102 not known
         103 : [ 'monitoring_info', {
                     0 : TimestampField('local_timestamp', False),
                     1 : ActivityTypeField(),
@@ -469,35 +492,52 @@ class DefinitionMessageData():
         104 : [ 'battery', {0 : TimeMinField('remaining_mins'), 2 : PercentField('charge')} ],
         105 : [ 'pad', {} ],
         106 : [ 'slave_device', {} ],
+        # 107-126 not known
         127 : [ 'connectivity', {} ],
         128 : [ 'weather_conditions', {} ],
         129 : [ 'weather_alert', {} ],
+        # 103 not known
         131 : [ 'cadence_zone', {} ],
         132 : [ 'hr', {} ],
+        # 133-141 not known
         142 : [ 'segment_lap', {} ],
+        # 143, 144 not known
         145 : [ 'memo_glob', {} ],
+        # 146 not known
         147 : [ 'sensor', {0 : Field('value')} ],
         148 : [ 'segment_id', {} ],
         149 : [ 'segment_leaderboard_entry', {} ],
         150 : [ 'segment_point', {} ],
         151 : [ 'segment_file', {} ],
+        # 152-157 not known
+        158 : [ 'workout_session', {} ],
+        159 : [ 'watchface_settings', {} ],
         160 : [ 'gps_metadata', {} ],
         161 : [ 'camera_event', {} ],
         162 : [ 'timestamp_correlation', {} ],
+        # 163 not known
         164 : [ 'gyroscope_data', {} ],
         165 : [ 'accelerometer_data', {} ],
+        # 166 not known
         167 : [ 'three_d_sensor_calibration', {} ],
+        # 168 not known
         169 : [ 'video_frame', {} ],
+        # 170-173 not known
         174 : [ 'obdii_data', {} ],
+        # 175,176 not known
         177 : [ 'nmea_sentence', {} ],
         178 : [ 'aviation_attitude', {} ],
+        # 179-183 not known
         184 : [ 'video', {} ],
         185 : [ 'video_title', {} ],
         186 : [ 'video_description', {} ],
         187 : [ 'video_clip', {} ],
+        188 : [ 'ohr_settings', {} ],
+        # 189-199 not known
         200 : [ 'exd_screen_configuration', {} ],
         201 : [ 'exd_data_field_configuration', {} ],
         202 : [ 'exd_data_concept_configuration', {} ],
+        # 203-205 not known
         206 : [ 'field_description', {
                     0 : Field('developer_data_index'),
                     1 : Field('field_definition_number'),
@@ -526,16 +566,24 @@ class DefinitionMessageData():
         208 : [ 'magnetometer_data', {} ],
         209 : [ 'barometer_data', {} ],
         210 : [ 'one_d_sensor_calibration', {} ],
+        # 211-224 not known
+        225 : [ 'set', {} ],
+        # 226 not known
         227 : [ 'stress_level', {
                     0 : Field('stress_level_value'),
                     1 : TimestampField('stress_level_time', False),
                 }
             ],
+        # 228-241 not known
         241 : [ 'unknown_241', {0 : TimestampField('ts_0')} ],
+        # 242-257 not known
         258 : [ 'dive_settings', {} ],
         259 : [ 'dive_gas', {} ],
+        # 260,261 not known
         262 : [ 'dive_alarm', {} ],
+        # 263 not known
         264 : [ 'exercise_title', {} ],
+        # 265-267 not known
         268 : [ 'dive_summary', {} ],
         max_mfg_gfn  : [ 'mfg_range_min', {} ],
         max_gmn  : [ 'mfg_range_max', {} ],
