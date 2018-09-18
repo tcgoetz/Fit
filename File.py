@@ -117,7 +117,7 @@ class File():
         return self.product() + "_" + str(self.serial_number())
 
     def time_created(self):
-        return self['file_id'][0]['time_created'].value
+        return self.time_created_timestamp
 
     def date_span(self):
         return (self.time_created_timestamp, self.last_message_timestamp)
