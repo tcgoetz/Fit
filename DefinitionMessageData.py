@@ -39,23 +39,54 @@ class DefinitionMessageData():
                     4 : TimeModeField(),
                     5 : Field('time_zone_offset'),
                     12 : BacklightModeField(),
+                    35 : SwitchField('switch_35'),
                     36 : BoolField('activity_tracker_enabled'),
+                    38 : SwitchField('switch_38'),
                     39 : TimestampField('clock_time'),
                     40 : Field('pages_enabled'),
+                    41 : SwitchField('switch_41'),
+                    42 : SwitchField('switch_42'),
+                    43 : SwitchField('switch_43'),
+                    44 : SwitchField('switch_44'),
+                    45 : SwitchField('switch_45'),
                     46 : BoolField('move_alert_enabled'),
                     47 : DateModeField(),
+                    48 : SwitchField('switch_48'),
+                    49 : SwitchField('switch_49'),
+                    52 : SwitchField('switch_52'),
+                    53 : SwitchField('switch_53'),
                     55 : DisplayOrientationField('display_orientation'),
                     56 : SideField(),
                     57 : Field('default_page'),
                     58 : Field('autosync_min_steps'),
                     59 : Field('autosync_min_time'),
+                    64 : SwitchField('switch_64'),
+                    65 : SwitchField('switch_65'),
+                    68 : SwitchField('switch_68'),
                     80 : BoolField('lactate_threshold_autodetect_enabled'),
+                    81 : SwitchField('switch_81'),
+                    82 : SwitchField('switch_82'),
+                    83 : SwitchField('switch_83'),
+                    84 : SwitchField('switch_84'),
+                    85 : SwitchField('switch_85'),
                     86 : BoolField('ble_auto_upload_enabled'),
+                    87 : SwitchField('switch_87'),
                     89 : AutoSyncFrequencyField(),
                     90 : AutoActivityDetectField(),
                     94 : Field('number_of_screens'),
                     95 : DisplayOrientationField('smart_notification_display_orientation'),
+                    107 : SwitchField('switch_107'),
+                    108 : SwitchField('switch_108'),
+                    109 : SwitchField('switch_109'),
+                    110 : SwitchField('switch_110'),
+                    111 : SwitchField('switch_111'),
+                    112 : SwitchField('switch_112'),
+                    126 : SwitchField('switch_126'),
+                    127 : SwitchField('switch_127'),
+                    128 : SwitchField('switch_128'),
+                    133 : SwitchField('switch_133'),
                     134 : SwitchField('tap_interface'),
+                    141 : SwitchField('switch_141'),
                 }
             ],
         3   : [ 'user_profile', {
@@ -84,8 +115,8 @@ class DefinitionMessageData():
                     30 : DisplayMeasureField('height_setting'),
                     31 : EnhancedDistanceMetersField('user_running_step_length'),
                     32 : EnhancedDistanceMetersField('user_walking_step_length'),
-                    35 : TimestampField('unknown_35'),
-                    41 : TimestampField('unknown_35'),
+                    35 : TimestampField('ts_35'),
+                    41 : TimestampField('ts_41'),
                     47 : DisplayMeasureField('depth_setting'),
                     49 : Field('dive_count'),
                 }
@@ -112,6 +143,11 @@ class DefinitionMessageData():
                 }
             ],
         # 13,14 are unknown
+        13  : [ 'unknown_13', {
+                    5 : PosField('position_5'),
+                    6 : PosField('position_6'),
+            }
+        ],
         15  : [ 'goal', {} ],
         # 16,17 are unknown
         18  : [ 'session', {
@@ -362,6 +398,7 @@ class DefinitionMessageData():
                     4 : Field('cadence'),
                     5 : DistanceCentimetersField('distance'),
                     6 : SpeedMpsField('speed'),
+                    11 : PosField('position_11'),
                     13 : TemperatureField('temperature'),
                     53 : Field('fractional_cadence'),
                 }
@@ -378,7 +415,8 @@ class DefinitionMessageData():
                     10 : Field('front_gear'),
                     11 : Field('rear_gear_num'),
                     12 : Field('rear_gear'),
-                    13 : Field('device_index')
+                    13 : Field('device_index'),
+                    15: TimestampField('ts_15'),
                 }
             ],
         22  : [ 'source', {} ],
@@ -403,6 +441,10 @@ class DefinitionMessageData():
                 }
             ],
         # 24 not known
+        24  : [ 'unknown_24', {
+                    2 : BytesField('unknown_2'),
+            }
+        ],
         25  : [ 'workout', {} ],
         26  : [ 'workout', { 6 : Field('num_valid_steps'), 8 : StringField('wkt_name'), } ],
         27  : [ 'workout_step', {} ],
@@ -500,11 +542,27 @@ class DefinitionMessageData():
         131 : [ 'cadence_zone', {} ],
         132 : [ 'hr', {} ],
         # 133-141 not known
+        140 : [ 'unknown_141', {
+                    21 : PosField('position_21'),
+                    24 : PosField('position_24'),
+            }
+        ],
+        141 : [ 'unknown_141', {
+                    1 : TimestampField('ts_1', False),
+                    2 : TimestampField('ts_2', False),
+                    4 : PosField('position_4'),
+                    5 : PosField('position_5'),
+            }
+        ],
         142 : [ 'segment_lap', {} ],
         # 143, 144 not known
         145 : [ 'memo_glob', {} ],
         # 146 not known
-        147 : [ 'sensor', {0 : Field('value')} ],
+        147 : [ 'sensor', {
+                0 : Field('value'),
+                2 : StringField('name'),
+            }
+        ],
         148 : [ 'segment_id', {} ],
         149 : [ 'segment_leaderboard_entry', {} ],
         150 : [ 'segment_point', {} ],
@@ -532,7 +590,10 @@ class DefinitionMessageData():
         185 : [ 'video_title', {} ],
         186 : [ 'video_description', {} ],
         187 : [ 'video_clip', {} ],
-        188 : [ 'ohr_settings', {} ],
+        188 : [ 'ohr_settings', {
+                    0 : SwitchField('enabled'),
+            }
+        ],
         # 189-199 not known
         200 : [ 'exd_screen_configuration', {} ],
         201 : [ 'exd_data_field_configuration', {} ],
@@ -575,7 +636,14 @@ class DefinitionMessageData():
                 }
             ],
         # 228-241 not known
-        241 : [ 'unknown_241', {0 : TimestampField('ts_0')} ],
+        233 : [ 'dev_data_id', {
+                    2 : BytesField('unknown_2'),
+                }
+            ],
+        241 : [ 'unknown_241', {
+                0 : TimestampField('ts_0', True)
+            }
+        ],
         # 242-257 not known
         258 : [ 'dive_settings', {} ],
         259 : [ 'dive_gas', {} ],
@@ -585,6 +653,16 @@ class DefinitionMessageData():
         264 : [ 'exercise_title', {} ],
         # 265-267 not known
         268 : [ 'dive_summary', {} ],
+        273 : [ 'unknown_273',
+            {
+                    2 : TimestampField('local_timestamp', False),
+            }
+        ],
+        284 : [ 'unknown_284',
+            {
+                    1 : TimestampField('ts_1', True),
+            }
+        ],
         max_mfg_gfn  : [ 'mfg_range_min', {} ],
         max_gmn  : [ 'mfg_range_max', {} ],
     }
