@@ -223,9 +223,6 @@ class Manufacturer(enum.Enum):
 
 
 class GarminProduct(enum.Enum):
-    #
-    # Garmin defined values
-    #
     HRM1 = 1
     axh01 = 2
     axb01 = 3
@@ -381,10 +378,6 @@ class GarminProduct(enum.Enum):
     connectiq_simulator = 65531
     android_antplus_plugin = 65532
     connect = 65534
-    #
-    # Privates values
-    #
-    Microsoft_Band = 100001
 
 
 class WahooFitnessProduct(enum.Enum):
@@ -595,6 +588,9 @@ class ActivityType(enum.Enum):
 
 
 class FileType(enum.Enum):
+    #
+    # Garmin defined values
+    #
     unknown0 = 0
     device = 1
     settings = 2
@@ -618,6 +614,10 @@ class FileType(enum.Enum):
     unknown_file_type_49 = 49
     unknown_file_type_64 = 64
     invalid = 255
+    #
+    # Non Garmin extensions
+    #
+    tcx = 100001
 
 
 class Event(enum.Enum):

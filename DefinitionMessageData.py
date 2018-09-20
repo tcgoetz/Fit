@@ -445,7 +445,6 @@ class DefinitionMessageData():
                     2 : BytesField('unknown_2'),
             }
         ],
-        25  : [ 'workout', {} ],
         26  : [ 'workout', { 6 : Field('num_valid_steps'), 8 : StringField('wkt_name'), } ],
         27  : [ 'workout_step', {} ],
         28  : [ 'schedule', {} ],
@@ -488,7 +487,7 @@ class DefinitionMessageData():
         51  : [ 'blood_pressure', {} ],
         # 52 not known
         53  : [ 'speed_zone', {} ],
-        # 53,54 not known
+        # 54 not known
         55  : [ 'monitoring', {
                     0 : Field('device_index'),
                     1 : CaloriesField('calories'),
@@ -542,7 +541,7 @@ class DefinitionMessageData():
         131 : [ 'cadence_zone', {} ],
         132 : [ 'hr', {} ],
         # 133-141 not known
-        140 : [ 'unknown_141', {
+        140 : [ 'unknown_140', {
                     21 : PosField('position_21'),
                     24 : PosField('position_24'),
             }
