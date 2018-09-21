@@ -243,10 +243,7 @@ class FitBaseTypeField(Field):
 class MessageNumberField(Field):
     def convert_single(self, value, invalid):
         if value != invalid:
-            try:
-                return value
-            except:
-                return value
+            return value
 
 
 

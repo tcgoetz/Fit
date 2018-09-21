@@ -7,6 +7,24 @@
 import enum
 
 
+class UnknownMessageType():
+    def __init__(self, index):
+        self.value = index
+        self.name = 'unknown_%d' % index
+
+    def __eq__(self, other):
+        return other and self.value == other.value
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return self.value
+
+    def __repr__(self):
+        return '<UnknownMessageType.%s: %d>' % (self.name, self.value)
+
+
 class MessageType(enum.Enum):
 
     file_id                         = 0
@@ -60,7 +78,6 @@ class MessageType(enum.Enum):
     # 73-77 not known
     hrv                             = 78
     # 79 not known
-    unknown_79                      = 79
     ant_rx                          = 80
     ant_tx                          = 81
     # 83-100 not known
@@ -72,8 +89,6 @@ class MessageType(enum.Enum):
     pad                             = 105
     slave_device                    = 106
     # 107-126 not known
-    unknown_113                     = 113   # found in activities files
-    unknown_125                     = 125   # found in activities files
     connectivity                    = 127
     weather_conditions              = 128
     weather_alert                   = 129
@@ -127,15 +142,10 @@ class MessageType(enum.Enum):
     barometer_data                  = 209
     one_d_sensor_calibration        = 210
     # 211-224 not known
-    unknown_211                     = 211
-    unknown_216                     = 216
     set                             = 225
     # 226 not known
     stress_level                    = 227
     # 228-241 not known
-    unknown_229                     = 229
-    unknown_232                     = 232
-    unknown_233                     = 233
     unknown_241                     = 241
     # 242-257 not known
     dive_settings                   = 258
@@ -147,12 +157,17 @@ class MessageType(enum.Enum):
     # 265-267 not known
     dive_summary                    = 268
     unknown_273                     = 273
-    unknown_274                     = 274
-    unknown_275                     = 275
-    unknown_276                     = 276
     unknown_284                     = 284
     #
     #
     #
     mfg_range_min                   = 0xFF00
     mfg_range_max                   = 0xFFFE
+
+    @classmethod
+    def get_type(cls, message_number):
+        try:
+            return cls(message_number)
+        except ValueError:
+            return UnknownMessageType(message_number)
+

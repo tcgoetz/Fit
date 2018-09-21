@@ -41,10 +41,7 @@ class DefinitionMessage(Data):
         if (self.global_message_number < 0) or (self.global_message_number > MessageType.mfg_range_max.value):
             raise FitMessageType('Message number out of bounds: %d' % self.global_message_number)
 
-        try:
-            self.message_type = MessageType(self.global_message_number)
-        except ValueError:
-            raise FitMessageType("Unknown message type: %d" % self.global_message_number)
+        self.message_type = MessageType.get_type(self.global_message_number)
 
         self.message_data = DefinitionMessageData.get_message_definition(self.message_type)
 
