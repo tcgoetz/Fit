@@ -4,8 +4,6 @@
 # copyright Tom Goetz
 #
 
-import logging
-
 
 class BaseType():
 

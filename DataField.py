@@ -17,12 +17,11 @@ class DataField(Data):
 
         self.field = definition_message.field(field_definition.field_definition_number)
 
-        endian = definition_message.architecture
         type = field_definition.type_string()
         count = field_definition.type_count()
         schema = Schema(self.field.name, collections.OrderedDict( [ (self.field.name, [type, count, '%d']) ] ))
 
-        Data.__init__(self, file, schema, None, endian)
+        Data.__init__(self, file, schema, None, definition_message.endian)
 
     def convert(self, english_units=False):
         self.value_obj = self.field.convert(self.__dict__[self.field.name], self.field_definition.invalid(), self.english_units)

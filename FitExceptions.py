@@ -29,3 +29,7 @@ class FitFileBadProtocolVersion(FitFileError):
 
 class FitFileDataType(FitFileError):
     pass
+
+
+class FitMessageType(FitFileError):
+    pass

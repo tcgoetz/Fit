@@ -4,14 +4,11 @@
 # copyright Tom Goetz
 #
 
-import collections, logging
+import collections
 
 from Field import Field
 from DataField import DataField
 from DevDataField import DevDataField
-
-
-logger = logging.getLogger(__name__)
 
 
 class DataMessage():
@@ -59,10 +56,7 @@ class DataMessage():
                 self._fields[field_value.field.name] = field_value
 
     def type(self):
-        return self.definition_message.message_number()
-
-    def name(self):
-        return self.definition_message.name()
+        return self.definition_message.message_type
 
     def to_dict(self):
         fields = {}
@@ -93,4 +87,4 @@ class DataMessage():
 
     def __str__(self):
         fields_str = "".join(["%s, " % value for value in self._fields.values()])
-        return ("%s: %s (%d): %s" % (self.__class__.__name__,  self.name(), self.type(), fields_str))
+        return "%s: %s: %s" % (self.__class__.__name__, repr(self.type()), fields_str)

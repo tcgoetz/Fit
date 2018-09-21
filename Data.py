@@ -4,10 +4,15 @@
 # copyright Tom Goetz
 #
 
-import struct, logging
+import struct, logging, enum
 
 
 logger = logging.getLogger(__name__)
+
+
+class Architecture(enum.Enum):
+    Little_Endian = 0
+    Big_Endian = 1
 
 
 class Schema():
@@ -31,7 +36,7 @@ class Schema():
         return type_format[type]
 
     def compile_unpack(self, endian):
-        if endian:
+        if endian == Architecture.Big_Endian:
             self.unpack_format = '>'
         else:
             self.unpack_format = ''
@@ -70,7 +75,7 @@ class Schema():
 
 class Data():
 
-    def __init__(self, file, primary_schema, secondary_schemas=None, endian=False):
+    def __init__(self, file, primary_schema, secondary_schemas=None, endian=Architecture.Little_Endian):
         self.file = file
         self.primary_schema = primary_schema
         self.secondary_schemas = secondary_schemas

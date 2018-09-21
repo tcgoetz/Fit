@@ -4,7 +4,7 @@
 # copyright Tom Goetz
 #
 
-import logging, collections
+import collections
 
 from Data import *
 from BaseType import BaseType

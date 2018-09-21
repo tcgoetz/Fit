@@ -4,15 +4,12 @@
 # copyright Tom Goetz
 #
 
-import logging, time, datetime
+import time, datetime
 
 from FieldEnums import *
 from FieldValue import FieldValue
 from FieldDefinition import FieldDefinition
 from Conversions import *
-
-
-logger = logging.getLogger(__name__)
 
 
 class Field():
@@ -247,7 +244,6 @@ class MessageNumberField(Field):
     def convert_single(self, value, invalid):
         if value != invalid:
             try:
-                #return DefinitionMessageData.get_message_name(value)
                 return value
             except:
                 return value

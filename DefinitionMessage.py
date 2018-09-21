@@ -4,16 +4,14 @@
 # copyright Tom Goetz
 #
 
-import collections, logging
+import collections
 
 from Data import *
 from Field import *
 from FieldDefinition import FieldDefinition
 from DeveloperFieldDefinition import DeveloperFieldDefinition
 from DefinitionMessageData import DefinitionMessageData
-
-
-logger = logging.getLogger(__name__)
+from MessageType import MessageType
 
 
 class DefinitionMessage(Data):
@@ -40,8 +38,15 @@ class DefinitionMessage(Data):
     def __init__(self, record_header, dev_field_dict, file):
         Data.__init__(self, file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.decode_secondary)] )
 
-        msg_num = self.message_number()
-        self.message_data = DefinitionMessageData.get_message(msg_num)
+        if (self.global_message_number < 0) or (self.global_message_number > MessageType.mfg_range_max.value):
+            raise FitMessageType('Message number out of bounds: %d' % self.global_message_number)
+
+        try:
+            self.message_type = MessageType(self.global_message_number)
+        except ValueError:
+            raise FitMessageType("Unknown message type: %d" % self.global_message_number)
+
+        self.message_data = DefinitionMessageData.get_message_definition(self.message_type)
 
         self.field_definitions = []
         for index in xrange(self.fields):
@@ -59,26 +64,11 @@ class DefinitionMessage(Data):
                 self.dev_field_definitions.append(dev_field_definition)
 
     def decode_secondary(self):
-        self.endian = self.architecture
+        self.endian = Architecture(self.architecture)
         return True
 
-    def architecture_str(self):
-        return DefinitionMessageData.get_architecture(self.architecture)
-
-    def message_number(self):
-        if (self.global_message_number < 0) or (self.global_message_number > DefinitionMessageData.max_mfg_gfn):
-            raise ValueError('Definition Message message number out of bounds: %d' % self.global_message_number)
-        return self.global_message_number
-
-    def name(self):
-        return self.message_data[DefinitionMessageData.index_msg_name]
-
-    def field_list(self):
-        return self.message_data[1]
-
     def field(self, field_number):
-        return DefinitionMessageData.reserved_field_indexes.get(field_number, self.field_list().get(field_number, UnknownField(field_number)))
+        return DefinitionMessageData.reserved_field_indexes.get(field_number, self.message_data.get(field_number, UnknownField(field_number)))
 
     def __str__(self):
-        return ("%s: %s (%d) %d %s fields" %
-                (self.__class__.__name__, self.name(), self.msg_num, self.field_count(), self.architecture_str()))
+        return ("%s: %s %d %s fields" % (self.__class__.__name__, self.message_type, self.field_count(), self.endian.name))

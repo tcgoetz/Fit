@@ -4,13 +4,10 @@
 # copyright Tom Goetz
 #
 
-import logging, collections
+import collections
 
 from FitExceptions import *
 from Data import *
-
-
-logger = logging.getLogger(__name__)
 
 
 class FileHeader(Data):
