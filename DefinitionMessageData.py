@@ -474,6 +474,9 @@ class DefinitionMessageData():
             3 : ActivityBasedCyclesField(),
             4 : CumActiveTimeField(),
             5 : ActivityTypeField(),
+            6 : Field('activity_subtype'),
+            7 : Field('activity_level'),
+            14 : TemperatureField('temperature_min'),
             19 : ActiveCaloriesField(),
             24 : ActivityTypeIntensityField('current_activity_type_intensity'),
             26 : TimeSField('timestamp_16'),
@@ -584,6 +587,9 @@ class DefinitionMessageData():
         MessageType.stress_level : {
             0 : Field('stress_level_value'),
             1 : TimestampField('stress_level_time', False),
+        },
+        MessageType.unknown_233 : {
+            2 : BytesField('unknown_2'),
         },
         MessageType.dev_data_id : {
             2 : BytesField('unknown_2'),

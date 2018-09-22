@@ -146,6 +146,7 @@ class MessageType(enum.Enum):
     # 226 not known
     stress_level                    = 227
     # 228-241 not known
+    unknown_233                     = 233
     unknown_241                     = 241
     # 242-257 not known
     dive_settings                   = 258
