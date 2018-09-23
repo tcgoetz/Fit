@@ -47,6 +47,7 @@ class File():
         self.matched_timestamp_16 = None
 
     def parse(self):
+        logger.debug("Parsing File %s", self.filename)
         self.file_header = FileHeader(self.file)
 
         self.data_size = self.file_header.data_size
@@ -64,19 +65,17 @@ class File():
             local_message_num = record_header.local_message()
             data_consumed += record_header.file_size
             self.record_count += 1
+            logger.debug("Parsed record %s", repr(record_header))
 
             if record_header.message_class is MessageClass.definition:
-                try:
-                    definition_message = DefinitionMessage(record_header, self._dev_fields, self.file)
-                except FitMessageType:
-                    logger.error("MessageType error in File %s [%s]", self.filename, self.type())
-                    raise
+                definition_message = DefinitionMessage(record_header, self._dev_fields, self.file)
+                logger.debug("  Definition [%d]: %s", local_message_num, str(definition_message))
                 data_consumed += definition_message.file_size
                 self._definition_messages[local_message_num] = definition_message
             else:
                 definition_message = self._definition_messages[local_message_num]
                 data_message = DataMessage(definition_message, self.file, self.english_units)
-                logger.debug("  Message [%d]: %s", local_message_num, str(data_message))
+                logger.debug("  Data [%d]: %s", local_message_num, str(data_message))
 
                 data_consumed += data_message.file_size
 
@@ -100,13 +99,15 @@ class File():
                 if data_message_type == MessageType.field_description:
                     self._dev_fields[data_message['field_definition_number'].value] = data_message
 
+                logger.debug("Parsed %s", repr(data_message_type))
+
                 try:
                     self.__dict__[data_message_type].append(data_message)
                 except:
                     self.__dict__[data_message_type] = [ data_message ]
                     self._data_message_types.append(data_message_type)
 
-            #logger.debug("Record %d: consumed %d of %s %r" % (self.record_count, data_consumed, self.data_size, self.english_units))
+            logger.debug("Record %d: consumed %d of %s %r", self.record_count, data_consumed, self.data_size, self.english_units)
         logger.debug("File %s: %s -> %s", self.filename, self.time_created_timestamp, self.last_message_timestamp)
 
     def file_id(self):

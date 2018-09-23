@@ -705,7 +705,7 @@ class SportField(EnumField):
         Field.__init__(self, name='sport', *args, **kwargs)
 
     @classmethod
-    def get_units(cls, sport_index):
+    def units(cls, sport_index):
         try:
             return cls._units[sport_index]
         except:

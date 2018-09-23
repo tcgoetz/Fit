@@ -37,7 +37,8 @@ class FieldValue():
         field_string = self.field.name + "(" + str(self.value)
         if self.units():
             field_string += " " + str(self.units())
-        field_string += " (" + str(self.orig) + ")"
+        if self.value != self.orig:
+            field_string += " (" + str(self.orig) + ")"
         if self.is_invalid():
             field_string += " [invalid]"
         field_string += ")"

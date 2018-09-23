@@ -11,6 +11,7 @@ from BaseType import BaseType
 from Field import DevField
 from Field import DevField
 from DefinitionMessageData import DefinitionMessageData
+from FitExceptions import *
 
 
 class DeveloperFieldDefinition(Data, BaseType):
@@ -28,7 +29,9 @@ class DeveloperFieldDefinition(Data, BaseType):
 
     def __init__(self, dev_field_dict, file):
         Data.__init__(self, file, DeveloperFieldDefinition.dfd_schema)
-        self.dev_field = dev_field_dict[self.field_number]
+        self.dev_field = dev_field_dict.get(self.field_number, None)
+        if self.dev_field is None:
+            raise FitUndefDevMessageType('Dev field %d undefined in %s' % (self.field_number, repr(dev_field_dict)))
         self.field_name = self.dev_field['field_name'].value
         self.native_message_num = self.dev_field['native_message_num'].value
         self.native_field_num = self.dev_field['native_field_num'].value

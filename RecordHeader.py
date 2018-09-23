@@ -37,5 +37,8 @@ class RecordHeader(Data):
         return (self.record_header & 0x0f)
 
     def __str__(self):
-        return ("%s: Local %s message %d (Compressed %d)" %
-                (self.__class__.__name__, self.message_class.name, self.local_message(), self.compressed_timestamp()))
+        return ("RecordHeader: Local %s message %d (Compressed %d)" %
+                (self.message_class.name, self.local_message(), self.compressed_timestamp()))
+
+    def __repr__(self):
+        return self.__str__()

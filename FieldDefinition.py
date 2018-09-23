@@ -46,4 +46,4 @@ class FieldDefinition(Data, BaseType):
         return (self.size / type_size)
 
     def __str__(self):
-        return ("%s: type %d: %d of %s" % (self.__class__.__name__, self.field_definition_number, self.type_count(), self.type_string()));
+        return ("FieldDefinition: type %d: %d of %s" % (self.field_definition_number, self.type_count(), self.type_string()));

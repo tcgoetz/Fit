@@ -6,6 +6,8 @@
 
 import enum
 
+from FitExceptions import *
+
 
 class UnknownMessageType():
     def __init__(self, index):
@@ -167,6 +169,8 @@ class MessageType(enum.Enum):
 
     @classmethod
     def get_type(cls, message_number):
+        if message_number < 0 or message_number > cls.mfg_range_max.value:
+            raise FitMessageType('Message number %d out of range' % message_number)
         try:
             return cls(message_number)
         except ValueError:

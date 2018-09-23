@@ -38,11 +38,7 @@ class DefinitionMessage(Data):
     def __init__(self, record_header, dev_field_dict, file):
         Data.__init__(self, file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.decode_secondary)] )
 
-        if (self.global_message_number < 0) or (self.global_message_number > MessageType.mfg_range_max.value):
-            raise FitMessageType('Message number out of bounds: %d' % self.global_message_number)
-
         self.message_type = MessageType.get_type(self.global_message_number)
-
         self.message_data = DefinitionMessageData.get_message_definition(self.message_type)
 
         self.field_definitions = []
@@ -68,4 +64,4 @@ class DefinitionMessage(Data):
         return DefinitionMessageData.reserved_field_indexes.get(field_number, self.message_data.get(field_number, UnknownField(field_number)))
 
     def __str__(self):
-        return ("%s: %s %d %s fields" % (self.__class__.__name__, self.message_type, self.field_count(), self.endian.name))
+        return ("DefinitionMessage: %s %d %s fields" % (repr(self.message_type), self.fields, self.endian.name))

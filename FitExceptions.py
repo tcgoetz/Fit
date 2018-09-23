@@ -33,3 +33,7 @@ class FitFileDataType(FitFileError):
 
 class FitMessageType(FitFileError):
     pass
+
+
+class FitUndefDevMessageType(FitFileError):
+    pass
