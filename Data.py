@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 class Architecture(enum.Enum):
-    Little_Endian = 0
-    Big_Endian = 1
+    Little_Endian   = 0
+    Big_Endian      = 1
 
 
 class Schema():
@@ -20,36 +20,41 @@ class Schema():
     def __init__(self, name, ordered_dict):
         self.name = name
         self.ordered_dict = ordered_dict
-        self.file_size = 0
-        self.unpack_format = None
+        self.file_size = [0, 0]
+        self.unpack_format = [None, None]
 
     @classmethod
     def type_to_size(cls, type):
-        type_size = { 'CHAR' : 1, 'INT8' : 1, 'UINT8' : 1, 'INT16' : 2, 'UINT16' : 2, 'INT32' : 4, 'UINT32' : 4,
-                      'INT64' : 8, 'UINT64' : 8, 'FLOAT32' : 4, 'FLOAT64' : 4}
+        type_size = {
+            'CHAR' : 1, 'INT8' : 1, 'UINT8' : 1, 'INT16' : 2, 'UINT16' : 2, 'INT32' : 4, 'UINT32' : 4,
+            'INT64' : 8, 'UINT64' : 8, 'FLOAT32' : 4, 'FLOAT64' : 4
+        }
         return type_size[type]
 
     @classmethod
     def type_to_unpack_format(cls, type):
-        type_format = { 'CHAR' : 'B', 'INT8' : 'b', 'UINT8' : 'B', 'INT16' : 'h', 'UINT16' : 'H', 'INT32' : 'i',
-                      'UINT32' : 'I', 'INT64' : 'q', 'UINT64' : 'Q', 'FLOAT32' : 'f', 'FLOAT64' : 'd'}
+        type_format = {
+            'CHAR' : 'B', 'INT8' : 'b', 'UINT8' : 'B', 'INT16' : 'h', 'UINT16' : 'H', 'INT32' : 'i',
+            'UINT32' : 'I', 'INT64' : 'q', 'UINT64' : 'Q', 'FLOAT32' : 'f', 'FLOAT64' : 'd'
+        }
         return type_format[type]
 
     def compile_unpack(self, endian):
-        if endian == Architecture.Big_Endian:
-            self.unpack_format = '>'
+        if endian is Architecture.Big_Endian:
+            unpack_format = '>'
         else:
-            self.unpack_format = ''
+            unpack_format = ''
         for key in self.ordered_dict:
             (type, count, format) = self.ordered_dict[key]
             for index in xrange(count):
-                self.unpack_format += self.type_to_unpack_format(type)
-            self.file_size += (count * self.type_to_size(type))
+                unpack_format += self.type_to_unpack_format(type)
+                self.file_size[endian.value] += self.type_to_size(type)
+        self.unpack_format[endian.value] = unpack_format
 
     def get_unpack(self, endian):
-        if self.unpack_format is None:
+        if self.unpack_format[endian.value] is None:
             self.compile_unpack(endian)
-        return (self.unpack_format, self.file_size)
+        return (self.unpack_format[endian.value], self.file_size[endian.value])
 
     def decode(self, data):
         decoded_data = {}
@@ -92,9 +97,7 @@ class Data():
         return struct.unpack(unpack_format, self.file.read(file_size))
 
     def decode(self, schema):
-        #logger.debug("Decoding: " + schema.name)
         self.__dict__.update(schema.decode(self.read(schema)))
-        #logger.debug("Decoded: " + str(self.file_size) + " bytes")
 
     def decode_all(self):
         self.decode(self.primary_schema)
