@@ -547,22 +547,22 @@ def cycles_units_to_field(name):
 
 def cycles_activity_to_units(activity):
     _units = {
-        'generic' : 'cycles',
+        'generic'                   : 'cycles',
         # steps activities
-        'walking' : 'steps',
-        'running' : 'steps',
-        'hiking' : 'steps',
-        'elliptical' : 'steps',
+        'walking'                   : 'steps',
+        'running'                   : 'steps',
+        'hiking'                    : 'steps',
+        'elliptical'                : 'steps',
         # strokes activities
-        'cycling' : 'strokes',
-        'swimming' : 'strokes',
-        'rowing' : 'strokes',
-        'paddling' : 'strokes',
-        'stand_up_paddleboarding' : 'strokes',
-        'kayaking' : 'strokes',
+        'cycling'                   : 'strokes',
+        'swimming'                  : 'strokes',
+        'rowing'                    : 'strokes',
+        'paddling'                  : 'strokes',
+        'stand_up_paddleboarding'   : 'strokes',
+        'kayaking'                  : 'strokes',
     }
     try:
-        return _units[activity]
+        return _units[activity.name]
     except:
         return _units['generic']
 

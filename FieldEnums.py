@@ -9,29 +9,29 @@ import enum
 
 
 class Switch(enum.Enum):
-    off = 0
-    on = 1
-    auto = 2
-    invalid = 255
+    off         = 0
+    on          = 1
+    auto        = 2
+    invalid     = 255
 
 
 class FitBaseUnit(enum.Enum):
-    other = 0
-    kg = 1
-    lb = 2
-    invalid = 255
+    other       = 0
+    kg          = 1
+    lb          = 2
+    invalid     = 255
 
 
 class DisplayMeasure(enum.Enum):
-    metric = 0
-    statute = 1
-    nautical = 2
-    invalid = 255
+    metric      = 0
+    statute     = 1
+    nautical    = 2
+    invalid     = 255
 
 
 class DisplayHeart(enum.Enum):
-    bpm = 0
-    max = 1
+    bpm     = 0
+    max     = 1
     reserve = 2
     invalid = 255
 
