@@ -265,6 +265,10 @@ class WahooFitnessProductField(EnumField):
     enum = WahooFitnessProduct
 
 
+class UnknownProductField(EnumField):
+    enum = UnknownProduct
+
+
 class ProductField(Field):
     dependant_field_control_fields = ['manufacturer']
 
@@ -278,7 +282,7 @@ class ProductField(Field):
         try:
             dependant_field_name = self._manufacturer_to_product_fields[manufacturer]
         except:
-            dependant_field_name = Field
+            dependant_field_name = UnknownProductField
         return dependant_field_name(name='product')
 
 

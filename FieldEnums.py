@@ -8,6 +8,25 @@
 import enum
 
 
+class UnknownEnumValue():
+    def __init__(self, type, index):
+        self.type = type
+        self.value = index
+        self.name = '%s_%d' % (type, index)
+
+    def __eq__(self, other):
+        return other and (isinstance(other, UnknownEnumValue) and self.value == other.value) or (not isinstance(other, UnknownEnumValue) and self.value == other)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return self.value
+
+    def __repr__(self):
+        return '<%s.%s: %d>' % (self.type, self.name, self.value)
+
+
 class Switch(enum.Enum):
     off         = 0
     on          = 1
@@ -394,13 +413,14 @@ class GarminProduct(enum.Enum):
     oregon7xx                       = 2441
     rino7xx                         = 2444
     nautix                          = 2496
+    Forerunner35                    = 2503
     Edge_820                        = 2530
     Edge_Explore_820                = 2531
     Fenix5s                         = 2544
     Running_Dynamics_Pod            = 2593
     Fenix5X                         = 2604
     VivoFit_Jr                      = 2606
-    FR935                           = 2691
+    Forerunner935                   = 2691
     Fenix5_Sapphire                 = 2697
     VivoActive_3                    = 2700
     FootPod_SDM4                    = 10007
@@ -413,6 +433,11 @@ class GarminProduct(enum.Enum):
 
 class WahooFitnessProduct(enum.Enum):
     RPM_Sensor = 6
+
+
+class UnknownProduct(UnknownEnumValue):
+    def __init__(self, index):
+        UnknownEnumValue.__init__(self, 'UnknownProduct', index)
 
 
 class DisplayOrientation(enum.Enum):
