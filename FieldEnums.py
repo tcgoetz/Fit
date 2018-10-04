@@ -481,9 +481,9 @@ class BacklightMode(enum.Enum):
 
 
 class AntNetwork(enum.Enum):
-    public = 0
+    public  = 0
     antplus = 1
-    antfs = 2
+    antfs   = 2
     invalid = 255
 
 

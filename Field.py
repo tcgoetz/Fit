@@ -608,8 +608,8 @@ class ActivityBasedCyclesField(Field):
     _conversion_factor = [ 2.0, 2.0 ]
     dependant_field_control_fields = ['activity_type']
 
-    def __init__(self, *args, **kwargs):
-        Field.__init__(self, name='cycles', *args, **kwargs)
+    def __init__(self, name='cycles', *args, **kwargs):
+        Field.__init__(self, name, *args, **kwargs)
 
     def dependant_field(self, control_value_list):
         activity_type = control_value_list[0]
@@ -777,8 +777,8 @@ class WorkField(Field):
 
 
 class AltitudeField(DistanceMetersField):
-    def __init__(self, *args, **kwargs):
-        DistanceMetersField.__init__(self, name='altitude', scale=500.0, *args, **kwargs)
+    def __init__(self, name='altitude', *args, **kwargs):
+        DistanceMetersField.__init__(self, name, scale=500.0, *args, **kwargs)
 
 
 class EnhancedAltitudeField(Field):
