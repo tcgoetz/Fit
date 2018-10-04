@@ -273,8 +273,11 @@ class ProductField(Field):
     dependant_field_control_fields = ['manufacturer']
 
     _manufacturer_to_product_fields = {
-        Manufacturer.Garmin         : GarminProductField,
-        Manufacturer.Wahoo_Fitness  : WahooFitnessProductField,
+        Manufacturer.Garmin                 : GarminProductField,
+        Manufacturer.Garmin_local_0         : GarminProductField,
+        Manufacturer.Garmin_local_43064     : GarminProductField,
+        Manufacturer.Garmin_local_65533     : GarminProductField,
+        Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
     }
 
     def dependant_field(self, control_value_list):

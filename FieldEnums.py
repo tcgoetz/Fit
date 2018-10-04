@@ -274,7 +274,10 @@ class Manufacturer(enum.Enum):
     #
     # Privates values
     #
-    Microsoft = 100001
+    Garmin_local_0                  = 0
+    Garmin_local_43064              = 43064
+    Garmin_local_65533              = 65533
+    Microsoft                       = 100001
 
 
 class GarminProduct(enum.Enum):
@@ -436,6 +439,10 @@ class GarminProduct(enum.Enum):
     connectiq_simulator             = 65531
     android_antplus_plugin          = 65532
     connect                         = 65534
+    #
+    # Privates values
+    #
+    Fenix5_Sapphire_local_8195      = 8195
 
 
 class WahooFitnessProduct(enum.Enum):
@@ -521,6 +528,7 @@ class LocalDeviceType(enum.Enum):
     accelerometer                   = 3
     barometer                       = 4
     bluetooth_low_energy_chipset    = 8
+    wrist_heart_rate                = 10
 
 
 
