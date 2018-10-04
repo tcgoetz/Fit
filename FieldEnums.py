@@ -663,38 +663,39 @@ class Language(enum.Enum):
 
 
 class DateMode(enum.Enum):
-    day_month = 0
-    month_day = 1
-    invalid = 255
+    day_month   = 0
+    month_day   = 1
+    invalid     = 255
 
 
 class TimeMode(enum.Enum):
-    twelve_hour = 0
-    twentyfour_hour = 1
-    military = 2
-    twelve_hour_secs = 3
-    twentyfour_hour_secs = 4
-    utc = 5
-    invalid = 255
+    twelve_hour             = 0
+    twentyfour_hour         = 1
+    military                = 2
+    twelve_hour_secs        = 3
+    twentyfour_hour_secs    = 4
+    utc                     = 5
+    invalid                 = 255
 
 
 class Activity(enum.Enum):
-    manual = 0
-    auto_multi_sport = 1
+    manual              = 0
+    auto_multi_sport    = 1
 
 
 class ActivityType(enum.Enum):
-    generic = 0
-    running = 1
-    cycling = 2
-    transition = 3
-    fitness_equipment = 4
-    swimming = 5
-    walking = 6
-    sedentary = 7
-    stop_disable = 8
-    unknown = 9
-    all = 245
+    generic             = 0
+    running             = 1
+    cycling             = 2
+    transition          = 3
+    fitness_equipment   = 4
+    swimming            = 5
+    walking             = 6
+    sedentary           = 7
+    stop_disable        = 8
+    unknown             = 9
+    all                 = 245
+    invalid             = 255
 
 
 class FileType(enum.Enum):
@@ -729,6 +730,7 @@ class FileType(enum.Enum):
     # Non Garmin extensions
     #
     tcx = 100001
+    gpx = 100002
 
 
 class Event(enum.Enum):
