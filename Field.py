@@ -314,6 +314,35 @@ class SourceTypeField(EnumField):
         EnumField.__init__(self, name='source_type', *args, **kwargs)
 
 
+class AntplusDeviceTypeField(EnumField):
+    enum = AntplusDeviceType
+
+
+class LocalDeviceTypeField(EnumField):
+    enum = LocalDeviceType
+
+
+class UnknownDeviceTypeField(EnumField):
+    enum = UnknownDeviceType
+
+
+class DeviceType(Field):
+    dependant_field_control_fields = ['source_type']
+
+    _source_to_device_type_fields = {
+        SourceType.antplus      : AntplusDeviceTypeField,
+        SourceType.local        : LocalDeviceTypeField,
+    }
+
+    def dependant_field(self, control_value_list):
+        source_type = control_value_list[0]
+        try:
+            dependant_field_name = self._source_to_device_type_fields[source_type]
+        except:
+            dependant_field_name = UnknownDeviceTypeField
+        return dependant_field_name(name='device_type')
+
+
 class BatteryVoltageField(Field):
     _units = [ 'v', 'v' ]
     _conversion_factor = [ 256.0, 256.0 ]

@@ -402,7 +402,7 @@ class DefinitionMessageData():
         MessageType.source : {},
         MessageType.device_info : {
             0 : Field('device_index'),
-            1 : Field('device_type'),
+            1 : DeviceType(),
             2 : ManufacturerField(),
             3 : Field('serial_number'),
             4 : ProductField(),

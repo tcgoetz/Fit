@@ -8,6 +8,11 @@
 import enum
 
 
+def name_for_enum(enum_instance):
+    if enum_instance is not None:
+        return enum_instance.name
+
+
 class UnknownEnumValue():
     def __init__(self, type, index):
         self.type = type
@@ -273,6 +278,7 @@ class Manufacturer(enum.Enum):
 
 
 class GarminProduct(enum.Enum):
+    Bluetooth_Low_Energy_Chipset    = 0
     HRM1                            = 1
     axh01                           = 2
     axb01                           = 3
@@ -329,6 +335,7 @@ class GarminProduct(enum.Enum):
     edge810                         = 1567
     Tempe                           = 1570
     fr910xt_japan                   = 1600
+    GPS                             = 1621
     fr620                           = 1623
     fr220                           = 1632
     fr910xt_korea                   = 1664
@@ -481,6 +488,45 @@ class SourceType(enum.Enum):
     wifi = 4
     local = 5
     invalid = 255
+
+
+class AntplusDeviceType(enum.Enum):
+    antfs                       = 1
+    bike_power                  = 11
+    environment_sensor_legacy   = 12
+    multi_sport_speed_distance  = 15
+    control                     = 16
+    fitness_equipment           = 17
+    blood_pressure              = 18
+    geocache_node               = 19
+    light_electric_vehicle      = 20
+    env_sensor                  = 25
+    racquet                     = 26
+    control_hub                 = 27
+    run                         = 30
+    muscle_oxygen               = 31
+    bike_light_main             = 35
+    bike_light_shared           = 36
+    exd                         = 38
+    bike_radar                  = 40
+    weight_scale                = 119
+    heart_rate                  = 120
+    bike_speed_cadence          = 121
+    bike_cadence                = 122
+    bike_speed                  = 123
+    stride_speed_distance       = 124
+
+class LocalDeviceType(enum.Enum):
+    gps                             = 0
+    accelerometer                   = 3
+    barometer                       = 4
+    bluetooth_low_energy_chipset    = 8
+
+
+
+class UnknownDeviceType(UnknownEnumValue):
+    def __init__(self, index):
+        UnknownEnumValue.__init__(self, 'UnknownDeviceType', index)
 
 
 class BatteryStatus(enum.Enum):
