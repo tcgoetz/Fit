@@ -71,6 +71,7 @@ def printable(string_in):
     return filter(lambda x: x in string.printable, string_in)
 
 def speed_to_pace(speed):
-    if speed is not None and speed != 0:
+    if speed:
+        # secs_per_hour / speed_per_hour = speed_per
         return (datetime.datetime.min +  datetime.timedelta(0, 3600 / speed)).time()
 
