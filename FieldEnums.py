@@ -10,7 +10,11 @@ import enum
 
 def name_for_enum(enum_instance):
     if enum_instance is not None:
-        return enum_instance.name
+        name = getattr(enum_instance, 'name', None)
+        if name:
+            return name
+        else:
+            return enum_instance
 
 
 class UnknownEnumValue():
