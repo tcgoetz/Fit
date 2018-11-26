@@ -430,6 +430,7 @@ class GarminProduct(enum.Enum):
     Running_Dynamics_Pod            = 2593
     Fenix5X                         = 2604
     VivoFit_Jr                      = 2606
+    VivoSport                       = 2623
     Forerunner935                   = 2691
     Fenix5_Sapphire                 = 2697
     VivoActive_3                    = 2700
