@@ -333,16 +333,23 @@ class DeviceType(Field):
     dependant_field_control_fields = ['source_type']
 
     _source_to_device_type_fields = {
+        SourceType.ant          : Field('ant_device_type'),
         SourceType.antplus      : AntplusDeviceTypeField,
         SourceType.local        : LocalDeviceTypeField,
     }
 
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, name='device_type', *args, **kwargs)
+
     def dependant_field(self, control_value_list):
         source_type = control_value_list[0]
-        try:
-            dependant_field_name = self._source_to_device_type_fields[source_type]
-        except:
-            dependant_field_name = UnknownDeviceTypeField
+        if source_type is not None:
+            try:
+                dependant_field_name = self._source_to_device_type_fields[source_type]
+            except:
+                dependant_field_name = UnknownDeviceTypeField
+        else:
+            dependant_field_name = Field
         return dependant_field_name(name='device_type')
 
 
