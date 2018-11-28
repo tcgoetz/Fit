@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class DataMessage():
-    def __init__(self, definition_message, file, english_units=False):
+    def __init__(self, definition_message, fit_file, english_units=False):
         self.definition_message = definition_message
 
         self._fields = {}
@@ -25,7 +25,7 @@ class DataMessage():
 
         message_fields = {}
         for index in xrange(definition_message.fields):
-            data_field = DataField(file, definition_message, definition_message.field_definitions[index], english_units)
+            data_field = DataField(fit_file, definition_message, definition_message.field_definitions[index], english_units)
             self.file_size += data_field.file_size
 
             # expand subfields?
@@ -42,7 +42,7 @@ class DataMessage():
             else:
                 message_fields[data_field._field_name()] = data_field._field_value()
         self.convert_fields(message_fields)
-        self.convert_dev_fields(definition_message, english_units)
+        self.convert_dev_fields(fit_file, definition_message, english_units)
 
     def control_field_value(self, field, message_fields, control_field_name):
         control_field = message_fields.get(control_field_name, None)
@@ -60,10 +60,10 @@ class DataMessage():
                 field_value.reconvert()
             self._fields[field_value.field.name] = field_value
 
-    def convert_dev_fields(self, definition_message, english_units):
+    def convert_dev_fields(self, fit_file, definition_message, english_units):
         if definition_message.has_dev_fields:
             for index in xrange(definition_message.dev_fields):
-                data_field = DevDataField(file, definition_message, definition_message.dev_field_definitions[index], english_units)
+                data_field = DevDataField(fit_file, definition_message, definition_message.dev_field_definitions[index], english_units)
                 self.file_size += data_field.file_size
                 field_value = data_field._field_value()
                 self._fields[field_value.field.name] = field_value

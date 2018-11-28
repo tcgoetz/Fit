@@ -85,9 +85,7 @@ class Data():
         self.primary_schema = primary_schema
         self.secondary_schemas = secondary_schemas
         self.endian = endian
-
         self.file_size = 0
-
         self.decode_all()
         self.convert()
 
