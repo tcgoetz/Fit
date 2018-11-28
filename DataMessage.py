@@ -9,6 +9,7 @@ import collections
 from Field import Field
 from DataField import DataField
 from DevDataField import DevDataField
+from FitExceptions import *
 
 
 class DataMessage():
@@ -37,16 +38,26 @@ class DataMessage():
                         message_fields[subfield_formal_name] = subfield_value
             else:
                 message_fields[data_field._field_name()] = data_field._field_value()
+        self.convert_fields(message_fields)
+        self.convert_dev_fields(definition_message, english_units)
 
+    def control_field_value(self, message_fields, control_field_name):
+        control_field = message_fields.get(control_field_name, None)
+        if control_field is not None:
+            return control_field.value
+        raise FitDependantField('Missing control field %s in message %s' % (control_field_name, repr(message_fields)))
+
+    def convert_fields(self, message_fields):
         for field_value in message_fields.values():
             field = field_value.field
             dependant_field_func = getattr(field, 'dependant_field', None)
             if dependant_field_func:
-                control_values = [message_fields[control_field].value for control_field in field.dependant_field_control_fields]
+                control_values = [self.control_field_value(message_fields, control_field) for control_field in field.dependant_field_control_fields]
                 field_value.field = dependant_field_func(control_values)
                 field_value.reconvert()
             self._fields[field_value.field.name] = field_value
 
+    def convert_dev_fields(self, definition_message, english_units):
         if definition_message.has_dev_fields:
             for index in xrange(definition_message.dev_fields):
                 data_field = DevDataField(file, definition_message, definition_message.dev_field_definitions[index], english_units)
