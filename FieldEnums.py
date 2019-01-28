@@ -281,6 +281,7 @@ class Manufacturer(enum.Enum):
     Garmin_local_0                  = 0
     Garmin_local_43064              = 43064
     Garmin_local_65533              = 65533
+    Unknown                         = 100000
     Microsoft                       = 100001
 
 
@@ -438,6 +439,7 @@ class GarminProduct(enum.Enum):
     Forerunner935                   = 2691
     Fenix5_Sapphire                 = 2697
     VivoActive_3                    = 2700
+    VivoMove_HR                     = 2772
     FootPod_SDM4                    = 10007
     edge_remote                     = 10014
     training_center                 = 20119
