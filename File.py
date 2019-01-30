@@ -5,7 +5,6 @@
 #
 
 import sys, logging, collections, traceback
-from datetime import tzinfo, timedelta, datetime
 
 from FitExceptions import *
 from FileHeader import FileHeader
@@ -30,21 +29,6 @@ class File():
 
         self.file = open(filename, 'rb')
         self.parse()
-
-    def timestamp16_to_timestamp(self, timestamp_16):
-        if self.matched_timestamp_16:
-            if timestamp_16 >= self.matched_timestamp_16:
-                delta = timestamp_16 - self.matched_timestamp_16
-            else:
-                delta = (self.matched_timestamp_16 - 65535) + timestamp_16
-        else:
-            self.matched_timestamp_16 = timestamp_16
-            delta = 0
-        return self.last_message_timestamp + timedelta(0, delta)
-
-    def track_dates(self, timestamp):
-        self.last_message_timestamp = timestamp
-        self.matched_timestamp_16 = None
 
     def parse(self):
         logger.debug("Parsing File %s", self.filename)
@@ -81,20 +65,11 @@ class File():
 
                 data_message_type = data_message.type()
 
-                time_created_timestamp = data_message['time_created']
-                if time_created_timestamp:
-                    self.time_created_timestamp = time_created_timestamp.value
-                    self.track_dates(self.time_created_timestamp)
-
-                message_timestamp = data_message['timestamp']
-                if message_timestamp:
-                    self.track_dates(message_timestamp.value)
-                else:
-                    message_timestamp_16 = data_message['timestamp_16']
-                    if message_timestamp_16:
-                        data_message.timestamp = self.timestamp16_to_timestamp(message_timestamp_16.value)
-                    else:
-                        data_message.timestamp = self.last_message_timestamp
+                if data_message.time_created_timestamp:
+                     self.time_created_timestamp = data_message.time_created_timestamp
+                # if self.last_message_timestamp is not None and data_message.timestamp < self.last_message_timestamp:
+                #     raise FitOutOfOrderMessage('Message time stamp %s before previous %s' % (data_message.timestamp, self.last_message_timestamp))
+                self.last_message_timestamp = data_message.timestamp
 
                 if data_message_type == MessageType.field_description:
                     self._dev_fields[data_message['field_definition_number'].value] = data_message

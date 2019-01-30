@@ -41,3 +41,7 @@ class FitUndefDevMessageType(FitFileError):
 
 class FitDependantField(FitFileError):
     pass
+
+
+class FitOutOfOrderMessage(FitFileError):
+    pass
