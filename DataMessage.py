@@ -65,7 +65,13 @@ class DataMessage():
         else:
             timestamp_16_field = self._fields.get('timestamp_16', None)
             if timestamp_16_field is not None:
-                self.timestamp = self.timestamp16_to_timestamp(timestamp_16_field.value)
+                if timestamp_16_field.value is not None:
+                    self.timestamp = self.timestamp16_to_timestamp(timestamp_16_field.value)
+                else:
+                    # This should not happen, if the timestamp16 field exists, it should not be None
+                    # Issue #21: seen on Ubuntu on Windows
+                    logger.error('timestamp16 with value None: %s', repr(self._fields))
+                    self.timestamp = DataMessage.last_timestamp
             else:
                 self.timestamp = DataMessage.last_timestamp
         DataMessage.last_timestamp = self.timestamp
