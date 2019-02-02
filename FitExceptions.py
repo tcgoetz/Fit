@@ -35,6 +35,10 @@ class FitMessageType(FitFileError):
     pass
 
 
+class FitMessageParse(FitFileError):
+    pass
+
+
 class FitUndefDevMessageType(FitFileError):
     pass
 

@@ -36,6 +36,24 @@ class UnknownEnumValue():
         return '<%s.%s: %d>' % (self.type, self.name, self.value)
 
 
+class FieldEnum(enum.Enum):
+    @classmethod
+    def from_string_ext(cls, string):
+        for name, value in cls.__members__.items():
+            if name in string:
+                return value
+
+    @classmethod
+    def from_string(cls, string):
+        try:
+            try:
+                return cls(string)
+            except:
+                return getattr(cls, string)
+        except AttributeError:
+            return cls.from_string_ext(string)
+
+
 class Switch(enum.Enum):
     off         = 0
     on          = 1
@@ -50,7 +68,7 @@ class FitBaseUnit(enum.Enum):
     invalid     = 255
 
 
-class DisplayMeasure(enum.Enum):
+class DisplayMeasure(FieldEnum):
     metric      = 0
     statute     = 1
     nautical    = 2
