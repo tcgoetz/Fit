@@ -513,6 +513,10 @@ class CumActiveTimeField(TimeMsField):
 class TimeSField(Field):
     _units = [ 's', 's' ]
 
+    # invalid is not allowed, 65535 is a valid value
+    def convert_single(self, value, invalid):
+        return value
+
 
 class TimeMinField(TimeMsField):
     def __init__(self, name='time_min', scale=1.0):
