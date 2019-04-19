@@ -15,7 +15,7 @@ class Architecture(enum.Enum):
     Big_Endian      = 1
 
 
-class Schema():
+class Schema(object):
 
     def __init__(self, name, ordered_dict):
         self.name = name
@@ -78,7 +78,7 @@ class Schema():
         return printable_data
 
 
-class Data():
+class Data(object):
 
     def __init__(self, file, primary_schema, secondary_schemas=None, endian=Architecture.Little_Endian):
         self.file = file

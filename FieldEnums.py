@@ -17,7 +17,7 @@ def name_for_enum(enum_instance):
             return enum_instance
 
 
-class UnknownEnumValue():
+class UnknownEnumValue(object):
     def __init__(self, type, index):
         self.type = type
         self.value = index

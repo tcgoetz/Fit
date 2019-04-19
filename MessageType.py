@@ -9,7 +9,7 @@ import enum
 from FitExceptions import *
 
 
-class UnknownMessageType():
+class UnknownMessageType(object):
     def __init__(self, index):
         self.value = index
         self.name = 'unknown_%d' % index

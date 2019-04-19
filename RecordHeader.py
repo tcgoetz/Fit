@@ -20,8 +20,7 @@ class RecordHeader(Data):
     message_type_string = [ 'data', 'definition' ]
 
     def __init__(self, file):
-        Data.__init__(self, file, RecordHeader.rh_schema)
-
+        super(RecordHeader, self).__init__(file, RecordHeader.rh_schema)
         self.message_class = MessageClass(self.message_type())
 
     def compressed_timestamp(self):

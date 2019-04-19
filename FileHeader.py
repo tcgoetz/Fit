@@ -37,7 +37,7 @@ class FileHeader(Data):
 #    file_data_type = ['.', 'F', 'I', 'T']
 
     def __init__(self, file):
-        Data.__init__(self, file, FileHeader.fh_primary_schema, [(FileHeader.fh_optional_schema, self.decode_secondary)] )
+        super(FileHeader, self).__init__(file, FileHeader.fh_primary_schema, [(FileHeader.fh_optional_schema, self.decode_secondary)] )
         self.check()
 
     def decode_secondary(self):

@@ -18,7 +18,7 @@ from FitExceptions import *
 logger = logging.getLogger(__name__)
 
 
-class DataMessage():
+class DataMessage(object):
 
     matched_timestamp_16 = None
     last_timestamp = None

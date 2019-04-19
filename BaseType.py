@@ -5,7 +5,7 @@
 #
 
 
-class BaseType():
+class BaseType(object):
 
     base_type_data = {
         0x00 : [ False, 'enum',     0xFF,               'UINT8'],

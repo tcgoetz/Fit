@@ -11,7 +11,7 @@ from Field import *
 from MessageType import MessageType
 
 
-class DefinitionMessageData():
+class DefinitionMessageData(object):
 
     known_messages = {
         MessageType.file_id : {

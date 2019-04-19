@@ -12,7 +12,7 @@ from FieldDefinition import FieldDefinition
 from Conversions import *
 
 
-class Field():
+class Field(object):
     attr_units_type_metric = 0
     attr_units_type_english = 1
     attr_units_type_default = attr_units_type_metric

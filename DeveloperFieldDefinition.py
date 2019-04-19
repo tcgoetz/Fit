@@ -28,7 +28,7 @@ class DeveloperFieldDefinition(Data, BaseType):
     )
 
     def __init__(self, dev_field_dict, file):
-        Data.__init__(self, file, DeveloperFieldDefinition.dfd_schema)
+        super(DeveloperFieldDefinition, self).__init__(file, DeveloperFieldDefinition.dfd_schema)
         self.dev_field = dev_field_dict.get(self.field_number, None)
         if self.dev_field is None:
             raise FitUndefDevMessageType('Dev field %d undefined in %s' % (self.field_number, repr(dev_field_dict)))

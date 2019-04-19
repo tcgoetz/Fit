@@ -5,7 +5,7 @@
 #
 
 
-class FieldValue():
+class FieldValue(object):
     def __init__(self, field, subfield_names=None, **kwargs):
         self.field = field
         self._subfield_names = subfield_names

@@ -24,7 +24,7 @@ class FieldDefinition(Data, BaseType):
     )
 
     def __init__(self, file):
-        Data.__init__(self, file, FieldDefinition.fd_schema)
+        super(FieldDefinition, self).__init__(file, FieldDefinition.fd_schema)
 
     def base_type(self):
         return self._base_type(self.base_type)

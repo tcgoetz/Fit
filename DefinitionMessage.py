@@ -36,7 +36,7 @@ class DefinitionMessage(Data):
     )
 
     def __init__(self, record_header, dev_field_dict, file):
-        Data.__init__(self, file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.decode_secondary)] )
+        super(DefinitionMessage, self).__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.decode_secondary)] )
 
         self.message_type = MessageType.get_type(self.global_message_number)
         self.message_data = DefinitionMessageData.get_message_definition(self.message_type)
