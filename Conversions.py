@@ -75,3 +75,95 @@ def speed_to_pace(speed):
         # secs_per_hour / speed_per_hour = speed_per
         return (datetime.datetime.min +  datetime.timedelta(0, 3600 / speed)).time()
 
+
+class Temperature():
+    def __init__(self, celsius):
+        self.celsius = celsius
+
+    @classmethod
+    def from_celsius(cls, celsius):
+        return cls(celsius)
+
+    def to_f(self):
+        return (self.celsius * 1.8) + 32.0
+
+    def c_or_f(self, metric):
+        if self.celsius is not None:
+            return self.celsius if metric else self.to_f()
+
+
+class Weight():
+    def __init__(self, kg):
+        self.kg = kg
+
+    @classmethod
+    def from_grams(cls, grams):
+        return cls(grams * 1000.0)
+
+    @classmethod
+    def from_lbs(cls, lbs):
+        return cls(lbs / 2.204623)
+
+    def to_kgs(self):
+        return self.kg
+
+    def to_lbs(self):
+        return (self.kg * 2.204623)
+
+    def kgs_or_lbs(self, metric):
+        if self.celsius is not None:
+            return self.to_kgs() if metric else self.to_lbs()
+
+
+class Distance():
+    def __init__(self, meters):
+        self.meters = meters
+
+    @classmethod
+    def from_meters(cls, meters):
+        return cls(meters)
+
+    @classmethod
+    def from_feet(cls, feet):
+        return cls(feet / 3.2808399)
+
+    def to_meters(self):
+        return self.meters
+
+    def to_kms(self):
+        return (self.meters / 1000.0)
+
+    def to_feet(self):
+        return (self.meters * 3.2808399)
+
+    def to_miles(self):
+        return (self.meters * 0.0006213712)
+
+    def meters_or_feet(self, metric):
+        if self.meters is not None:
+            return self.to_meters() if metric else self.to_feet()
+
+    def kms_or_miles(self, metric):
+        if self.meters is not None:
+            return self.to_kms() if metric else self.to_miles()
+
+
+class Speed():
+    def __init__(self, meters_per_sec):
+        self.meters_per_sec = meters_per_sec
+
+    @classmethod
+    def from_mps(cls, meters_per_sec):
+        return cls(meters_per_sec)
+
+    def to_kph(self):
+        return ((self.meters_per_sec * (60 * 60)) / 1000.0)
+
+    def to_mph(self):
+        return (self.meters_per_sec * 2.236936)
+
+    def kph_or_mph(self, metric):
+        if self.meters_per_sec is not None:
+            return self.to_kph() if metric else self.to_mph()
+
+
