@@ -93,25 +93,25 @@ class Temperature():
 
 
 class Weight():
-    def __init__(self, kg):
-        self.kg = kg
+    def __init__(self, kgs):
+        self.kgs = kgs
 
     @classmethod
     def from_grams(cls, grams):
-        return cls(grams * 1000.0)
+        return cls(grams / 1000.0)
 
     @classmethod
     def from_lbs(cls, lbs):
         return cls(lbs / 2.204623)
 
     def to_kgs(self):
-        return self.kg
+        return self.kgs
 
     def to_lbs(self):
-        return (self.kg * 2.204623)
+        return (self.kgs * 2.204623)
 
     def kgs_or_lbs(self, metric):
-        if self.celsius is not None:
+        if self.kgs is not None:
             return self.to_kgs() if metric else self.to_lbs()
 
 
