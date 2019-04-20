@@ -82,7 +82,7 @@ class Field(object):
 class UnknownField(Field):
     known_field = False
     def __init__(self, index):
-        Field.__init__(self, "unknown_" + str(index))
+        super(UnknownField, self).__init__("unknown_" + str(index))
 
 
 class DevField(Field):
@@ -92,7 +92,26 @@ class DevField(Field):
             self._conversion_factor = [scale, scale]
         if offset is not None:
             self._conversion_constant = [offset, offset]
-        Field.__init__(self, name=name, *args, **kwargs)
+        super(DevField, self).__init__(name=name, *args, **kwargs)
+
+
+class ObjectField(Field):
+    def __init__(self, name, obj_func, output_func):
+        super(ObjectField, self).__init__(name)
+        self.obj_func = obj_func
+        self.output_func = output_func
+
+    def convert_single(self, value, invalid):
+        if value != invalid:
+            return self.output_func(value, self.units_type == Field.attr_units_type_metric)
+
+    def convert(self, value, invalid, english_units=False):
+        if english_units:
+            self.units_type = Field.attr_units_type_english
+        else:
+            self.units_type = Field.attr_units_type_metric
+        value_obj = self.obj_func(value)
+        return FieldValue(self, invalid=invalid, value=self.convert_many(value_obj, invalid), orig=value_obj)
 
 
 #
@@ -190,26 +209,38 @@ class BytesField(Field):
         return converted_value
 
 
-class DistanceMetersField(Field):
-    _units = [ 'm', 'ft' ]
-    def __init__(self, name, scale=1.0, *args, **kwargs):
-        self._conversion_factor = [ 1.0 * scale, .3048 * scale ]
-        Field.__init__(self, name=name, *args, **kwargs)
+class DistanceMetersField(ObjectField):
+    def __init__(self, name, obj_func=Distance.from_meters, output_func=Distance.meters_or_feet, scale=1.0):
+        super(DistanceMetersField, self).__init__(name, obj_func, output_func)
+        self._conversion_factor = scale
+
+    def convert(self, value, invalid, english_units=False):
+        if english_units:
+            self.units_type = Field.attr_units_type_english
+        else:
+            self.units_type = Field.attr_units_type_metric
+        value_obj = self.obj_func(value / self._conversion_factor)
+        return FieldValue(self, invalid=invalid, value=self.convert_many(value_obj, invalid), orig=value_obj)
 
 
 class EnhancedDistanceMetersField(DistanceMetersField):
-    def __init__(self, *args, **kwargs):
-        DistanceMetersField.__init__(self, scale=1000.0, *args, **kwargs)
+    def __init__(self, name):
+        super(EnhancedDistanceMetersField, self).__init__(name, Distance.from_mm, Distance.meters_or_feet)
 
 
-class DistanceCentimetersField(Field):
-    _conversion_factor = [ 100000.0, 160934.4 ]
-    _units = [ 'km', 'mi' ]
+class DistanceCentimetersToKmsField(DistanceMetersField):
+    def __init__(self, name='distance'):
+        super(DistanceCentimetersToKmsField, self).__init__(name, Distance.from_cm, Distance.kms_or_miles)
 
 
-class DistanceMillimetersField(Field):
-    _conversion_factor = [ 10.0, 0.3937 ]
-    _units = [ 'mm', 'in' ]
+class DistanceCentimetersToMetersField(DistanceMetersField):
+    def __init__(self, name='distance'):
+        super(DistanceCentimetersToMetersField, self).__init__(name, Distance.from_cm, Distance.meters_or_feet)
+
+
+class DistanceMillimetersField(DistanceMetersField):
+    def __init__(self, name='distance'):
+        super(DistanceMillimetersField, self).__init__(name, Distance.from_mm, Distance.mm_or_inches, 10.0)
 
 
 #
@@ -403,14 +434,14 @@ class GenderField(EnumField):
     enum = Gender
 
 
-class HeightField(DistanceMetersField):
-    def __init__(self, *args, **kwargs):
-        DistanceMetersField.__init__(self, name='height', scale=100.0, *args, **kwargs)
+class HeightField(ObjectField):
+    def __init__(self, name='height'):
+        super(HeightField, self).__init__(name, Distance.from_cm, Distance.meters_or_feet)
 
 
-class WeightField(Field):
-    _units = [ 'kg', 'lbs' ]
-    _conversion_factor = [ 10.0, 4.545 ]
+class WeightField(ObjectField):
+    def __init__(self, name='weight'):
+        super(WeightField, self).__init__(name, Weight.from_cgs, Weight.kgs_or_lbs)
 
 
 class CaloriesField(Field):
@@ -505,11 +536,6 @@ class TimeMsField(Field):
             return ms_to_dt_time(value / self._conversion_factor)
 
 
-class CumActiveTimeField(TimeMsField):
-    def __init__(self, *args, **kwargs):
-        TimeMsField.__init__(self, name='cum_active_time', *args, **kwargs)
-
-
 class TimeSField(Field):
     _units = [ 's', 's' ]
 
@@ -534,24 +560,9 @@ class TimeOfDayField(Field):
             return secs_to_dt_time(value)
 
 
-class DurationField(TimeMinField):
-    def __init__(self, *args, **kwargs):
-        TimeMinField.__init__(self, name='duration', *args, **kwargs)
-
-
-class MonitoringDistanceField(DistanceMetersField):
-    def __init__(self, *args, **kwargs):
-        DistanceMetersField.__init__(self, name='distance', *args, **kwargs)
-
-
-class SpeedKphField(Field):
-    _units = [ 'km/h', 'm/h' ]
-    _conversion_factor = [ 277.8, 172.6 ]
-
-
-class SpeedMpsField(Field):
-    _units = [ 'kmph', 'mph' ]
-    _conversion_factor = [ 277.77, 447.04 ]
+class SpeedMpsField(ObjectField):
+    def __init__(self, name):
+        super(SpeedMpsField, self).__init__(name, Speed.from_mmps, Speed.kph_or_mph)
 
 
 class CyclesField(Field):
@@ -657,12 +668,12 @@ class ActivityClassField(Field):
 class IntensityField(Field):
     _max_intensity = 8
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, "intensity", *args, **kwargs)
+        super(IntensityField, self).__init__("intensity", *args, **kwargs)
 
 
 class ActivityTypeIntensityField(Field):
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+        super(ActivityTypeIntensityField, self).__init__(*args, **kwargs)
         self._subfield['activity_type'] = ActivityTypeField()
         self._subfield['intensity'] = IntensityField()
 
@@ -684,6 +695,10 @@ class VersionField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
+    def convert_single(self, value, invalid):
+        if value != invalid:
+            return '{0:2.2f}'.format(value / self._conversion_factor[self.units_type])
+
 
 class EventField(EnumField):
     enum = Event
@@ -701,7 +716,7 @@ class EventDataField(Field):
     dependant_field_control_fields = ['event']
 
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, name='event_data', *args, **kwargs)
+        super(EventDataField, self).__init__(name='event_data', *args, **kwargs)
 
     def dependant_field(self, control_value_list):
         event = control_value_list[0]
@@ -749,7 +764,7 @@ class SportField(EnumField):
         37 : 'strokes',
     }
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, name='sport', *args, **kwargs)
+        super(SportField, self).__init__(name='sport', *args, **kwargs)
 
     @classmethod
     def units(cls, sport_index):
@@ -762,7 +777,7 @@ class SportField(EnumField):
 class SubSportField(EnumField):
     enum = SubSport
     def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='sub_sport', *args, **kwargs)
+        super(SubSportField, self).__init__(name='sub_sport', *args, **kwargs)
 
 
 class PosField(Field):
@@ -788,28 +803,18 @@ class WorkField(Field):
 
 
 class AltitudeField(DistanceMetersField):
-    def __init__(self, name='altitude', *args, **kwargs):
-        DistanceMetersField.__init__(self, name, scale=500.0, *args, **kwargs)
+    def __init__(self, name='altitude'):
+        super(AltitudeField, self).__init__(name, Distance.from_cm, Distance.meters_or_feet, 5.0)
 
 
-class EnhancedAltitudeField(Field):
-    _units = [ 'm', 'ft' ]
-    _conversion_factor = [ 6993, 2131 ]
+class EnhancedAltitudeField(DistanceMetersField):
+    def __init__(self, name='altitude'):
+        super(EnhancedAltitudeField, self).__init__(name, Distance.from_meters, Distance.meters_or_feet, 6993.0)
 
 
-class ClimbField(DistanceMetersField):
-    def __init__(self, *args, **kwargs):
-        DistanceMetersField.__init__(self, scale=1000.0, *args, **kwargs)
-
-
-class ClimbMetersField(DistanceMetersField):
-    _units = [ 'm', 'ft' ]
-
-
-class TemperatureField(Field):
-    _units = [ 'C', 'F' ]
-    _conversion_factor = [ 1, 0.55555555556 ]
-    _conversion_constant = [ 0, 32 ]
+class TemperatureField(ObjectField):
+    def __init__(self, name):
+        super(TemperatureField, self).__init__(name, Temperature.from_celsius, Temperature.c_or_f)
 
 
 class TrainingeffectField(Field):
