@@ -292,6 +292,10 @@ class Manufacturer(enum.Enum):
     Dabuziduo                       = 292
     JetBlack                        = 293
     Coros                           = 294
+    virtugo                         = 295
+    velosense                       = 296
+    cycligentinc                    = 297
+    trailforks                      = 298
     actigraphcorp                   = 5759
     #
     # Privates values
@@ -457,7 +461,28 @@ class GarminProduct(enum.Enum):
     Forerunner935                   = 2691
     Fenix5_Sapphire                 = 2697
     VivoActive_3                    = 2700
+    Edge_1030                       = 2713
     VivoMove_HR                     = 2772
+    Approach_z80                    = 2806
+    VivoSmart3_Apac                 = 2831
+    VivoSport_Apac                  = 2832
+    Descent                         = 2859
+    fr645                           = 2886
+    fr645m                          = 2888
+    Fenix5s_Plus                    = 2900
+    Edge_130                        = 2909
+    Vivosmart_4                     = 2927
+    Approach_x10                    = 2962
+    VivoActive_3m_w                 = 2988
+    Edge_Explore                    = 3011
+    GPSMap66                        = 3028
+    Approach_S10                    = 3049
+    VivoActive_3M_l                 = 3066
+    Approach_g80                    = 3085
+    Fenix5_plus                     = 3110
+    Fenix5x_plus                    = 3111
+    Edge_520_plus                   = 3112
+    HRN_Dual                        = 3299
     FootPod_SDM4                    = 10007
     edge_remote                     = 10014
     training_center                 = 20119
