@@ -785,6 +785,16 @@ class PosField(Field):
     _conversion_factor = [ 11930326.891, 11930326.891 ]
 
 
+class LongitudeField(ObjectField):
+    def __init__(self, name):
+        super(LongitudeField, self).__init__(name, Longitude.from_semicircles, Longitude.to_degrees)
+
+
+class LatiitudeField(ObjectField):
+    def __init__(self, name):
+        super(LatiitudeField, self).__init__(name, Latitude.from_semicircles, Latitude.to_degrees)
+
+
 class CadenceField(Field):
     _units = [ 'rpm', 'rpm' ]
 

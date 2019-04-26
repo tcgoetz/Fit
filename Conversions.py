@@ -76,7 +76,7 @@ def speed_to_pace(speed):
         return (datetime.datetime.min +  datetime.timedelta(0, 3600 / speed)).time()
 
 
-class Temperature():
+class Temperature(object):
     def __init__(self, celsius):
         self.celsius = celsius
 
@@ -105,7 +105,7 @@ class Temperature():
 #####
 
 
-class Weight():
+class Weight(object):
     def __init__(self, kgs):
         self.kgs = kgs
 
@@ -142,7 +142,7 @@ class Weight():
         return self.__repr__()
 
 
-class Distance():
+class Distance(object):
     def __init__(self, meters):
         self.meters = meters
 
@@ -211,7 +211,7 @@ class Distance():
         return self.__repr__()
 
 
-class Speed():
+class Speed(object):
     def __init__(self, meters_per_sec):
         self.meters_per_sec = meters_per_sec
 
@@ -234,8 +234,8 @@ class Speed():
         return (self.meters_per_sec * 2.236936)
 
     @classmethod
-    def kph_or_mph(cls, spped, metric):
-        return spped.kph_or_mph(metric)
+    def kph_or_mph(cls, speed, metric):
+        return speed.kph_or_mph(metric)
 
     def kph_or_mph(self, metric):
         if self.meters_per_sec is not None:
@@ -248,3 +248,25 @@ class Speed():
         return self.__repr__()
 
 
+class Position(object):
+    def __init__(self, semicircles):
+        self.semicircles = semicircles
+
+    @classmethod
+    def from_semicircles(cls, semicircles):
+        return cls(semicircles)
+
+    @classmethod
+    def to_degrees(cls, position, metric):
+        return position.to_degrees(metric)
+
+    def to_degrees(self, metric):
+        return (self.semicircles  / 11930326.891)
+
+
+class Latitude(Position):
+    pass
+
+
+class Longitude(Position):
+    pass
