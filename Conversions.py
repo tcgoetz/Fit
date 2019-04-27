@@ -55,6 +55,9 @@ def celsius_to_fahrenheit(celsius):
     if celsius is not None:
         return (celsius * 1.8) + 32.0
 
+def date_to_dt(date):
+    return datetime.datetime.combine(date, datetime.time.min)
+
 def dt_to_epoch_ms(dt):
     return int((dt - datetime.datetime.fromtimestamp(0)).total_seconds() * 1000)
 
