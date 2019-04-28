@@ -306,7 +306,16 @@ class ProductField(Field):
     _manufacturer_to_product_fields = {
         Manufacturer.Garmin                 : GarminProductField,
         Manufacturer.Garmin_local_0         : GarminProductField,
+        Manufacturer.Garmin_local_31533     : GarminProductField,
+        Manufacturer.Garmin_local_42664     : GarminProductField,
+        Manufacturer.Garmin_local_42768     : GarminProductField,
         Manufacturer.Garmin_local_43064     : GarminProductField,
+        Manufacturer.Garmin_local_43168     : GarminProductField,
+        Manufacturer.Garmin_local_43304     : GarminProductField,
+        Manufacturer.Garmin_local_45192     : GarminProductField,
+        Manufacturer.Garmin_local_45528     : GarminProductField,
+        Manufacturer.Garmin_local_45712     : GarminProductField,
+        Manufacturer.Garmin_local_45784     : GarminProductField,
         Manufacturer.Garmin_local_65533     : GarminProductField,
         Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
     }

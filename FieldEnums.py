@@ -301,7 +301,16 @@ class Manufacturer(enum.Enum):
     # Privates values
     #
     Garmin_local_0                  = 0
+    Garmin_local_31533              = 31533
+    Garmin_local_42664              = 42664
+    Garmin_local_42768              = 42768
     Garmin_local_43064              = 43064
+    Garmin_local_43168              = 43168
+    Garmin_local_43304              = 43304
+    Garmin_local_45192              = 45192
+    Garmin_local_45528              = 45528
+    Garmin_local_45712              = 45712
+    Garmin_local_45784              = 45784
     Garmin_local_65533              = 65533
     Unknown                         = 100000
     Microsoft                       = 100001
