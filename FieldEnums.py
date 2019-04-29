@@ -128,7 +128,7 @@ class DisplayPosition(enum.Enum):
     invalid = 255
 
 
-class Manufacturer(enum.Enum):
+class Manufacturer(FieldEnum):
     #
     # Garmin defined values
     #
@@ -316,7 +316,7 @@ class Manufacturer(enum.Enum):
     Microsoft                       = 100001
 
 
-class GarminProduct(enum.Enum):
+class GarminProduct(FieldEnum):
     Bluetooth_Low_Energy_Chipset    = 0
     HRM1                            = 1
     axh01                           = 2
@@ -504,13 +504,33 @@ class GarminProduct(enum.Enum):
     Fenix5_Sapphire_local_8195      = 8195
 
 
-class WahooFitnessProduct(enum.Enum):
+class WahooFitnessProduct(FieldEnum):
     RPM_Sensor = 6
 
 
 class UnknownProduct(UnknownEnumValue):
     def __init__(self, index):
         UnknownEnumValue.__init__(self, 'UnknownProduct', index)
+
+
+def product_enum(manufacturer, product_str):
+    _manufacturer_to_product_enum = {
+        Manufacturer.Garmin                 : GarminProductField,
+        Manufacturer.Garmin_local_0         : GarminProductField,
+        Manufacturer.Garmin_local_31533     : GarminProductField,
+        Manufacturer.Garmin_local_42664     : GarminProductField,
+        Manufacturer.Garmin_local_42768     : GarminProductField,
+        Manufacturer.Garmin_local_43064     : GarminProductField,
+        Manufacturer.Garmin_local_43168     : GarminProductField,
+        Manufacturer.Garmin_local_43304     : GarminProductField,
+        Manufacturer.Garmin_local_45192     : GarminProductField,
+        Manufacturer.Garmin_local_45528     : GarminProductField,
+        Manufacturer.Garmin_local_45712     : GarminProductField,
+        Manufacturer.Garmin_local_45784     : GarminProductField,
+        Manufacturer.Garmin_local_65533     : GarminProductField,
+        Manufacturer.Wahoo_Fitness          : WahooFitnessProduct,
+    }
+    return _manufacturer_to_product_enum[manufacturer].from_string(product_str)
 
 
 class DisplayOrientation(enum.Enum):
