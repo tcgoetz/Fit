@@ -119,12 +119,12 @@ class DataMessage(object):
     def type(self):
         return self.definition_message.message_type
 
-    def to_dict(self):
+    def to_dict(self, ignore_none_values=False):
         fields = {}
         for field_name, field_value in self._fields.iteritems():
             if field_name == 'timestamp_16':
                 fields['timestamp'] = self.timestamp
-            else:
+            elif not ignore_none_values or field_value.value is not None:
                 fields[field_name] = field_value.value
         return fields
 
