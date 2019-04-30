@@ -315,7 +315,10 @@ class ProductField(Field):
         Manufacturer.Garmin_local_45192     : GarminProductField,
         Manufacturer.Garmin_local_45528     : GarminProductField,
         Manufacturer.Garmin_local_45712     : GarminProductField,
+        Manufacturer.Garmin_local_47656     : GarminProductField,
         Manufacturer.Garmin_local_45784     : GarminProductField,
+        Manufacturer.Garmin_local_52416     : GarminProductField,
+        Manufacturer.Garmin_local_61440     : GarminProductField,
         Manufacturer.Garmin_local_65533     : GarminProductField,
         Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
     }

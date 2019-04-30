@@ -302,6 +302,7 @@ class Manufacturer(FieldEnum):
     #
     Garmin_local_0                  = 0
     Garmin_local_31533              = 31533
+    Garmin_local_34213              = 34213
     Garmin_local_42664              = 42664
     Garmin_local_42768              = 42768
     Garmin_local_43064              = 43064
@@ -309,8 +310,11 @@ class Manufacturer(FieldEnum):
     Garmin_local_43304              = 43304
     Garmin_local_45192              = 45192
     Garmin_local_45528              = 45528
+    Garmin_local_47656              = 47656
     Garmin_local_45712              = 45712
     Garmin_local_45784              = 45784
+    Garmin_local_52416              = 52416
+    Garmin_local_61440              = 61440
     Garmin_local_65533              = 65533
     Unknown                         = 100000
     Microsoft                       = 100001
@@ -493,8 +497,10 @@ class GarminProduct(FieldEnum):
     Edge_520_plus                   = 3112
     HRN_Dual                        = 3299
     FootPod_SDM4                    = 10007
+    Accelerometer                   = 17530
     edge_remote                     = 10014
     training_center                 = 20119
+    BTLE_Chipset                    = 24832
     connectiq_simulator             = 65531
     android_antplus_plugin          = 65532
     connect                         = 65534
@@ -515,19 +521,21 @@ class UnknownProduct(UnknownEnumValue):
 
 def product_enum(manufacturer, product_str):
     _manufacturer_to_product_enum = {
-        Manufacturer.Garmin                 : GarminProductField,
-        Manufacturer.Garmin_local_0         : GarminProductField,
-        Manufacturer.Garmin_local_31533     : GarminProductField,
-        Manufacturer.Garmin_local_42664     : GarminProductField,
-        Manufacturer.Garmin_local_42768     : GarminProductField,
-        Manufacturer.Garmin_local_43064     : GarminProductField,
-        Manufacturer.Garmin_local_43168     : GarminProductField,
-        Manufacturer.Garmin_local_43304     : GarminProductField,
-        Manufacturer.Garmin_local_45192     : GarminProductField,
-        Manufacturer.Garmin_local_45528     : GarminProductField,
-        Manufacturer.Garmin_local_45712     : GarminProductField,
-        Manufacturer.Garmin_local_45784     : GarminProductField,
-        Manufacturer.Garmin_local_65533     : GarminProductField,
+        Manufacturer.Garmin                 : GarminProduct,
+        Manufacturer.Garmin_local_0         : GarminProduct,
+        Manufacturer.Garmin_local_31533     : GarminProduct,
+        Manufacturer.Garmin_local_42664     : GarminProduct,
+        Manufacturer.Garmin_local_42768     : GarminProduct,
+        Manufacturer.Garmin_local_43064     : GarminProduct,
+        Manufacturer.Garmin_local_43168     : GarminProduct,
+        Manufacturer.Garmin_local_43304     : GarminProduct,
+        Manufacturer.Garmin_local_45192     : GarminProduct,
+        Manufacturer.Garmin_local_47656     : GarminProduct,
+        Manufacturer.Garmin_local_45784     : GarminProduct,
+        Manufacturer.Garmin_local_45712     : GarminProduct,
+        Manufacturer.Garmin_local_52416     : GarminProduct,
+        Manufacturer.Garmin_local_61440     : GarminProduct,
+        Manufacturer.Garmin_local_65533     : GarminProduct,
         Manufacturer.Wahoo_Fitness          : WahooFitnessProduct,
     }
     return _manufacturer_to_product_enum[manufacturer].from_string(product_str)
