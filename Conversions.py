@@ -155,7 +155,7 @@ class Distance(object):
 
     @classmethod
     def from_cm(cls, cm):
-        return cls(cm / 1000.0)
+        return cls(cm / 100.0)
 
     @classmethod
     def from_mm(cls, mm):
