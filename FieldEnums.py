@@ -316,8 +316,6 @@ class Manufacturer(FieldEnum):
     Garmin_local_52416              = 52416
     Garmin_local_61440              = 61440
     Garmin_local_65533              = 65533
-    Unknown                         = 100000
-    Microsoft                       = 100001
 
 
 class GarminProduct(FieldEnum):
@@ -813,11 +811,6 @@ class FileType(enum.Enum):
     unknown_file_type_64 = 64
     manufacturer_range_start = 0xfe
     invalid = 255
-    #
-    # Non Garmin extensions
-    #
-    tcx = 100001
-    gpx = 100002
 
 
 class Event(enum.Enum):
