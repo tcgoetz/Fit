@@ -292,6 +292,9 @@ class GarminProductField(EnumField):
     enum = GarminProduct
 
 
+class ScoscheProductField(EnumField):
+    enum = ScoscheProduct
+
 class WahooFitnessProductField(EnumField):
     enum = WahooFitnessProduct
 
@@ -305,7 +308,11 @@ class ProductField(Field):
 
     _manufacturer_to_product_fields = {
         Manufacturer.Garmin                 : GarminProductField,
+        Manufacturer.Scosche                : ScoscheProductField,
+        Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
         Manufacturer.Garmin_local_0         : GarminProductField,
+        Manufacturer.Garmin_local_14738     : GarminProductField,
+        Manufacturer.Garmin_local_22208     : GarminProductField,
         Manufacturer.Garmin_local_31533     : GarminProductField,
         Manufacturer.Garmin_local_42664     : GarminProductField,
         Manufacturer.Garmin_local_42768     : GarminProductField,
@@ -320,7 +327,6 @@ class ProductField(Field):
         Manufacturer.Garmin_local_52416     : GarminProductField,
         Manufacturer.Garmin_local_61440     : GarminProductField,
         Manufacturer.Garmin_local_65533     : GarminProductField,
-        Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
     }
 
     def dependant_field(self, control_value_list):

@@ -211,7 +211,7 @@ class Manufacturer(FieldEnum):
     lifebeam                        = 80
     Bontrager                       = 81
     wellgo                          = 82
-    scosche                         = 83
+    Scosche                         = 83
     magura                          = 84
     woodway                         = 85
     elite                           = 86
@@ -301,6 +301,8 @@ class Manufacturer(FieldEnum):
     # Privates values
     #
     Garmin_local_0                  = 0
+    Garmin_local_14738              = 14738
+    Garmin_local_22208              = 22208
     Garmin_local_31533              = 31533
     Garmin_local_34213              = 34213
     Garmin_local_42664              = 42664
@@ -376,7 +378,8 @@ class GarminProduct(FieldEnum):
     edge810                         = 1567
     Tempe                           = 1570
     fr910xt_japan                   = 1600
-    GPS                             = 1621
+    GPS_1620                        = 1620
+    GPS_1621                        = 1621
     fr620                           = 1623
     fr220                           = 1632
     fr910xt_korea                   = 1664
@@ -494,10 +497,12 @@ class GarminProduct(FieldEnum):
     Fenix5x_plus                    = 3111
     Edge_520_plus                   = 3112
     HRN_Dual                        = 3299
+    Accelerometer_8194              = 8194
     FootPod_SDM4                    = 10007
     Accelerometer                   = 17530
     edge_remote                     = 10014
     training_center                 = 20119
+    Accelerometer_21909             = 21909
     BTLE_Chipset                    = 24832
     connectiq_simulator             = 65531
     android_antplus_plugin          = 65532
@@ -509,7 +514,11 @@ class GarminProduct(FieldEnum):
 
 
 class WahooFitnessProduct(FieldEnum):
-    RPM_Sensor = 6
+    RPM_Sensor                      = 6
+
+
+class ScoscheProduct(FieldEnum):
+    Rhythm_Plus_Armband_HRM         = 2
 
 
 class UnknownProduct(UnknownEnumValue):
@@ -520,7 +529,11 @@ class UnknownProduct(UnknownEnumValue):
 def product_enum(manufacturer, product_str):
     _manufacturer_to_product_enum = {
         Manufacturer.Garmin                 : GarminProduct,
+        Manufacturer.Scosche                : ScoscheProduct,
+        Manufacturer.Wahoo_Fitness          : WahooFitnessProduct,
         Manufacturer.Garmin_local_0         : GarminProduct,
+        Manufacturer.Garmin_local_14738     : GarminProduct,
+        Manufacturer.Garmin_local_22208     : GarminProduct,
         Manufacturer.Garmin_local_31533     : GarminProduct,
         Manufacturer.Garmin_local_42664     : GarminProduct,
         Manufacturer.Garmin_local_42768     : GarminProduct,
@@ -534,7 +547,6 @@ def product_enum(manufacturer, product_str):
         Manufacturer.Garmin_local_52416     : GarminProduct,
         Manufacturer.Garmin_local_61440     : GarminProduct,
         Manufacturer.Garmin_local_65533     : GarminProduct,
-        Manufacturer.Wahoo_Fitness          : WahooFitnessProduct,
     }
     return _manufacturer_to_product_enum[manufacturer].from_string(product_str)
 
