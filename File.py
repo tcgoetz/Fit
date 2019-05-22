@@ -110,7 +110,7 @@ class File(object):
         return self._data_message_types
 
     def __getitem__(self, name):
-        return self.__dict__.get(name, None)
+        return self.__dict__.get(name)
 
     def __str__(self):
         return "Type: " + repr(self.type())

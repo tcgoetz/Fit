@@ -51,19 +51,19 @@ class DataMessage(object):
         self.convert_fields(message_fields)
         self.convert_dev_fields(fit_file, definition_message, english_units)
 
-        time_created_timestamp_field = self._fields.get('time_created', None)
+        time_created_timestamp_field = self._fields.get('time_created')
         if time_created_timestamp_field:
             self.time_created_timestamp = time_created_timestamp_field.value
             self.track_dates(self.time_created_timestamp)
         else:
             self.time_created_timestamp = None
 
-        timestamp_field = self._fields.get('timestamp', None)
+        timestamp_field = self._fields.get('timestamp')
         if timestamp_field:
             self.track_dates(timestamp_field.value)
             self.timestamp = timestamp_field.value
         else:
-            timestamp_16_field = self._fields.get('timestamp_16', None)
+            timestamp_16_field = self._fields.get('timestamp_16')
             if timestamp_16_field is not None:
                 if timestamp_16_field.value is not None:
                     self.timestamp = self.timestamp16_to_timestamp(timestamp_16_field.value)
@@ -77,7 +77,7 @@ class DataMessage(object):
         DataMessage.last_timestamp = self.timestamp
 
     def control_field_value(self, field, message_fields, control_field_name):
-        control_field = message_fields.get(control_field_name, None)
+        control_field = message_fields.get(control_field_name)
         if control_field is not None:
             return control_field.value
         logger.debug('Missing control field %s for %s in message %s', control_field_name, repr(field), repr(message_fields))
@@ -129,7 +129,7 @@ class DataMessage(object):
         return fields
 
     def __getitem__(self, name):
-        return self._fields.get(name, None)
+        return self._fields.get(name)
 
     def __iter__(self):
         return iter(self._fields)
