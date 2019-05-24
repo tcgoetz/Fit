@@ -238,6 +238,11 @@ class DistanceCentimetersToMetersField(DistanceMetersField):
         super(DistanceCentimetersToMetersField, self).__init__(name, Distance.from_cm, Distance.meters_or_feet)
 
 
+class DistanceMillimetersToMetersField(DistanceMetersField):
+    def __init__(self, name='distance'):
+        super(DistanceMillimetersToMetersField, self).__init__(name, Distance.from_mm, Distance.meters_or_feet)
+
+
 class DistanceMillimetersField(DistanceMetersField):
     def __init__(self, name='distance'):
         super(DistanceMillimetersField, self).__init__(name, Distance.from_mm, Distance.mm_or_inches, 10.0)

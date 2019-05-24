@@ -531,12 +531,12 @@ class DefinitionMessageData(object):
             26 : TimeSField('timestamp_16'),
             27 : HeartRateField('heart_rate'),
             29 : TimeMinField('duration'),
-            31 : DistanceCentimetersToMetersField('ascent'),
-            32 : DistanceCentimetersToMetersField('descent'),
+            31 : DistanceMillimetersToMetersField('ascent'),
+            32 : DistanceMillimetersToMetersField('descent'),
             33 : TimeMinField('moderate_activity_time'),
             34 : TimeMinField('vigorous_activity_time'),
-            35 : DistanceCentimetersToMetersField('cum_ascent'),
-            36 : DistanceCentimetersToMetersField('cum_descent')
+            35 : DistanceMillimetersToMetersField('cum_ascent'),
+            36 : DistanceMillimetersToMetersField('cum_descent')
         },
         MessageType.training_file : {}, # timestamp, serial_number, creation_time, product_ID, session_style
         MessageType.hrv : {
