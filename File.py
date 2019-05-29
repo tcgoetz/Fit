@@ -18,6 +18,9 @@ logger = logging.getLogger(__name__)
 
 
 class File(object):
+
+    name_regex = r'\w+\.(fit|FIT)'
+
     def __init__(self, filename, english_units=False):
         self.filename = filename
         self.english_units = english_units
