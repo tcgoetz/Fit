@@ -144,9 +144,9 @@ class Manufacturer(FieldEnum):
     spark_hk                        = 10
     tanita                          = 11
     echowell                        = 12
-    dynastream_oem                  = 13
+    Dynastream_OEM                  = 13
     nautilus                        = 14
-    dynastream                      = 15
+    Dynastream                      = 15
     timex                           = 16
     metrigear                       = 17
     xelic                           = 18
@@ -447,7 +447,7 @@ class GarminProduct(FieldEnum):
     varia_radar_taillight           = 2225
     varia_radar_display             = 2226
     edge20                          = 2238
-    d2_bravo                        = 2262
+    D2_Bravo                        = 2262
     approach_s20                    = 2266
     varia_remote                    = 2276
     HRM4_Run                        = 2327
@@ -462,12 +462,14 @@ class GarminProduct(FieldEnum):
     fr235                           = 2431
     Fenix3_Chronos                  = 2432
     oregon7xx                       = 2441
-    rino7xx                         = 2444
+    Rino_7xx                        = 2444
     nautix                          = 2496
     Forerunner35                    = 2503
     Edge_820                        = 2530
     Edge_Explore_820                = 2531
     Fenix5s                         = 2544
+    D2_Bravo_Titanium               = 2547
+    Varia_UT800                     = 2567
     Running_Dynamics_Pod            = 2593
     Fenix5X                         = 2604
     VivoFit_Jr                      = 2606
@@ -492,20 +494,21 @@ class GarminProduct(FieldEnum):
     GPSMap66                        = 3028
     Approach_S10                    = 3049
     VivoActive_3M_l                 = 3066
-    Approach_g80                    = 3085
+    Approach_G80                    = 3085
     Fenix5_plus                     = 3110
     Fenix5x_plus                    = 3111
     Edge_520_plus                   = 3112
-    HRN_Dual                        = 3299
+    Approach_S40                    = 3314
+    HRM_Dual                        = 3299
     Accelerometer_8194              = 8194
     FootPod_SDM4                    = 10007
     Accelerometer                   = 17530
     edge_remote                     = 10014
-    training_center                 = 20119
+    Training_Center                 = 20119
     Accelerometer_21909             = 21909
     BTLE_Chipset                    = 24832
-    connectiq_simulator             = 65531
-    android_antplus_plugin          = 65532
+    Connectiq_Simulator             = 65531
+    Android_Antplus_plugin          = 65532
     connect                         = 65534
     #
     # Privates values
@@ -529,6 +532,8 @@ class UnknownProduct(UnknownEnumValue):
 def product_enum(manufacturer, product_str):
     _manufacturer_to_product_enum = {
         Manufacturer.Garmin                 : GarminProduct,
+        Manufacturer.Dynastream             : GarminProduct,
+        Manufacturer.Dynastream_OEM         : GarminProduct,
         Manufacturer.Scosche                : ScoscheProduct,
         Manufacturer.Wahoo_Fitness          : WahooFitnessProduct,
         Manufacturer.Garmin_local_0         : GarminProduct,
@@ -799,30 +804,30 @@ class FileType(enum.Enum):
     #
     # Garmin defined values
     #
-    unknown0 = 0
-    device = 1
-    settings = 2
-    sport_settings = 3
-    activity = 4
-    workout = 5
-    course = 6
-    schedules = 7
-    weight = 9
-    totals = 10
-    goals = 11
-    blood_pressure = 14
-    monitoring_a = 15
-    activity_summary = 20
-    monitoring_daily = 28
-    monitoring_b = 32
-    segment = 34
-    segment_list = 35
-    exd_configuration = 40
-    unknown_file_type_44 = 44
-    unknown_file_type_49 = 49
-    unknown_file_type_64 = 64
-    manufacturer_range_start = 0xfe
-    invalid = 255
+    unknown0                    = 0
+    device                      = 1
+    settings                    = 2
+    sport_settings              = 3
+    activity                    = 4
+    workout                     = 5
+    course                      = 6
+    schedules                   = 7
+    weight                      = 9
+    totals                      = 10
+    goals                       = 11
+    blood_pressure              = 14
+    monitoring_a                = 15
+    activity_summary            = 20
+    monitoring_daily            = 28
+    monitoring_b                = 32
+    segment                     = 34
+    segment_list                = 35
+    exd_configuration           = 40
+    unknown_file_type_44        = 44
+    sleep                       = 49
+    unknown_file_type_64        = 64
+    manufacturer_range_start    = 0xfe
+    invalid                     = 255
 
 
 class Event(enum.Enum):

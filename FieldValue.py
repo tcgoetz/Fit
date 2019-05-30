@@ -34,11 +34,11 @@ class FieldValue(object):
         return self.__dict__[key]
 
     def __str__(self):
-        field_string = self.field.name + "(" + str(self.value)
+        field_string = self.field.name + "(" + repr(self.value)
         if self.units():
             field_string += " " + str(self.units())
         if self.value != self.orig:
-            field_string += " (" + str(self.orig) + ")"
+            field_string += " (" + repr(self.orig) + ")"
         if self.is_invalid():
             field_string += " [invalid]"
         field_string += ")"

@@ -63,8 +63,8 @@ class MessageType(enum.Enum):
     course_point                    = 32
     totals                          = 33
     activity                        = 34
-    # 36 not known
     software                        = 35
+    # 36 not known
     file_capabilities               = 37
     mesg_capabilities               = 38
     field_capabilities              = 39
@@ -159,7 +159,9 @@ class MessageType(enum.Enum):
     exercise_title                  = 264
     # 265-267 not known
     dive_summary                    = 268
-    unknown_273                     = 273
+    start                           = 273   # this is a guess
+    data                            = 274   # this is a guess
+    end                             = 276   # this is a guess
     unknown_284                     = 284
     #
     #

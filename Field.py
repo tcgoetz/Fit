@@ -313,6 +313,8 @@ class ProductField(Field):
 
     _manufacturer_to_product_fields = {
         Manufacturer.Garmin                 : GarminProductField,
+        Manufacturer.Dynastream             : GarminProductField,
+        Manufacturer.Dynastream_OEM         : GarminProductField,
         Manufacturer.Scosche                : ScoscheProductField,
         Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
         Manufacturer.Garmin_local_0         : GarminProductField,

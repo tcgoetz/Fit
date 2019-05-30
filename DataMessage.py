@@ -149,3 +149,6 @@ class DataMessage(object):
     def __str__(self):
         fields_str = "".join(["%s, " % value for value in self._fields.values()])
         return "%s: %s: %s" % (self.__class__.__name__, repr(self.type()), fields_str)
+
+    def __repr__(self):
+        return "%s: %s: %s" % (self.__class__.__name__, repr(self.type()), repr(self._fields))

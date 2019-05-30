@@ -642,9 +642,6 @@ class DefinitionMessageData(object):
         MessageType.unknown_233 : {
             2 : BytesField('unknown_2'),
         },
-        MessageType.dev_data_id : {
-            2 : BytesField('unknown_2'),
-        },
         MessageType.unknown_241 : {
             0 : TimestampField('ts_0', True)
         },
@@ -653,9 +650,16 @@ class DefinitionMessageData(object):
         MessageType.dive_alarm : {},
         MessageType.exercise_title : {},
         MessageType.dive_summary : {},
-        MessageType.unknown_273 : {
+        # Names and types for this message are guesses
+        MessageType.start : {
             2 : TimestampField('local_timestamp', False),
         },
+        # Names and types for this message are guesses
+        MessageType.data : {
+            0 : BytesField('data'),
+        },
+        # Names and types for this message are guesses
+        MessageType.end : {},
         MessageType.unknown_284 : {
             1 : TimestampField('ts_1', True),
         },
