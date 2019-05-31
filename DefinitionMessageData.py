@@ -27,9 +27,9 @@ class DefinitionMessageData(object):
         MessageType.device_settings : {
             0 : Field('active_time_zone'),
             1 : Field('utc_offset'),
-            2 : Field('time_offset'),
+            2 : TimeSField('time_offset'),
             4 : TimeModeField(),
-            5 : Field('time_zone_offset'),
+            5 : TimeHourField('time_zone_offset'),
             12 : BacklightModeField(),
             35 : SwitchField('switch_35'),
             36 : BoolField('activity_tracker_enabled'),
@@ -170,6 +170,9 @@ class DefinitionMessageData(object):
         MessageType.unknown_13 : {
             5 : PosField('position_5'),
             6 : PosField('position_6'),
+        },
+        MessageType.unknown_14 : {
+            10 : Field('sequence'),
         },
         MessageType.goal : {
             0 : SportField(),
@@ -668,8 +671,13 @@ class DefinitionMessageData(object):
         MessageType.sensor : {
             0 : Field('sensor_id'),
             2 : StringField('name'),
+            10 : DistanceMillimetersToMetersField('manual_wheelsize'),
+            11 : NumberField('calibration_factor', 10.0),
+            21 : DistanceMillimetersToMetersField('auto_wheelsize'),
             32 : ProductField(),
             33 : ManufacturerField(),
+            34 : VersionField('software_version'),
+            50 : BytesField('ble_id')
         },
         MessageType.segment_id : {},
         MessageType.segment_leaderboard_entry : {},

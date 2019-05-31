@@ -44,6 +44,7 @@ class MessageType(enum.Enum):
     sport                           = 12
     # 13,14 are unknown
     unknown_13                      = 13
+    unknown_14                      = 14
     goal                            = 15
     # 16,17 are unknown
     session                         = 18

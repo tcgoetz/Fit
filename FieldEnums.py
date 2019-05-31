@@ -379,6 +379,7 @@ class GarminProduct(FieldEnum):
     edge810                         = 1567
     Tempe                           = 1570
     fr910xt_japan                   = 1600
+    GPS_1619                        = 1619
     GPS_1620                        = 1620
     GPS_1621                        = 1621
     fr620                           = 1623
@@ -489,6 +490,7 @@ class GarminProduct(FieldEnum):
     Fenix5s_Plus                    = 2900
     Edge_130                        = 2909
     Vivosmart_4                     = 2927
+    GPS_2957                        = 2957
     Approach_x10                    = 2962
     VivoActive_3m_w                 = 2988
     Edge_Explore                    = 3011
@@ -502,6 +504,7 @@ class GarminProduct(FieldEnum):
     Approach_S40                    = 3314
     HRM_Dual                        = 3299
     Accelerometer_8194              = 8194
+    Accelerometer_8195              = 8195
     FootPod_SDM4                    = 10007
     Accelerometer                   = 17530
     edge_remote                     = 10014
@@ -511,10 +514,6 @@ class GarminProduct(FieldEnum):
     Connectiq_Simulator             = 65531
     Android_Antplus_plugin          = 65532
     connect                         = 65534
-    #
-    # Privates values
-    #
-    Fenix5_Sapphire_local_8195      = 8195
 
 
 class WahooFitnessProduct(FieldEnum):
@@ -627,13 +626,13 @@ class AntplusDeviceType(enum.Enum):
     bike_speed                  = 123
     stride_speed_distance       = 124
 
+
 class LocalDeviceType(enum.Enum):
     gps                             = 0
     accelerometer                   = 3
     barometer                       = 4
     bluetooth_low_energy_chipset    = 8
     wrist_heart_rate                = 10
-
 
 
 class UnknownDeviceType(UnknownEnumValue):

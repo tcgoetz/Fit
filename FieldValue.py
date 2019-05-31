@@ -13,9 +13,7 @@ class FieldValue(object):
         self.__dict__.update(kwargs)
 
     def is_invalid(self):
-        if hasattr(self.orig, 'is_invalid'):
-            return self.orig.is_invalid()
-        return (self.orig == self.invalid)
+        return self.field.is_invalid(self.orig, self.invalid)
 
     def subfield_names(self):
         return self._subfield_names

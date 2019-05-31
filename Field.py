@@ -44,18 +44,28 @@ class Field(object):
     def sub_field(self, name):
         return _sub_field[name]
 
+    def invalid_single(self, value, invalid):
+        return (value == invalid)
+
+    def invalid_many(self, values, invalid):
+        for value in values:
+            if self.invalid_single(value, invalid):
+                return True
+        return False
+
+    def is_invalid(self, value, invalid):
+        if isinstance(value, list):
+            return self.invalid_many(value, invalid)
+        return self.invalid_single(value, invalid)
+
     def convert_single(self, value, invalid):
         if value != invalid:
             return (value / self._conversion_factor[self.measurement_system.value]) + self._conversion_constant[self.measurement_system.value]
 
     def _convert_many(self, _convert_single, value, invalid):
         if isinstance(value, list):
-            converted_value = []
-            for index, sub_value in enumerate(value):
-                converted_value.append(_convert_single(value[index], invalid))
-        else:
-            converted_value = _convert_single(value, invalid)
-        return converted_value
+            return [_convert_single(sub_value, invalid) for sub_value in value]
+        return _convert_single(value, invalid)
 
     def convert_many(self, value, invalid):
         return self._convert_many(self.convert_single, value, invalid)
@@ -103,6 +113,9 @@ class ObjectField(Field):
         self.obj_func = obj_func
         self.output_func = output_func
         self.scale = scale
+
+    def invalid_single(self, value, invalid):
+        return value.is_invalid()
 
     def convert_single(self, value, invalid):
         return self.output_func(value, self.measurement_system)
@@ -172,7 +185,7 @@ class PercentField(Field):
     _units = [ '%', '%' ]
 
     def __init__(self, name, scale=1.0, *args, **kwargs):
-        self. _conversion_factor = [ 100.0 * scale, 100.0 * scale ]
+        self._conversion_factor = [ 100.0 * scale, 100.0 * scale ]
         Field.__init__(self, name, *args, **kwargs)
 
 
@@ -181,18 +194,26 @@ class BytePercentField(Field):
     _conversion_factor = [ 2.0, 2.0 ]
 
 
+class NumberField(Field):
+    def __init__(self, name, scale=1.0, *args, **kwargs):
+        self._conversion_factor = [ scale, scale ]
+        super(NumberField, self).__init__(name, *args, **kwargs)
+
+
 class StringField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
+    def invalid_single(self, value, invalid):
+        return (value < 0) or (value > 127)
+
     def convert_many(self, value, invalid):
         if isinstance(value, list):
             converted_value = ""
-            for character in value:
-                if character != 0:
-                    converted_value += chr(character)
-                else:
+            for aschii_index in value:
+                if aschii_index == 0:
                     break
+                converted_value += chr(aschii_index)
         else:
             converted_value = str(value)
         return converted_value.strip()
@@ -569,11 +590,17 @@ class TimeSField(Field):
     def convert_single(self, value, invalid):
         return value
 
+class TimeHourField(TimeMsField):
+    def __init__(self, name='time', scale=1.0):
+        super(TimeHourField, self).__init__(name, scale)
+
+    def convert_single(self, value, invalid):
+        if value != invalid:
+            return hour_to_dt_time(value / self._conversion_factor)
 
 class TimeMinField(TimeMsField):
-    def __init__(self, name='time_min', scale=1.0):
-        self._conversion_factor = scale
-        Field.__init__(self, name)
+    def __init__(self, name='time', scale=1.0):
+        super(TimeMinField, self).__init__(name, scale)
 
     def convert_single(self, value, invalid):
         if value != invalid:
