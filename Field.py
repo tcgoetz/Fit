@@ -10,13 +10,14 @@ from FieldEnums import *
 from FieldValue import FieldValue
 from FieldDefinition import FieldDefinition
 from Conversions import *
+from Distance import *
+from Position import *
+from Temperature import *
+from Speed import *
+from Weight import *
 
 
 class Field(object):
-    attr_units_type_metric = 0
-    attr_units_type_english = 1
-    attr_units_type_default = attr_units_type_metric
-
     known_field = True
     _units = [ None, None ]
     _conversion_factor = [ 1, 1 ]
@@ -31,13 +32,13 @@ class Field(object):
         if not name:
             self.name = self.type
         self._subfield = {}
-        self.units_type = self.attr_units_type_default
+        self.measurement_system = DisplayMeasure.metric
 
     def name(self):
         return self._name
 
     def units(self, value):
-        if self._units[self.units_type]:
+        if self._units[self.measurement_system.value]:
             return self.convert_many_units(value, None)
 
     def sub_field(self, name):
@@ -45,7 +46,7 @@ class Field(object):
 
     def convert_single(self, value, invalid):
         if value != invalid:
-            return (value / self._conversion_factor[self.units_type]) + self._conversion_constant[self.units_type]
+            return (value / self._conversion_factor[self.measurement_system.value]) + self._conversion_constant[self.measurement_system.value]
 
     def _convert_many(self, _convert_single, value, invalid):
         if isinstance(value, list):
@@ -60,17 +61,18 @@ class Field(object):
         return self._convert_many(self.convert_single, value, invalid)
 
     def convert_single_units(self, value, invalid):
-        return self._units[self.units_type]
+        return self._units[self.measurement_system.value]
 
     def convert_many_units(self, value, invalid):
         return self._convert_many(self.convert_single_units, value, invalid)
 
-    def convert(self, value, invalid, english_units=False):
-        if english_units:
-            self.units_type = Field.attr_units_type_english
-        else:
-            self.units_type = Field.attr_units_type_metric
+    def convert(self, value, invalid, measurement_system=DisplayMeasure.metric):
+        self.measurement_system = measurement_system
         return FieldValue(self, invalid=invalid, value=self.convert_many(value, invalid), orig=value)
+
+    def reconvert(self, value, invalid, measurement_system=DisplayMeasure.metric):
+        self.measurement_system = measurement_system
+        return (self.convert_many(value, invalid), value)
 
     def __repr__(self):
         return self.__class__.__name__ + '(' + self.name + ')'
@@ -96,22 +98,25 @@ class DevField(Field):
 
 
 class ObjectField(Field):
-    def __init__(self, name, obj_func, output_func):
+    def __init__(self, name, obj_func, output_func, scale=1.0):
         super(ObjectField, self).__init__(name)
         self.obj_func = obj_func
         self.output_func = output_func
+        self.scale = scale
 
     def convert_single(self, value, invalid):
         if value != invalid:
-            return self.output_func(value, self.units_type == Field.attr_units_type_metric)
+            return self.output_func(value, self.measurement_system)
 
-    def convert(self, value, invalid, english_units=False):
-        if english_units:
-            self.units_type = Field.attr_units_type_english
-        else:
-            self.units_type = Field.attr_units_type_metric
-        value_obj = self.obj_func(value)
+    def convert(self, value, invalid, measurement_system=DisplayMeasure.metric):
+        self.measurement_system = measurement_system
+        value_obj = self.obj_func(value / self.scale, invalid)
         return FieldValue(self, invalid=invalid, value=self.convert_many(value_obj, invalid), orig=value_obj)
+
+    def reconvert(self, value, invalid, measurement_system=DisplayMeasure.metric):
+        self.measurement_system = measurement_system
+        value_obj = self.obj_func(value / self.scale, invalid)
+        return (self.convert_many(value_obj, invalid), value_obj)
 
 
 #
@@ -211,16 +216,7 @@ class BytesField(Field):
 
 class DistanceMetersField(ObjectField):
     def __init__(self, name, obj_func=Distance.from_meters, output_func=Distance.meters_or_feet, scale=1.0):
-        super(DistanceMetersField, self).__init__(name, obj_func, output_func)
-        self._conversion_factor = scale
-
-    def convert(self, value, invalid, english_units=False):
-        if english_units:
-            self.units_type = Field.attr_units_type_english
-        else:
-            self.units_type = Field.attr_units_type_metric
-        value_obj = self.obj_func(value / self._conversion_factor)
-        return FieldValue(self, invalid=invalid, value=self.convert_many(value_obj, invalid), orig=value_obj)
+        super(DistanceMetersField, self).__init__(name, obj_func, output_func, scale)
 
 
 class EnhancedDistanceMetersField(DistanceMetersField):
@@ -552,7 +548,7 @@ class TimestampField(Field):
 
 
 class TimeMsField(Field):
-    def __init__(self, name='time_ms', scale=1.0):
+    def __init__(self, name='time', scale=1.0):
         self._conversion_factor = scale
         Field.__init__(self, name)
 
@@ -722,7 +718,7 @@ class VersionField(Field):
 
     def convert_single(self, value, invalid):
         if value != invalid:
-            return '{0:2.2f}'.format(value / self._conversion_factor[self.units_type])
+            return '{0:2.2f}'.format(value / self._conversion_factor[self.measurement_system.value])
 
 
 class EventField(EnumField):
@@ -831,6 +827,8 @@ class FractionalCadenceField(Field):
 
 class PowerField(Field):
     _units = [ 'watts', 'watts' ]
+    def __init__(self, name='power'):
+        super(PowerField, self).__init__(name)
 
 
 class WorkField(Field):
@@ -854,3 +852,35 @@ class TemperatureField(ObjectField):
 
 class TrainingeffectField(Field):
     _conversion_factor = [ 10.0, 10.0 ]
+
+
+
+class PersonalRecordTypeField(EnumField):
+    enum = PersonalRecordType
+    def __init__(self):
+        EnumField.__init__(self, 'pr_type')
+
+
+class PersonalRecord(Field):
+    dependant_field_control_fields = ['pr_type']
+
+    _pr_type_to_record_fields = {
+        PersonalRecordType.speed        : TimeMsField,
+        PersonalRecordType.distance     : DistanceCentimetersToMetersField,
+        PersonalRecordType.elevation    : AltitudeField,
+        PersonalRecordType.power        : PowerField
+    }
+
+    def __init__(self, *args, **kwargs):
+        super(PersonalRecord, self).__init__(name='personal_record', *args, **kwargs)
+
+    def dependant_field(self, control_value_list):
+        pr_type = control_value_list[0]
+        if pr_type is not None:
+            try:
+                _dependant_field = self._pr_type_to_record_fields[pr_type]
+            except:
+                _dependant_field = UnknownField
+        else:
+            _dependant_field = Field
+        return _dependant_field()

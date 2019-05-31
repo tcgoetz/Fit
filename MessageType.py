@@ -90,6 +90,7 @@ class MessageType(enum.Enum):
     battery                         = 104
     pad                             = 105
     slave_device                    = 106
+    personal_record                 = 114
     # 107-126 not known
     connectivity                    = 127
     weather_conditions              = 128

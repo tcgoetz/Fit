@@ -13,6 +13,7 @@ from Field import Field
 from DataField import DataField
 from DevDataField import DevDataField
 from FitExceptions import *
+from FieldEnums import *
 
 
 logger = logging.getLogger(__name__)
@@ -24,15 +25,14 @@ class DataMessage(object):
     last_timestamp = None
     last_absolute_timestamp = None
 
-    def __init__(self, definition_message, fit_file, english_units=False):
+    def __init__(self, definition_message, fit_file, measurement_system):
         self.definition_message = definition_message
-
         self._fields = {}
         self.file_size = 0
 
         message_fields = {}
         for index in xrange(definition_message.fields):
-            data_field = DataField(fit_file, definition_message, definition_message.field_definitions[index], english_units)
+            data_field = DataField(fit_file, definition_message, definition_message.field_definitions[index], measurement_system)
             self.file_size += data_field.file_size
 
             # expand subfields?
@@ -48,8 +48,8 @@ class DataMessage(object):
                         message_fields[subfield_formal_name] = subfield_value
             else:
                 message_fields[data_field._field_name()] = data_field._field_value()
-        self.convert_fields(message_fields)
-        self.convert_dev_fields(fit_file, definition_message, english_units)
+        self.convert_fields(message_fields, measurement_system)
+        self.convert_dev_fields(fit_file, definition_message, measurement_system)
 
         time_created_timestamp_field = self._fields.get('time_created')
         if time_created_timestamp_field:
@@ -82,20 +82,20 @@ class DataMessage(object):
             return control_field.value
         logger.debug('Missing control field %s for %s in message %s', control_field_name, repr(field), repr(message_fields))
 
-    def convert_fields(self, message_fields):
+    def convert_fields(self, message_fields, measurement_system):
         for field_value in message_fields.values():
             field = field_value.field
             dependant_field_func = getattr(field, 'dependant_field', None)
             if dependant_field_func:
                 control_values = [self.control_field_value(field, message_fields, control_field) for control_field in field.dependant_field_control_fields]
                 field_value.field = dependant_field_func(control_values)
-                field_value.reconvert()
+                field_value.reconvert(measurement_system)
             self._fields[field_value.field.name] = field_value
 
-    def convert_dev_fields(self, fit_file, definition_message, english_units):
+    def convert_dev_fields(self, fit_file, definition_message, measurement_system):
         if definition_message.has_dev_fields:
             for index in xrange(definition_message.dev_fields):
-                data_field = DevDataField(fit_file, definition_message, definition_message.dev_field_definitions[index], english_units)
+                data_field = DevDataField(fit_file, definition_message, definition_message.dev_field_definitions[index], measurement_system)
                 self.file_size += data_field.file_size
                 field_value = data_field._field_value()
                 self._fields[field_value.field.name] = field_value

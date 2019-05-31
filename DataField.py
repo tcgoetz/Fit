@@ -7,21 +7,22 @@
 import collections
 
 from Data import *
+from FieldEnums import *
 
 
 class DataField(Data):
 
-    def __init__(self, file, definition_message, field_definition, english_units=False):
+    def __init__(self, file, definition_message, field_definition, measurement_system):
         self.field_definition = field_definition
-        self.english_units = english_units
+        self.measurement_system = measurement_system
         self.field = definition_message.field(field_definition.field_definition_number)
         type = field_definition.type_string()
         count = field_definition.type_count()
         schema = Schema(self.field.name, collections.OrderedDict( [ (self.field.name, [type, count, '%d']) ] ))
         super(DataField, self).__init__(file, schema, None, definition_message.endian)
 
-    def convert(self, english_units=False):
-        self.value_obj = self.field.convert(self.__dict__[self.field.name], self.field_definition.invalid(), self.english_units)
+    def convert(self):
+        self.value_obj = self.field.convert(self.__dict__[self.field.name], self.field_definition.invalid(), self.measurement_system)
 
     def _field_name(self):
         return self.value_obj.field.name

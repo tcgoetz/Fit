@@ -380,7 +380,7 @@ class DefinitionMessageData(object):
             4 : Field('cadence'),
             5 : DistanceCentimetersToKmsField('distance'),
             6 : SpeedMpsField('speed'),
-            7 : PowerField('power'),
+            7 : PowerField(),
             8 : Field('compressed_speed_distance'),
             9 : PercentField('grade'),
             10 : Field('resistance'),
@@ -511,7 +511,8 @@ class DefinitionMessageData(object):
         MessageType.field_capabilities : {},
         MessageType.file_creator : {
             0 : VersionField('software_version'),
-            1 : VersionField('hardware_version')
+            1 : VersionField('hardware_version'),
+            2 : BytesField('data')
         },
         MessageType.blood_pressure : {},
         MessageType.speed_zone : {},
@@ -559,6 +560,14 @@ class DefinitionMessageData(object):
         },
         MessageType.pad : {},
         MessageType.slave_device : {},
+        MessageType.personal_record : {
+            0 : PersonalRecordTypeField(),
+            1 : SportField(),
+            2 : DistanceCentimetersToMetersField('record_distance'),
+            3 : DistanceCentimetersToMetersField('record_distance2'),
+            4 : DistanceCentimetersToMetersField('actual_distance'),
+            5 : PersonalRecord()
+        },
         MessageType.connectivity : {},
         MessageType.weather_conditions : {},
         MessageType.weather_alert : {},

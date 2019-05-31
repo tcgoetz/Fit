@@ -819,6 +819,7 @@ class FileType(enum.Enum):
     monitoring_a                = 15
     activity_summary            = 20
     monitoring_daily            = 28
+    records                     = 29
     monitoring_b                = 32
     segment                     = 34
     segment_list                = 35
@@ -1016,4 +1017,10 @@ class SubSport(enum.Enum):
     obstacle                = 59
     all                     = 254
 
+
+class PersonalRecordType(enum.Enum):
+    speed       = 0
+    distance    = 1
+    elevation   = 2
+    power       = 3
 

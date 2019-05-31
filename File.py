@@ -21,9 +21,9 @@ class File(object):
 
     name_regex = r'\w+\.(fit|FIT)'
 
-    def __init__(self, filename, english_units=False):
+    def __init__(self, filename, measurement_system=False):
         self.filename = filename
-        self.english_units = english_units
+        self.measurement_system = measurement_system
 
         self.last_date = None
         self.last_day = None
@@ -61,7 +61,7 @@ class File(object):
                 self._definition_messages[local_message_num] = definition_message
             else:
                 definition_message = self._definition_messages[local_message_num]
-                data_message = DataMessage(definition_message, self.file, self.english_units)
+                data_message = DataMessage(definition_message, self.file, self.measurement_system)
                 logger.debug("  Data [%d]: %s", local_message_num, str(data_message))
 
                 data_consumed += data_message.file_size
@@ -85,7 +85,7 @@ class File(object):
                     self.__dict__[data_message_type] = [ data_message ]
                     self._data_message_types.append(data_message_type)
 
-            logger.debug("Record %d: consumed %d of %s %r", self.record_count, data_consumed, self.data_size, self.english_units)
+            logger.debug("Record %d: consumed %d of %s %r", self.record_count, data_consumed, self.data_size, self.measurement_system)
         logger.debug("File %s: %s -> %s", self.filename, self.time_created_timestamp, self.last_message_timestamp)
 
     def file_id(self):
