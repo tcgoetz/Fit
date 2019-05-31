@@ -157,7 +157,10 @@ class DefinitionMessageData(object):
             1 : HeartRateField('high_bpm'),
             2 : StringField('name'),
         },
-        MessageType.power_zone : {},
+        MessageType.power_zone : {
+            1 : PowerField('high_value'),
+            2 : StringField('name'),
+        },
         MessageType.met_zone : {},
         MessageType.sport : {
             0 : SportField(),
