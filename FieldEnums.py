@@ -318,6 +318,7 @@ class Manufacturer(FieldEnum):
     Garmin_local_52416              = 52416
     Garmin_local_61440              = 61440
     Garmin_local_65533              = 65533
+    invalid                         = 65535
 
 
 class GarminProduct(FieldEnum):
@@ -552,6 +553,7 @@ def product_enum(manufacturer, product_str):
         Manufacturer.Garmin_local_52416     : GarminProduct,
         Manufacturer.Garmin_local_61440     : GarminProduct,
         Manufacturer.Garmin_local_65533     : GarminProduct,
+        Manufacturer.invalid                : GarminProduct,
     }
     return _manufacturer_to_product_enum[manufacturer].from_string(product_str)
 

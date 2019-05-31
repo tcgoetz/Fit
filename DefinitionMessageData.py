@@ -599,7 +599,13 @@ class DefinitionMessageData(object):
             35 : DistanceMillimetersToMetersField('cum_ascent'),
             36 : DistanceMillimetersToMetersField('cum_descent')
         },
-        MessageType.training_file : {}, # timestamp, serial_number, creation_time, product_ID, session_style
+        MessageType.training_file : {
+            0 : FileField('type'),
+            1 : ManufacturerField(),
+            2 : ProductField(),
+            3 : Field('serial_number'),
+            4 : TimestampField('time_created'),
+        }, # timestamp, serial_number, creation_time, product_ID, session_style
         MessageType.hrv : {
             0 : TimeMsField('time'),
         },

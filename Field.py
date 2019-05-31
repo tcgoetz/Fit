@@ -330,6 +330,7 @@ class ProductField(Field):
         Manufacturer.Garmin_local_52416     : GarminProductField,
         Manufacturer.Garmin_local_61440     : GarminProductField,
         Manufacturer.Garmin_local_65533     : GarminProductField,
+        Manufacturer.invalid                : GarminProductField,
     }
 
     def dependant_field(self, control_value_list):
