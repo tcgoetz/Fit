@@ -105,8 +105,7 @@ class ObjectField(Field):
         self.scale = scale
 
     def convert_single(self, value, invalid):
-        if value != invalid:
-            return self.output_func(value, self.measurement_system)
+        return self.output_func(value, self.measurement_system)
 
     def convert(self, value, invalid, measurement_system=DisplayMeasure.metric):
         self.measurement_system = measurement_system
@@ -139,11 +138,10 @@ class EnumField(Field):
         Field.__init__(self, *args, **kwargs)
 
     def convert_single(self, value, invalid):
-        if value != invalid:
-            try:
-                return self.enum(value)
-            except:
-                return value
+        try:
+            return self.enum(value)
+        except:
+            return value
 
 
 class SwitchField(EnumField):
@@ -289,18 +287,24 @@ class ManufacturerField(EnumField):
         EnumField.__init__(self, name='manufacturer', *args, **kwargs)
 
 
-class GarminProductField(EnumField):
+class ProductField(EnumField):
+    def __init__(self, *args, **kwargs):
+        EnumField.__init__(self, name='product', *args, **kwargs)
+
+
+class GarminProductField(ProductField):
     enum = GarminProduct
 
 
-class ScoscheProductField(EnumField):
+class ScoscheProductField(ProductField):
     enum = ScoscheProduct
 
-class WahooFitnessProductField(EnumField):
+
+class WahooFitnessProductField(ProductField):
     enum = WahooFitnessProduct
 
 
-class UnknownProductField(EnumField):
+class UnknownProductField(ProductField):
     enum = UnknownProduct
 
 
@@ -339,7 +343,7 @@ class ProductField(Field):
             dependant_field_name = self._manufacturer_to_product_fields[manufacturer]
         except:
             dependant_field_name = UnknownProductField
-        return dependant_field_name(name='product')
+        return dependant_field_name()
 
 
 class DisplayOrientationField(EnumField):
@@ -877,14 +881,16 @@ class PersonalRecordField(Field):
 
     def dependant_field(self, control_value_list):
         pr_type = control_value_list[0]
+        field_name = 'unknown_pr'
         if pr_type is not None:
             try:
                 _dependant_field = self._type_to_fields[pr_type]
+                field_name = pr_type.name
             except:
                 _dependant_field = UnknownField
         else:
             _dependant_field = Field
-        return _dependant_field(pr_type.name)
+        return _dependant_field(field_name)
 
 
 class GoalTypeField(EnumField):
@@ -917,14 +923,16 @@ class GoalValueField(Field):
 
     def dependant_field(self, control_value_list):
         goal_type = control_value_list[0]
+        field_name = 'unknown_goal'
         if goal_type is not None:
             try:
                 _dependant_field = self._type_to_fields[goal_type]
+                field_name = goal_type.name
             except:
                 _dependant_field = UnknownField
         else:
             _dependant_field = Field
-        return _dependant_field(goal_type.name)
+        return _dependant_field(field_name)
 
 
 class WatchFaceModeField(EnumField):
