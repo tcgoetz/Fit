@@ -698,13 +698,13 @@ class ActivityTypeIntensityField(Field):
         self._subfield['activity_type'] = ActivityTypeField()
         self._subfield['intensity'] = IntensityField()
 
-    def convert(self, value, invalid, english_units=False):
+    def convert(self, value, invalid, measurement_system):
         activity_type = value & 0x1f
         intensity = value >> 5
         return FieldValue(self, ['activity_type', 'intensity'],
                           invalid=invalid, value=self.convert_many(value, invalid), orig=value,
-                          activity_type=self._subfield['activity_type'].convert(activity_type, 0xff, english_units),
-                          intensity=self._subfield['intensity'].convert(intensity, 0xff, english_units))
+                          activity_type=self._subfield['activity_type'].convert(activity_type, 0xff, measurement_system),
+                          intensity=self._subfield['intensity'].convert(intensity, 0xff, measurement_system))
 
 
 class FileField(EnumField):
