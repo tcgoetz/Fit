@@ -824,7 +824,7 @@ class FileType(enum.Enum):
     segment                     = 34
     segment_list                = 35
     exd_configuration           = 40
-    unknown_file_type_44        = 44
+    metrics                     = 44
     sleep                       = 49
     unknown_file_type_64        = 64
     manufacturer_range_start    = 0xfe
@@ -1019,8 +1019,30 @@ class SubSport(enum.Enum):
 
 
 class PersonalRecordType(enum.Enum):
-    speed       = 0
+    time        = 0
     distance    = 1
     elevation   = 2
     power       = 3
+
+class GoalType(enum.Enum):
+    time            = 0
+    distance        = 1
+    calories        = 2
+    frequency       = 3
+    steps           = 4
+    ascent          = 5
+    active_minutes  = 6
+
+class GoalRecurrence(enum.Enum):
+    off             = 0
+    daily           = 1
+    weekly          = 2
+    monthly         = 3
+    yearly          = 4
+    custom          = 5
+
+class GoalSource(enum.Enum):
+    auto            = 0
+    community       = 1
+    user            = 2
 

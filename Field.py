@@ -861,26 +861,67 @@ class PersonalRecordTypeField(EnumField):
         EnumField.__init__(self, 'pr_type')
 
 
-class PersonalRecord(Field):
+class PersonalRecordField(Field):
     dependant_field_control_fields = ['pr_type']
 
-    _pr_type_to_record_fields = {
-        PersonalRecordType.speed        : TimeMsField,
+    _type_to_fields = {
+        PersonalRecordType.time         : TimeMsField,
         PersonalRecordType.distance     : DistanceCentimetersToMetersField,
         PersonalRecordType.elevation    : AltitudeField,
         PersonalRecordType.power        : PowerField
     }
 
     def __init__(self, *args, **kwargs):
-        super(PersonalRecord, self).__init__(name='personal_record', *args, **kwargs)
+        super(PersonalRecordField, self).__init__(name='personal_record', *args, **kwargs)
 
     def dependant_field(self, control_value_list):
         pr_type = control_value_list[0]
         if pr_type is not None:
             try:
-                _dependant_field = self._pr_type_to_record_fields[pr_type]
+                _dependant_field = self._type_to_fields[pr_type]
             except:
                 _dependant_field = UnknownField
         else:
             _dependant_field = Field
-        return _dependant_field()
+        return _dependant_field(pr_type.name)
+
+
+class GoalTypeField(EnumField):
+    enum = GoalType
+
+
+class GoalRecurrenceField(EnumField):
+    enum = GoalRecurrence
+
+
+class GoalSourceField(EnumField):
+    enum = GoalSource
+
+
+class GoalValueField(Field):
+    dependant_field_control_fields = ['type']
+
+    _type_to_fields = {
+        GoalType.time              : TimeMsField,
+        GoalType.distance          : DistanceCentimetersToMetersField,
+        GoalType.calories          : CaloriesField,
+        GoalType.frequency         : Field,
+        GoalType.steps             : Field,
+        GoalType.ascent            : EnhancedAltitudeField,
+        GoalType.active_minutes    : TimeMinField
+    }
+
+    def __init__(self, *args, **kwargs):
+        super(GoalValueField, self).__init__(name='target_value', *args, **kwargs)
+
+    def dependant_field(self, control_value_list):
+        goal_type = control_value_list[0]
+        if goal_type is not None:
+            try:
+                _dependant_field = self._type_to_fields[goal_type]
+            except:
+                _dependant_field = UnknownField
+        else:
+            _dependant_field = Field
+        return _dependant_field(goal_type.name)
+

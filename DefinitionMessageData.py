@@ -133,7 +133,20 @@ class DefinitionMessageData(object):
             5 : PosField('position_5'),
             6 : PosField('position_6'),
         },
-        MessageType.goal : {},
+        MessageType.goal : {
+            0 : SportField(),
+            1 : SubSportField(),
+            2 : TimestampField('start_time'),
+            3 : TimestampField('end_time'),
+            4 : GoalTypeField('type'),
+            5 : Field('value'),
+            6 : BoolField('repeat'),
+            7 : GoalValueField(),
+            8 : GoalRecurrenceField('recurrence'),
+            9 : Field('recurrence_value'),
+            10 : BoolField('enabled'),
+            11 : GoalSourceField('source')
+        },
         MessageType.session : {
             0 : EventField(),
             1 : EventTypeField(),
@@ -468,7 +481,7 @@ class DefinitionMessageData(object):
             27 : StringField('product_name'),
         },
         MessageType.unknown_24 : {
-            2 : BytesField('unknown_2'),
+            2 : BytesField('data'),
         },
         MessageType.workout : {
             6 : Field('num_valid_steps'),
@@ -493,7 +506,16 @@ class DefinitionMessageData(object):
         },
         MessageType.course : {},
         MessageType.course_point : {},
-        MessageType.totals : {},
+        MessageType.totals : {
+            0 : TimeSField('timer_time'),
+            1 : DistanceMetersField('distance'),
+            2 : CaloriesField('calories'),
+            3 : SportField(),
+            4 : TimeSField('elapsed_time'),
+            5 : Field('sessions'),
+            6 : TimeSField('active_time'),
+            9 : Field('sport_index'),
+        },
         MessageType.activity : {
             0 : TimeMsField('total_timer_time'),
             1 : Field('num_sessions'),
@@ -566,7 +588,7 @@ class DefinitionMessageData(object):
             2 : DistanceCentimetersToMetersField('record_distance'),
             3 : DistanceCentimetersToMetersField('record_distance2'),
             4 : DistanceCentimetersToMetersField('actual_distance'),
-            5 : PersonalRecord()
+            5 : PersonalRecordField()
         },
         MessageType.connectivity : {},
         MessageType.weather_conditions : {},
@@ -651,8 +673,8 @@ class DefinitionMessageData(object):
         MessageType.unknown_233 : {
             2 : BytesField('unknown_2'),
         },
-        MessageType.unknown_241 : {
-            0 : TimestampField('ts_0', True)
+        MessageType.local_time : {
+            0 : TimestampField('local_timestamp', False)
         },
         MessageType.dive_settings : {},
         MessageType.dive_gas : {},

@@ -3,8 +3,8 @@ from FitExceptions import *
 from MessageType import MessageType
 
 import Conversions
-import Distance
-import Position
-import Temperature
-import Speed
-import Weight
+from Distance import Distance
+from Position import Position
+from Temperature import Temperature
+from Speed import Speed
+from Weight import Weight
