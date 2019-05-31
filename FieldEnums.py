@@ -1046,3 +1046,9 @@ class GoalSource(enum.Enum):
     community       = 1
     user            = 2
 
+class WatchFaceMode(enum.Enum):
+    digital         = 0
+    analog          = 1
+    connect_iq      = 2
+    disabled        = 3
+

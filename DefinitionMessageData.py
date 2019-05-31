@@ -111,7 +111,12 @@ class DefinitionMessageData(object):
             47 : DisplayMeasureField('depth_setting'),
             49 : Field('dive_count'),
         },
-        MessageType.hrm_profile : {},
+        MessageType.hrm_profile : {
+            0 : BoolField('enabled'),
+            1 : Field('hrm_ant_id'),
+            2 : BoolField('log_hrv'),
+            3 : Field('hrm_ant_id_trans_type'),
+        },
         MessageType.sdm_profile : {},
         MessageType.bike_profile : {
             0 : StringField('name'),
@@ -148,7 +153,10 @@ class DefinitionMessageData(object):
             5 : HeartRateZoneCalcField(),
             7 : PowerCalcField()
         },
-        MessageType.hr_zone : {},
+        MessageType.hr_zone : {
+            1 : HeartRateField('high_bpm'),
+            2 : StringField('name'),
+        },
         MessageType.power_zone : {},
         MessageType.met_zone : {},
         MessageType.sport : {
@@ -659,7 +667,10 @@ class DefinitionMessageData(object):
         MessageType.segment_point : {},
         MessageType.segment_file : {},
         MessageType.workout_session : {},
-        MessageType.watchface_settings : {},
+        MessageType.watchface_settings : {
+            0 : WatchFaceModeField('mode'),
+            1 : Field('layout'),
+        },
         MessageType.gps_metadata : {},
         MessageType.camera_event : {},
         MessageType.timestamp_correlation : {},

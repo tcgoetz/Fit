@@ -925,3 +925,6 @@ class GoalValueField(Field):
             _dependant_field = Field
         return _dependant_field(goal_type.name)
 
+
+class WatchFaceModeField(EnumField):
+    enum = WatchFaceMode
