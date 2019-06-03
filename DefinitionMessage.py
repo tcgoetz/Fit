@@ -64,4 +64,4 @@ class DefinitionMessage(Data):
         return DefinitionMessageData.reserved_field_indexes.get(field_number, self.message_data.get(field_number, UnknownField(field_number)))
 
     def __str__(self):
-        return ("DefinitionMessage: %s %d %s fields" % (repr(self.message_type), self.fields, self.endian.name))
+        return ("DefinitionMessage: %r %d %s fields" % (self.message_type, self.fields, self.endian.name))

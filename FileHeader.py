@@ -49,7 +49,7 @@ class FileHeader(Data):
         if self.protocol_version < FileHeader.min_protocol_version:
             raise FitFileBadProtocolVersion("%d < %d" % (self.protocol_version, FileHeader.min_protocol_version))
         if self.data_type != FileHeader.file_data_type:
-            raise FitFileDataType("%s < %s" % (repr(self.data_type), repr(FileHeader.file_data_type)))
+            raise FitFileDataType("%r < %r" % (self.data_type, FileHeader.file_data_type))
 
     def __str__(self):
         return ("%s: header size %d prot ver %x prof ver %d" %

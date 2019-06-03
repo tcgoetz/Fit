@@ -40,9 +40,9 @@ class FieldValue(object):
         else:
             field_string += repr(self.value)
         if self.units():
-            field_string += " " + str(self.units())
+            field_string += " %s" % self.units()
         if self.value != self.orig:
-            field_string += " (" + repr(self.orig) + ")"
+            field_string += " (%r)" % self.orig
         field_string += ")"
         return field_string
 

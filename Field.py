@@ -178,7 +178,7 @@ class LeftRightBalanceField(Field):
             else:
                 left_or_right = 'Left'
             percentage = (value & 0x3fff) / 100
-            return left_or_right + ' ' + str(percentage) + '%'
+            return '%s %s %%' % (left_or_right, percentage)
 
 
 class PercentField(Field):

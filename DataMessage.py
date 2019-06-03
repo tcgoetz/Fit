@@ -70,7 +70,7 @@ class DataMessage(object):
                 else:
                     # This should not happen, if the timestamp16 field exists, it should not be None
                     # Issue #21: seen on Ubuntu on Windows
-                    logger.error('timestamp16 with value None: %s', repr(self._fields))
+                    logger.error('timestamp16 with value None: %r', self._fields)
                     self.timestamp = DataMessage.last_timestamp
             else:
                 self.timestamp = DataMessage.last_timestamp
@@ -80,7 +80,7 @@ class DataMessage(object):
         control_field = message_fields.get(control_field_name)
         if control_field is not None:
             return control_field.value
-        logger.debug('Missing control field %s for %s in message %s', control_field_name, repr(field), repr(message_fields))
+        logger.debug('Missing control field %s for %r in message %r', control_field_name, field, message_fields)
 
     def convert_fields(self, message_fields, measurement_system):
         for field_value in message_fields.values():
@@ -101,7 +101,7 @@ class DataMessage(object):
                 self._fields[field_value.field.name] = field_value
 
     def track_dates(self, timestamp):
-        logger.debug('Setting last time stamp %s', repr(timestamp))
+        logger.debug('Setting last time stamp %r', timestamp)
         DataMessage.last_absolute_timestamp = timestamp
         DataMessage.matched_timestamp_16 = None
 
@@ -148,7 +148,7 @@ class DataMessage(object):
 
     def __str__(self):
         fields_str = "".join(["%s, " % value for value in self._fields.values()])
-        return "%s: %s: %s" % (self.__class__.__name__, repr(self.type()), fields_str)
+        return "%s: %r: %s" % (self.__class__.__name__, self.type(), fields_str)
 
     def __repr__(self):
-        return "%s: %s: %s" % (self.__class__.__name__, repr(self.type()), repr(self._fields))
+        return "%s: %r: %r" % (self.__class__.__name__, self.type(), self._fields)

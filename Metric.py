@@ -20,7 +20,7 @@ class Metric(object):
         if self.is_invalid():
             value = 'invalid'
         else:
-            value = '%s %s [%s]' % (self.default_output_func(), self.default_output_units, str(self.raw_value))
+            value = '%s %s [%s]' % (self.default_output_func(), self.default_output_units, self.raw_value)
         return self.__class__.__name__ + '(' + value + ')'
 
     def __str__(self):

@@ -52,17 +52,17 @@ class File(object):
             local_message_num = record_header.local_message()
             data_consumed += record_header.file_size
             self.record_count += 1
-            logger.debug("Parsed record %s", repr(record_header))
+            logger.debug("Parsed record %r", record_header)
 
             if record_header.message_class is MessageClass.definition:
                 definition_message = DefinitionMessage(record_header, self._dev_fields, self.file)
-                logger.debug("  Definition [%d]: %s", local_message_num, str(definition_message))
+                logger.debug("  Definition [%d]: %s", local_message_num, definition_message)
                 data_consumed += definition_message.file_size
                 self._definition_messages[local_message_num] = definition_message
             else:
                 definition_message = self._definition_messages[local_message_num]
                 data_message = DataMessage(definition_message, self.file, self.measurement_system)
-                logger.debug("  Data [%d]: %s", local_message_num, str(data_message))
+                logger.debug("  Data [%d]: %s", local_message_num, data_message)
 
                 data_consumed += data_message.file_size
 
@@ -77,7 +77,7 @@ class File(object):
                 if data_message_type == MessageType.field_description:
                     self._dev_fields[data_message['field_definition_number'].value] = data_message
 
-                logger.debug("Parsed %s", repr(data_message_type))
+                logger.debug("Parsed %r", data_message_type)
 
                 try:
                     self.__dict__[data_message_type].append(data_message)
@@ -116,4 +116,4 @@ class File(object):
         return self.__dict__.get(name)
 
     def __str__(self):
-        return "Type: " + repr(self.type())
+        return "Type: %r" % self.type()
