@@ -307,6 +307,14 @@ class ManufacturerField(EnumField):
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='manufacturer', *args, **kwargs)
 
+    def convert_single(self, value, invalid):
+        try:
+            return self.enum(value)
+        except:
+            if value >= Manufacturer.Garmin_local_start.value:
+                return Manufacturer.Garmin_local
+            return value
+
 
 class ProductField(EnumField):
     def __init__(self, *args, **kwargs):
@@ -338,23 +346,7 @@ class ProductField(Field):
         Manufacturer.Dynastream_OEM         : GarminProductField,
         Manufacturer.Scosche                : ScoscheProductField,
         Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
-        Manufacturer.Garmin_local_0         : GarminProductField,
-        Manufacturer.Garmin_local_14738     : GarminProductField,
-        Manufacturer.Garmin_local_22208     : GarminProductField,
-        Manufacturer.Garmin_local_31533     : GarminProductField,
-        Manufacturer.Garmin_local_42664     : GarminProductField,
-        Manufacturer.Garmin_local_42768     : GarminProductField,
-        Manufacturer.Garmin_local_43064     : GarminProductField,
-        Manufacturer.Garmin_local_43168     : GarminProductField,
-        Manufacturer.Garmin_local_43304     : GarminProductField,
-        Manufacturer.Garmin_local_45192     : GarminProductField,
-        Manufacturer.Garmin_local_45528     : GarminProductField,
-        Manufacturer.Garmin_local_45712     : GarminProductField,
-        Manufacturer.Garmin_local_47656     : GarminProductField,
-        Manufacturer.Garmin_local_45784     : GarminProductField,
-        Manufacturer.Garmin_local_52416     : GarminProductField,
-        Manufacturer.Garmin_local_61440     : GarminProductField,
-        Manufacturer.Garmin_local_65533     : GarminProductField,
+        Manufacturer.Garmin_local           : GarminProductField,
         Manufacturer.invalid                : GarminProductField,
     }
 

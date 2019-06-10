@@ -300,24 +300,8 @@ class Manufacturer(FieldEnum):
     #
     # Privates values
     #
-    Garmin_local_0                  = 0
-    Garmin_local_14738              = 14738
-    Garmin_local_22208              = 22208
-    Garmin_local_31533              = 31533
-    Garmin_local_34213              = 34213
-    Garmin_local_42664              = 42664
-    Garmin_local_42768              = 42768
-    Garmin_local_43064              = 43064
-    Garmin_local_43168              = 43168
-    Garmin_local_43304              = 43304
-    Garmin_local_45192              = 45192
-    Garmin_local_45528              = 45528
-    Garmin_local_47656              = 47656
-    Garmin_local_45712              = 45712
-    Garmin_local_45784              = 45784
-    Garmin_local_52416              = 52416
-    Garmin_local_61440              = 61440
-    Garmin_local_65533              = 65533
+    Garmin_local                    = 0
+    Garmin_local_start              = 14000
     invalid                         = 65535
 
 
@@ -501,12 +485,19 @@ class GarminProduct(FieldEnum):
     Fenix5_plus                     = 3110
     Fenix5x_plus                    = 3111
     Edge_520_plus                   = 3112
+    Instinct                        = 3126
     Approach_S40                    = 3314
     HRM_Dual                        = 3299
     Accelerometer_8194              = 8194
     Accelerometer_8195              = 8195
     FootPod_SDM4                    = 10007
-    Accelerometer                   = 17530
+    Accelerometer_16150             = 16150
+    Accelerometer_16155             = 16155
+    Accelerometer_16310             = 16310
+    Accelerometer_16423             = 16423
+    Accelerometer_16427             = 16427
+    Accelerometer_16354             = 16354
+    Accelerometer_17350             = 17530
     edge_remote                     = 10014
     Training_Center                 = 20119
     Accelerometer_21909             = 21909
@@ -536,22 +527,6 @@ def product_enum(manufacturer, product_str):
         Manufacturer.Dynastream_OEM         : GarminProduct,
         Manufacturer.Scosche                : ScoscheProduct,
         Manufacturer.Wahoo_Fitness          : WahooFitnessProduct,
-        Manufacturer.Garmin_local_0         : GarminProduct,
-        Manufacturer.Garmin_local_14738     : GarminProduct,
-        Manufacturer.Garmin_local_22208     : GarminProduct,
-        Manufacturer.Garmin_local_31533     : GarminProduct,
-        Manufacturer.Garmin_local_42664     : GarminProduct,
-        Manufacturer.Garmin_local_42768     : GarminProduct,
-        Manufacturer.Garmin_local_43064     : GarminProduct,
-        Manufacturer.Garmin_local_43168     : GarminProduct,
-        Manufacturer.Garmin_local_43304     : GarminProduct,
-        Manufacturer.Garmin_local_45192     : GarminProduct,
-        Manufacturer.Garmin_local_47656     : GarminProduct,
-        Manufacturer.Garmin_local_45784     : GarminProduct,
-        Manufacturer.Garmin_local_45712     : GarminProduct,
-        Manufacturer.Garmin_local_52416     : GarminProduct,
-        Manufacturer.Garmin_local_61440     : GarminProduct,
-        Manufacturer.Garmin_local_65533     : GarminProduct,
         Manufacturer.invalid                : GarminProduct,
     }
     return _manufacturer_to_product_enum[manufacturer].from_string(product_str)
