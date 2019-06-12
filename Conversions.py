@@ -23,6 +23,10 @@ def hour_to_dt_time(time_hours):
     if time_hours is not None:
         return secs_to_dt_time(time_hours * 360)
 
+def time_to_secs(time):
+    if time is not None:
+        return (((time.hour * 60) + time.minute) * 60) + time.second
+
 def time_to_timedelta(time):
     if time is not None:
         return datetime.timedelta(hours=time.hour, minutes=time.minute, seconds=time.second)
