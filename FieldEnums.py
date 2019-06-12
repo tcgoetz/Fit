@@ -320,6 +320,7 @@ class GarminProduct(FieldEnum):
     axs01                           = 11
     hrm_tri_single_byte_product_id  = 12
     fr225_single_byte_product_id    = 14
+    Accelerometer_16                = 16
     fr301_china                     = 473
     fr301_japan                     = 474
     fr301_korea                     = 475
@@ -415,7 +416,7 @@ class GarminProduct(FieldEnum):
     fr25                            = 2148
     VivoFit2                        = 2150
     fr225                           = 2153
-    fr630                           = 2156
+    Forerunner_630                  = 2156
     fr230                           = 2157
     vivo_active_apac                = 2160
     vector_2                        = 2161
