@@ -301,7 +301,7 @@ class Manufacturer(FieldEnum):
     # Privates values
     #
     Garmin_local                    = 0
-    Garmin_local_start              = 14000
+    Garmin_local_start              = 7000
     invalid                         = 65535
 
 
@@ -491,6 +491,8 @@ class GarminProduct(FieldEnum):
     Accelerometer_8194              = 8194
     Accelerometer_8195              = 8195
     FootPod_SDM4                    = 10007
+    Accelerometer_12529             = 12529
+    Accelerometer_12533             = 12533
     Accelerometer_16150             = 16150
     Accelerometer_16155             = 16155
     Accelerometer_16310             = 16310
