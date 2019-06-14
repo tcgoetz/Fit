@@ -128,6 +128,15 @@ class DataMessage(object):
                 fields[field_name] = field_value.value
         return fields
 
+    def to_lower_dict(self, ignore_none_values=False):
+        fields = {}
+        for field_name, field_value in self._fields.iteritems():
+            if field_name == 'timestamp_16':
+                fields['timestamp'] = self.timestamp
+            elif not ignore_none_values or field_value.value is not None:
+                fields[field_name.lower()] = field_value.value
+        return fields
+
     def __getitem__(self, name):
         return self._fields.get(name)
 
