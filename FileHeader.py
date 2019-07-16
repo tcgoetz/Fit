@@ -50,5 +50,5 @@ class FileHeader(Data):
             raise FitFileDataType("%r < %r" % (self.data_type, FileHeader.file_data_type))
 
     def __str__(self):
-        return ("%s: header size %d prot ver %x prof ver %d" %
+        return ("%s(header size %d prot ver %x prof ver %d)" %
                 (self.__class__.__name__, self.header_size, self.protocol_version, self.profile_version))

@@ -81,7 +81,7 @@ class Field(object):
         return (self.convert_many(value, invalid), value)
 
     def __repr__(self):
-        return self.__class__.__name__ + '(' + self.name + ')'
+        return '%s (%s)' % (self.__class__.__name__, self.name)
 
 
 #
@@ -292,7 +292,6 @@ class MessageNumberField(Field):
     def convert_single(self, value, invalid):
         if value != invalid:
             return value
-
 
 
 #
@@ -902,7 +901,6 @@ class TemperatureField(ObjectField):
 
 class TrainingeffectField(Field):
     _conversion_factor = [10.0, 10.0]
-
 
 
 class PersonalRecordTypeField(EnumField):

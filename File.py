@@ -113,4 +113,4 @@ class File(object):
         return self.__dict__.get(name)
 
     def __str__(self):
-        return "Type: %r" % self.type()
+        return "File(%r)" % self.type()
