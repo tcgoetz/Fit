@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
 import enum
 
-from FitExceptions import *
+from FitExceptions import FitMessageType
 
 
 class UnknownMessageType(object):
@@ -179,4 +177,3 @@ class MessageType(enum.Enum):
             return cls(message_number)
         except ValueError:
             return UnknownMessageType(message_number)
-

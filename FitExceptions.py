@@ -1,10 +1,6 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
-
-import traceback
 
 
 class FitException(Exception):

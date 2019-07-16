@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
 import collections
 
-from Data import *
+from Data import Data, Schema
 from BaseType import BaseType
 
 
@@ -46,4 +44,4 @@ class FieldDefinition(Data, BaseType):
         return (self.size / type_size)
 
     def __str__(self):
-        return ("FieldDefinition: type %d: %d of %s" % (self.field_definition_number, self.type_count(), self.type_string()));
+        return ("FieldDefinition: type %d: %d of %s" % (self.field_definition_number, self.type_count(), self.type_string()))

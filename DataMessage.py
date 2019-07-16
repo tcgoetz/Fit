@@ -1,19 +1,12 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
-import collections, logging
+import logging
+import datetime
 
-from datetime import timedelta, datetime
-
-
-from Field import Field
 from DataField import DataField
 from DevDataField import DevDataField
-from FitExceptions import *
-from FieldEnums import *
 
 
 logger = logging.getLogger(__name__)
@@ -114,7 +107,7 @@ class DataMessage(object):
         else:
             DataMessage.matched_timestamp_16 = timestamp_16
             delta = 0
-        return DataMessage.last_absolute_timestamp + timedelta(0, delta)
+        return DataMessage.last_absolute_timestamp + datetime.timedelta(0, delta)
 
     def type(self):
         return self.definition_message.message_type

@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
@@ -9,7 +7,6 @@ class FieldValue(object):
     def __init__(self, field, subfield_names=None, **kwargs):
         self.field = field
         self._subfield_names = subfield_names
-
         self.__dict__.update(kwargs)
 
     def is_invalid(self):

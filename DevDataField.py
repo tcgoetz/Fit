@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
 import collections
 
-from Data import *
+from Data import Data, Schema
 
 
 class DevDataField(Data):
@@ -17,7 +15,7 @@ class DevDataField(Data):
         self.field = dev_field_definition.field()
         type = dev_field_definition.type_string()
         count = dev_field_definition.type_count()
-        schema = Schema(self.field.name, collections.OrderedDict( [ (self.field.name, [type, count, '%d']) ] ))
+        schema = Schema(self.field.name, collections.OrderedDict([(self.field.name, [type, count, '%d'])]))
         super(DevDataField, self).__init__(file, schema, None, definition_message.endian)
 
     def convert(self):
@@ -43,4 +41,3 @@ class DevDataField(Data):
 
     def __str__(self):
         return str(self.value_obj)
-

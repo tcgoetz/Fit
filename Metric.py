@@ -1,9 +1,6 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
-
 
 
 class Metric(object):

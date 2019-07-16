@@ -1,13 +1,11 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
 import collections
 
-from FitExceptions import *
-from Data import *
+from FitExceptions import FitFileBadHeaderSize, FitFileBadProtocolVersion, FitFileDataType
+from Data import Data, Schema
 
 
 class FileHeader(Data):
@@ -26,9 +24,9 @@ class FileHeader(Data):
     )
     fh_optional_schema = Schema(
         'fh_optional',
-        collections.OrderedDict( [ ('crc', ['UINT16', 1, '%x']) ] )
+        collections.OrderedDict([('crc', ['UINT16', 1, '%x'])])
     )
-    profile_version_str = { 100 : 'activity', 1602 : 'device'}
+    profile_version_str = {100 : 'activity', 1602 : 'device'}
 
     min_file_header_size = 12
     opt_file_header_size = 14
@@ -37,7 +35,7 @@ class FileHeader(Data):
 #    file_data_type = ['.', 'F', 'I', 'T']
 
     def __init__(self, file):
-        super(FileHeader, self).__init__(file, FileHeader.fh_primary_schema, [(FileHeader.fh_optional_schema, self.decode_secondary)] )
+        super(FileHeader, self).__init__(file, FileHeader.fh_primary_schema, [(FileHeader.fh_optional_schema, self.decode_secondary)])
         self.check()
 
     def decode_secondary(self):

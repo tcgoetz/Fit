@@ -1,10 +1,10 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
-import struct, logging, enum
+import struct
+import logging
+import enum
 
 
 logger = logging.getLogger(__name__)
@@ -70,9 +70,9 @@ class Schema(object):
 
     def printable_data(self, decoded_data):
         printable_data = {}
-        for (key,(type, count, format)) in self.ordered_dict.iteritems():
+        for (key, (type, count, format)) in self.ordered_dict.iteritems():
             if count > 1:
-                printable_data[key] = [(format % decoded_data[index + repeat]) for repeat in xrange(count)]
+                printable_data[key] = [(format % decoded_data[repeat]) for repeat in xrange(count)]
             else:
                 printable_data[key] = (format % decoded_data[key])
         return printable_data
@@ -114,4 +114,3 @@ class Data(object):
                 if control_func():
                     self.printable_data.update(schema.printable_data(self.decoded_data))
         return str(self.printable_data)
-

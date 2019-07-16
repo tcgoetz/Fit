@@ -1,14 +1,11 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
-import sys, logging, collections, traceback
+import logging
 
-from FitExceptions import *
 from FileHeader import FileHeader
-from RecordHeader import *
+from RecordHeader import RecordHeader, MessageClass
 from DefinitionMessage import DefinitionMessage
 from DataMessage import DataMessage
 from MessageType import MessageType
@@ -69,7 +66,7 @@ class File(object):
                 data_message_type = data_message.type()
 
                 if data_message.time_created_timestamp:
-                     self.time_created_timestamp = data_message.time_created_timestamp
+                    self.time_created_timestamp = data_message.time_created_timestamp
                 # if self.last_message_timestamp is not None and data_message.timestamp < self.last_message_timestamp:
                 #     raise FitOutOfOrderMessage('Message time stamp %s before previous %s' % (data_message.timestamp, self.last_message_timestamp))
                 self.last_message_timestamp = data_message.timestamp
@@ -81,8 +78,8 @@ class File(object):
 
                 try:
                     self.__dict__[data_message_type].append(data_message)
-                except:
-                    self.__dict__[data_message_type] = [ data_message ]
+                except Exception:
+                    self.__dict__[data_message_type] = [data_message]
                     self._data_message_types.append(data_message_type)
 
             logger.debug("Record %d: consumed %d of %s %r", self.record_count, data_consumed, self.data_size, self.measurement_system)

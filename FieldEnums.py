@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
@@ -48,7 +46,7 @@ class FieldEnum(enum.Enum):
         try:
             try:
                 return cls(string)
-            except:
+            except Exception:
                 return getattr(cls, string)
         except AttributeError:
             return cls.from_string_ext(string)
@@ -849,6 +847,7 @@ class Event(enum.Enum):
     elev_low_alert = 46
     comm_timeout = 47
 
+
 class EventType(enum.Enum):
     start = 0
     stop = 1
@@ -1003,6 +1002,7 @@ class PersonalRecordType(enum.Enum):
     elevation   = 2
     power       = 3
 
+
 class GoalType(enum.Enum):
     time            = 0
     distance        = 1
@@ -1012,6 +1012,7 @@ class GoalType(enum.Enum):
     ascent          = 5
     active_minutes  = 6
 
+
 class GoalRecurrence(enum.Enum):
     off             = 0
     daily           = 1
@@ -1020,14 +1021,15 @@ class GoalRecurrence(enum.Enum):
     yearly          = 4
     custom          = 5
 
+
 class GoalSource(enum.Enum):
     auto            = 0
     community       = 1
     user            = 2
+
 
 class WatchFaceMode(enum.Enum):
     digital         = 0
     analog          = 1
     connect_iq      = 2
     disabled        = 3
-

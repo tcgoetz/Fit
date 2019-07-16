@@ -1,13 +1,10 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
 import collections
 
-from Data import *
-from FieldEnums import *
+from Data import Data, Schema
 
 
 class DataField(Data):
@@ -18,7 +15,7 @@ class DataField(Data):
         self.field = definition_message.field(field_definition.field_definition_number)
         type = field_definition.type_string()
         count = field_definition.type_count()
-        schema = Schema(self.field.name, collections.OrderedDict( [ (self.field.name, [type, count, '%d']) ] ))
+        schema = Schema(self.field.name, collections.OrderedDict([(self.field.name, [type, count, '%d'])]))
         super(DataField, self).__init__(file, schema, None, definition_message.endian)
 
     def convert(self):
@@ -44,4 +41,3 @@ class DataField(Data):
 
     def __str__(self):
         return str(self.value_obj)
-

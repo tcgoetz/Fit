@@ -1,12 +1,11 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
-import collections, enum
+import collections
+import enum
 
-from Data import *
+from Data import Data, Schema
 
 
 class MessageClass(enum.Enum):
@@ -16,8 +15,8 @@ class MessageClass(enum.Enum):
 
 class RecordHeader(Data):
 
-    rh_schema = Schema('rh', collections.OrderedDict( [ ('record_header', ['UINT8', 1, '%x']) ] ))
-    message_type_string = [ 'data', 'definition' ]
+    rh_schema = Schema('rh', collections.OrderedDict([('record_header', ['UINT8', 1, '%x'])]))
+    message_type_string = ['data', 'definition']
 
     def __init__(self, file):
         super(RecordHeader, self).__init__(file, RecordHeader.rh_schema)

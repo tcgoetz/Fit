@@ -1,27 +1,26 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
-import time, datetime
+import time
+import datetime
 
+import Conversions
 from FieldEnums import *
 from FieldValue import FieldValue
 from FieldDefinition import FieldDefinition
-from Conversions import *
-from Distance import *
-from Position import *
-from Temperature import *
-from Speed import *
-from Weight import *
+from Distance import Distance
+from Temperature import Temperature
+from Speed import Speed
+from Weight import Weight
+from Position import Latitude, Longitude
 
 
 class Field(object):
     known_field = True
-    _units = [ None, None ]
-    _conversion_factor = [ 1, 1 ]
-    _conversion_constant = [ 0, 0 ]
+    _units = [None, None]
+    _conversion_factor = [1, 1]
+    _conversion_constant = [0, 0]
 
     def __init__(self, name=''):
         self.name = name
@@ -40,9 +39,6 @@ class Field(object):
     def units(self, value):
         if self._units[self.measurement_system.value]:
             return self.convert_many_units(value, None)
-
-    def sub_field(self, name):
-        return _sub_field[name]
 
     def invalid_single(self, value, invalid):
         return (value == invalid)
@@ -93,6 +89,7 @@ class Field(object):
 #
 class UnknownField(Field):
     known_field = False
+
     def __init__(self, index):
         super(UnknownField, self).__init__("unknown_" + str(index))
 
@@ -142,7 +139,7 @@ class BoolField(Field):
         if value != invalid:
             try:
                 return bool(value)
-            except:
+            except Exception:
                 return value
 
 
@@ -153,7 +150,7 @@ class EnumField(Field):
     def convert_single(self, value, invalid):
         try:
             return self.enum(value)
-        except:
+        except Exception:
             return value
 
 
@@ -182,21 +179,21 @@ class LeftRightBalanceField(Field):
 
 
 class PercentField(Field):
-    _units = [ '%', '%' ]
+    _units = ['%', '%']
 
     def __init__(self, name, scale=1.0, *args, **kwargs):
-        self._conversion_factor = [ 100.0 * scale, 100.0 * scale ]
+        self._conversion_factor = [100.0 * scale, 100.0 * scale]
         Field.__init__(self, name, *args, **kwargs)
 
 
 class BytePercentField(Field):
-    _units = [ '%', '%' ]
-    _conversion_factor = [ 2.0, 2.0 ]
+    _units = ['%', '%']
+    _conversion_factor = [2.0, 2.0]
 
 
 class NumberField(Field):
     def __init__(self, name, scale=1.0, *args, **kwargs):
-        self._conversion_factor = [ scale, scale ]
+        self._conversion_factor = [scale, scale]
         super(NumberField, self).__init__(name, *args, **kwargs)
 
 
@@ -287,7 +284,7 @@ class FitBaseTypeField(Field):
         if value != invalid:
             try:
                 return FieldDefinition._type_name(value)
-            except:
+            except Exception:
                 return value
 
 
@@ -310,7 +307,7 @@ class ManufacturerField(EnumField):
     def convert_single(self, value, invalid):
         try:
             return self.enum(value)
-        except:
+        except Exception:
             if value >= Manufacturer.Garmin_local_start.value:
                 return Manufacturer.Garmin_local
             return value
@@ -354,7 +351,7 @@ class ProductField(Field):
         manufacturer = control_value_list[0]
         try:
             dependant_field_name = self._manufacturer_to_product_fields[manufacturer]
-        except:
+        except Exception:
             dependant_field_name = UnknownProductField
         return dependant_field_name()
 
@@ -365,24 +362,28 @@ class DisplayOrientationField(EnumField):
 
 class SideField(EnumField):
     enum = Side
+
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='side', *args, **kwargs)
 
 
 class BacklightModeField(EnumField):
     enum = BacklightMode
+
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='backlight_mode', *args, **kwargs)
 
 
 class AntNetworkField(EnumField):
     enum = AntNetwork
+
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='ant_network', *args, **kwargs)
 
 
 class SourceTypeField(EnumField):
     enum = SourceType
+
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='source_type', *args, **kwargs)
 
@@ -416,7 +417,7 @@ class DeviceType(Field):
         if source_type is not None:
             try:
                 dependant_field_name = self._source_to_device_type_fields[source_type]
-            except:
+            except Exception:
                 dependant_field_name = UnknownDeviceTypeField
         else:
             dependant_field_name = Field
@@ -424,18 +425,20 @@ class DeviceType(Field):
 
 
 class BatteryVoltageField(Field):
-    _units = [ 'v', 'v' ]
-    _conversion_factor = [ 256.0, 256.0 ]
+    _units = ['v', 'v']
+    _conversion_factor = [256.0, 256.0]
 
 
 class BatteryStatusField(EnumField):
     enum = BatteryStatus
+
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='battery_status', *args, **kwargs)
 
 
 class AutoSyncFrequencyField(EnumField):
     enum = AutoSyncFrequency
+
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='auto_sync_frequency', *args, **kwargs)
 
@@ -455,6 +458,7 @@ class AutoActivityDetectField(BitField):
         0x00000400 : 'sedentary',
         0xffffffff : 'invalid'
     }
+
     def __init__(self, *args, **kwargs):
         BitField.__init__(self, name='auto_activity_detect', *args, **kwargs)
 
@@ -469,6 +473,8 @@ class MessageIndexField(Field):
 #
 # User related fields
 #
+
+
 class GenderField(EnumField):
     enum = Gender
 
@@ -484,7 +490,7 @@ class WeightField(ObjectField):
 
 
 class CaloriesField(Field):
-    _units = [ 'kcal', 'kcal' ]
+    _units = ['kcal', 'kcal']
 
 
 class ActiveCaloriesField(CaloriesField):
@@ -493,38 +499,45 @@ class ActiveCaloriesField(CaloriesField):
 
 
 class CaloriesDayField(Field):
-    _units = [ 'kcal/day', 'kcal/day' ]
+    _units = ['kcal/day', 'kcal/day']
+
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
 
 class CyclesCaloriesField(Field):
-    _units = [ 'kcal/cycle', 'kcal/cycle' ]
-    _conversion_factor = [ 5019.6, 5019.6 ]
+    _units = ['kcal/cycle', 'kcal/cycle']
+    _conversion_factor = [5019.6, 5019.6]
+
     def __init__(self):
         Field.__init__(self, 'cycles_to_calories')
 
 
 class CyclesDistanceField(Field):
-    _units = [ 'm/cycle', 'm/cycle' ]
-    _conversion_factor = [ 5000.0, 5000.0 ]
+    _units = ['m/cycle', 'm/cycle']
+    _conversion_factor = [5000.0, 5000.0]
+
     def __init__(self):
         Field.__init__(self, 'cycles_to_distance')
 
 
 class HeartRateField(Field):
-    _units = [ 'bpm', 'bpm' ]
+    _units = ['bpm', 'bpm']
+
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
+
 class HeartRateZoneCalcField(EnumField):
     enum = HeartRateZoneCalc
+
     def __init__(self):
         EnumField.__init__(self, 'hr_calc_type')
 
 
 class PowerCalcField(EnumField):
     enum = PowerCalc
+
     def __init__(self):
         EnumField.__init__(self, 'pwr_calc_type')
 
@@ -538,12 +551,14 @@ class LanguageField(EnumField):
 #
 class DateModeField(EnumField):
     enum = DateMode
+
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='date_mode', *args, **kwargs)
 
 
 class TimeModeField(EnumField):
     enum = TimeMode
+
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='time_mode', *args, **kwargs)
 
@@ -562,7 +577,7 @@ class TimestampField(Field):
             # hack - summary of the day messages appear at midnight and we want them to appear in the current day,
             # reimplement properly
             value += (utc_offset_secs - 1)
-        return datetime.datetime(1989, 12, 31, 0, 0, 0) +  datetime.timedelta(0, value)
+        return datetime.datetime(1989, 12, 31, 0, 0, 0) + datetime.timedelta(0, value)
 
 
 class TimeMsField(Field):
@@ -572,15 +587,16 @@ class TimeMsField(Field):
 
     def convert_single(self, value, invalid):
         if value != invalid:
-            return ms_to_dt_time(value / self._conversion_factor)
+            return Conversions.ms_to_dt_time(value / self._conversion_factor)
 
 
 class TimeSField(Field):
-    _units = [ 's', 's' ]
+    _units = ['s', 's']
 
     # invalid is not allowed, 65535 is a valid value
     def convert_single(self, value, invalid):
         return value
+
 
 class TimeHourField(TimeMsField):
     def __init__(self, name='time', scale=1.0):
@@ -588,7 +604,8 @@ class TimeHourField(TimeMsField):
 
     def convert_single(self, value, invalid):
         if value != invalid:
-            return hour_to_dt_time(value / self._conversion_factor)
+            return Conversions.hour_to_dt_time(value / self._conversion_factor)
+
 
 class TimeMinField(TimeMsField):
     def __init__(self, name='time', scale=1.0):
@@ -596,13 +613,13 @@ class TimeMinField(TimeMsField):
 
     def convert_single(self, value, invalid):
         if value != invalid:
-            return min_to_dt_time(value / self._conversion_factor)
+            return Conversions.min_to_dt_time(value / self._conversion_factor)
 
 
 class TimeOfDayField(Field):
     def convert_single(self, value, invalid):
         if value != invalid:
-            return secs_to_dt_time(value)
+            return Conversions.secs_to_dt_time(value)
 
 
 class SpeedMpsField(ObjectField):
@@ -611,28 +628,31 @@ class SpeedMpsField(ObjectField):
 
 
 class CyclesField(Field):
-    _units = ['cycles', 'cycles' ]
+    _units = ['cycles', 'cycles']
+
     def __init__(self, name, scale=2.0, *args, **kwargs):
-        self. _conversion_factor = [ scale, scale ]
+        self. _conversion_factor = [scale, scale]
         Field.__init__(self, name)
 
 
 class FractionalCyclesField(Field):
-    _units = ['cycles', 'cycles' ]
-    _conversion_factor = [ 128.0, 128.0 ]
+    _units = ['cycles', 'cycles']
+    _conversion_factor = [128.0, 128.0]
 
 
 class StepsField(Field):
-    _units = ['steps', 'steps' ]
+    _units = ['steps', 'steps']
+
     def __init__(self, name, scale=1.0, *args, **kwargs):
-        self. _conversion_factor = [ scale, scale ]
+        self. _conversion_factor = [scale, scale]
         Field.__init__(self, name)
 
 
 class StrokesField(Field):
-    _units = ['strokes', 'strokes' ]
+    _units = ['strokes', 'strokes']
+
     def __init__(self, name, scale=2.0, *args, **kwargs):
-        self. _conversion_factor = [ scale, scale ]
+        self. _conversion_factor = [scale, scale]
         Field.__init__(self, name)
 
 
@@ -644,7 +664,7 @@ def cycles_units_to_field(name):
     }
     try:
         return field_mapping[name]
-    except:
+    except Exception:
         return CyclesField
 
 
@@ -666,13 +686,13 @@ def cycles_activity_to_units(activity):
     }
     try:
         return _units[activity.name]
-    except:
+    except Exception:
         return _units['generic']
 
 
 class ActivityBasedCyclesField(Field):
-    _units = ['cycles', 'cycles' ]
-    _conversion_factor = [ 2.0, 2.0 ]
+    _units = ['cycles', 'cycles']
+    _conversion_factor = [2.0, 2.0]
     dependant_field_control_fields = ['activity_type']
 
     def __init__(self, name='cycles', *args, **kwargs):
@@ -712,6 +732,7 @@ class ActivityClassField(Field):
 
 class IntensityField(Field):
     _max_intensity = 8
+
     def __init__(self, *args, **kwargs):
         super(IntensityField, self).__init__("intensity", *args, **kwargs)
 
@@ -736,7 +757,8 @@ class FileField(EnumField):
 
 
 class VersionField(Field):
-    _conversion_factor = [ 100.0, 100.0 ]
+    _conversion_factor = [100.0, 100.0]
+
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
@@ -777,14 +799,15 @@ class SessionTriggerField(EnumField):
 
 
 class SportBasedCyclesField(Field):
-    _units = ['cycles', 'cycles' ]
-    _conversion_factor = [ 1.0, 1.0 ]
+    _units = ['cycles', 'cycles']
+    _conversion_factor = [1.0, 1.0]
     dependant_field_control_fields = ['sport', 'sub_sport']
     _scale = {
         'cycles'    : 1.0,
         'steps'     : 0.5,
         'strokes'   : 1.0
     }
+
     def dependant_field(self, control_value_list):
         sport = control_value_list[0]
         dependant_field_name_base = cycles_activity_to_units(sport)
@@ -808,6 +831,7 @@ class SportField(EnumField):
         19 : 'strokes',
         37 : 'strokes',
     }
+
     def __init__(self, *args, **kwargs):
         super(SportField, self).__init__(name='sport', *args, **kwargs)
 
@@ -815,19 +839,20 @@ class SportField(EnumField):
     def units(cls, sport_index):
         try:
             return cls._units[sport_index]
-        except:
+        except Exception:
             return cls._units[0]
 
 
 class SubSportField(EnumField):
     enum = SubSport
+
     def __init__(self, *args, **kwargs):
         super(SubSportField, self).__init__(name='sub_sport', *args, **kwargs)
 
 
 class PosField(Field):
-    _units = [ 'degrees', 'degrees' ]
-    _conversion_factor = [ 11930326.891, 11930326.891 ]
+    _units = ['degrees', 'degrees']
+    _conversion_factor = [11930326.891, 11930326.891]
 
 
 class LongitudeField(ObjectField):
@@ -841,22 +866,23 @@ class LatiitudeField(ObjectField):
 
 
 class CadenceField(Field):
-    _units = [ 'rpm', 'rpm' ]
+    _units = ['rpm', 'rpm']
 
 
 class FractionalCadenceField(Field):
-    _units = [ 'rpm', 'rpm' ]
-    _conversion_factor = [ 128.0, 128.0 ]
+    _units = ['rpm', 'rpm']
+    _conversion_factor = [128.0, 128.0]
 
 
 class PowerField(Field):
-    _units = [ 'watts', 'watts' ]
+    _units = ['watts', 'watts']
+
     def __init__(self, name='power'):
         super(PowerField, self).__init__(name)
 
 
 class WorkField(Field):
-    _units = [ 'J', 'J' ]
+    _units = ['J', 'J']
 
 
 class AltitudeField(DistanceMetersField):
@@ -875,12 +901,13 @@ class TemperatureField(ObjectField):
 
 
 class TrainingeffectField(Field):
-    _conversion_factor = [ 10.0, 10.0 ]
+    _conversion_factor = [10.0, 10.0]
 
 
 
 class PersonalRecordTypeField(EnumField):
     enum = PersonalRecordType
+
     def __init__(self):
         EnumField.__init__(self, 'pr_type')
 
@@ -905,7 +932,7 @@ class PersonalRecordField(Field):
             try:
                 _dependant_field = self._type_to_fields[pr_type]
                 field_name = pr_type.name
-            except:
+            except Exception:
                 _dependant_field = UnknownField
         else:
             _dependant_field = Field
@@ -947,7 +974,7 @@ class GoalValueField(Field):
             try:
                 _dependant_field = self._type_to_fields[goal_type]
                 field_name = goal_type.name
-            except:
+            except Exception:
                 _dependant_field = UnknownField
         else:
             _dependant_field = Field

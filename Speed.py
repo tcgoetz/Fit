@@ -1,11 +1,9 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
-from Metric import *
-from FieldEnums import *
+from Metric import Metric
+from FieldEnums import DisplayMeasure
 
 
 class Speed(Metric):

@@ -1,13 +1,11 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
 import collections
 
-from Data import *
-from Field import *
+from Data import Data, Schema, Architecture
+from Field import UnknownField
 from FieldDefinition import FieldDefinition
 from DeveloperFieldDefinition import DeveloperFieldDefinition
 from DefinitionMessageData import DefinitionMessageData
@@ -19,24 +17,24 @@ class DefinitionMessage(Data):
     dm_primary_schema = Schema(
         'dm_primary',
         collections.OrderedDict(
-            [ ('reserved', ['UINT8', 1, '%x']), ('architecture', ['UINT8', 1, '%x']) ]
+            [('reserved', ['UINT8', 1, '%x']), ('architecture', ['UINT8', 1, '%x'])]
         )
     )
     dm_secondary_schema = Schema(
         'dm_secondary',
         collections.OrderedDict(
-            [ ('global_message_number', ['UINT16', 1, '%x']), ('fields', ['UINT8', 1, '%x']) ]
+            [('global_message_number', ['UINT16', 1, '%x']), ('fields', ['UINT8', 1, '%x'])]
         )
     )
     dm_dev_schema = Schema(
         'dm_dev',
         collections.OrderedDict(
-            [ ('dev_fields', ['UINT8', 1, '%x']) ]
+            [('dev_fields', ['UINT8', 1, '%x'])]
         )
     )
 
     def __init__(self, record_header, dev_field_dict, file):
-        super(DefinitionMessage, self).__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.decode_secondary)] )
+        super(DefinitionMessage, self).__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.decode_secondary)])
 
         self.message_type = MessageType.get_type(self.global_message_number)
         self.message_data = DefinitionMessageData.get_message_definition(self.message_type)

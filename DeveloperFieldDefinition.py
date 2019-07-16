@@ -1,17 +1,13 @@
-#!/usr/bin/env python
-
 #
 # copyright Tom Goetz
 #
 
 import collections
 
-from Data import *
+from Data import Data, Schema
 from BaseType import BaseType
 from Field import DevField
-from Field import DevField
-from DefinitionMessageData import DefinitionMessageData
-from FitExceptions import *
+from FitExceptions import FitUndefDevMessageType
 
 
 class DeveloperFieldDefinition(Data, BaseType):
