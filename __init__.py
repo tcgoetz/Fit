@@ -1,10 +1,11 @@
-from File import File
-from FitExceptions import *
-from MessageType import MessageType
+"""Librabry for parsing FIT files."""
 
-import Conversions
-from Distance import Distance
-from Position import Position
-from Temperature import Temperature
-from Speed import Speed
-from Weight import Weight
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
+
+import file
+import exceptions
+from messagetype import UnknownMessageType, MessageType
+import conversions
+import measurement

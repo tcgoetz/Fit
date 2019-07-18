@@ -1,16 +1,19 @@
-#
-# copyright Tom Goetz
-#
+"""Object that defines the structure of a FIT file message field."""
+
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
 
 import collections
 
-from Data import Data, Schema
-from BaseType import BaseType
+import data
+import basetype
 
 
-class FieldDefinition(Data, BaseType):
+class FieldDefinition(data.Data, basetype.BaseType):
+    """Object that defines the structure of a FIT file message field."""
 
-    fd_schema = Schema(
+    fd_schema = data.Schema(
         'fd',
         collections.OrderedDict(
             [
@@ -40,7 +43,7 @@ class FieldDefinition(Data, BaseType):
         return self._type_string(self.base_type)
 
     def type_count(self):
-        type_size = Schema.type_to_size(self.type_string())
+        type_size = data.Schema.type_to_size(self.type_string())
         return (self.size / type_size)
 
     def __str__(self):

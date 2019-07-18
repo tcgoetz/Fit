@@ -1,16 +1,18 @@
-#
-# copyright Tom Goetz
-#
+"""Object that represents a FIT file header."""
+
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
 
 import collections
 
-from FitExceptions import FitFileBadHeaderSize, FitFileBadProtocolVersion, FitFileDataType
-from Data import Data, Schema
+import exceptions
+import data
 
 
-class FileHeader(Data):
+class FileHeader(data.Data):
 
-    fh_primary_schema = Schema(
+    fh_primary_schema = data.Schema(
         'fh_primary',
         collections.OrderedDict(
             [
@@ -22,7 +24,7 @@ class FileHeader(Data):
             ]
         )
     )
-    fh_optional_schema = Schema(
+    fh_optional_schema = data.Schema(
         'fh_optional',
         collections.OrderedDict([('crc', ['UINT16', 1, '%x'])])
     )
@@ -35,19 +37,19 @@ class FileHeader(Data):
 #    file_data_type = ['.', 'F', 'I', 'T']
 
     def __init__(self, file):
-        super(FileHeader, self).__init__(file, FileHeader.fh_primary_schema, [(FileHeader.fh_optional_schema, self.decode_secondary)])
-        self.check()
+        super(FileHeader, self).__init__(file, FileHeader.fh_primary_schema, [(FileHeader.fh_optional_schema, self.__decode_secondary)])
+        self.__check()
 
-    def decode_secondary(self):
+    def __decode_secondary(self):
         return (self.header_size >= FileHeader.opt_file_header_size)
 
-    def check(self):
+    def __check(self):
         if self.header_size < FileHeader.min_file_header_size:
-            raise FitFileBadHeaderSize("%d < %d" % (self.header_size, FileHeader.min_file_header_size))
+            raise exceptions.FitFileBadHeaderSize("%d < %d" % (self.header_size, FileHeader.min_file_header_size))
         if self.protocol_version < FileHeader.min_protocol_version:
-            raise FitFileBadProtocolVersion("%d < %d" % (self.protocol_version, FileHeader.min_protocol_version))
+            raise exceptions.FitFileBadProtocolVersion("%d < %d" % (self.protocol_version, FileHeader.min_protocol_version))
         if self.data_type != FileHeader.file_data_type:
-            raise FitFileDataType("%r < %r" % (self.data_type, FileHeader.file_data_type))
+            raise exceptions.FitFileDataType("%r < %r" % (self.data_type, FileHeader.file_data_type))
 
     def __str__(self):
         return ("%s(header size %d prot ver %x prof ver %d)" %

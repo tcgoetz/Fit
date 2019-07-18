@@ -1,13 +1,17 @@
-#
-# copyright Tom Goetz
-#
+"""FIT file data field."""
+
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
+
 
 import collections
 
-from Data import Data, Schema
+import data
 
 
-class DataField(Data):
+class DataField(data.Data):
+    """FIT file data field."""
 
     def __init__(self, file, definition_message, field_definition, measurement_system):
         self.field_definition = field_definition
@@ -15,10 +19,10 @@ class DataField(Data):
         self.field = definition_message.field(field_definition.field_definition_number)
         type = field_definition.type_string()
         count = field_definition.type_count()
-        schema = Schema(self.field.name, collections.OrderedDict([(self.field.name, [type, count, '%d'])]))
+        schema = data.Schema(self.field.name, collections.OrderedDict([(self.field.name, [type, count, '%d'])]))
         super(DataField, self).__init__(file, schema, None, definition_message.endian)
 
-    def convert(self):
+    def _convert(self):
         self.value_obj = self.field.convert(self.__dict__[self.field.name], self.field_definition.invalid(), self.measurement_system)
 
     def _field_name(self):

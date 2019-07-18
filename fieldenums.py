@@ -1,7 +1,8 @@
-#
-# copyright Tom Goetz
-#
+"""Enums that represent FIT file message field values."""
 
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
 
 import enum
 

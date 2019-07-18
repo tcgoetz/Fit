@@ -1,32 +1,36 @@
-#
-# copyright Tom Goetz
-#
+"""FIT file definition message."""
+
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
+
 
 import collections
 
-from Data import Data, Schema, Architecture
-from Field import UnknownField
-from FieldDefinition import FieldDefinition
-from DeveloperFieldDefinition import DeveloperFieldDefinition
-from DefinitionMessageData import DefinitionMessageData
-from MessageType import MessageType
+import data
+import fields
+import dfd
+import dmd
+import fd
+import messagetype as mt
 
 
-class DefinitionMessage(Data):
+class DefinitionMessage(data.Data):
+    """FIT file definition message."""
 
-    dm_primary_schema = Schema(
+    dm_primary_schema = data.Schema(
         'dm_primary',
         collections.OrderedDict(
             [('reserved', ['UINT8', 1, '%x']), ('architecture', ['UINT8', 1, '%x'])]
         )
     )
-    dm_secondary_schema = Schema(
+    dm_secondary_schema = data.Schema(
         'dm_secondary',
         collections.OrderedDict(
             [('global_message_number', ['UINT16', 1, '%x']), ('fields', ['UINT8', 1, '%x'])]
         )
     )
-    dm_dev_schema = Schema(
+    dm_dev_schema = data.Schema(
         'dm_dev',
         collections.OrderedDict(
             [('dev_fields', ['UINT8', 1, '%x'])]
@@ -34,14 +38,14 @@ class DefinitionMessage(Data):
     )
 
     def __init__(self, record_header, dev_field_dict, file):
-        super(DefinitionMessage, self).__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.decode_secondary)])
+        super(DefinitionMessage, self).__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.__decode_secondary)])
 
-        self.message_type = MessageType.get_type(self.global_message_number)
-        self.message_data = DefinitionMessageData.get_message_definition(self.message_type)
+        self.message_type = mt.MessageType.get_type(self.global_message_number)
+        self.message_data = dmd.DefinitionMessageData.get_message_definition(self.message_type)
 
         self.field_definitions = []
         for index in xrange(self.fields):
-            field_definition = FieldDefinition(file)
+            field_definition = fd.FieldDefinition(file)
             self.file_size += field_definition.file_size
             self.field_definitions.append(field_definition)
 
@@ -50,16 +54,16 @@ class DefinitionMessage(Data):
         if self.has_dev_fields:
             self.decode(DefinitionMessage.dm_dev_schema)
             for index in xrange(self.dev_fields):
-                dev_field_definition = DeveloperFieldDefinition(dev_field_dict, file)
+                dev_field_definition = dfd.DeveloperFieldDefinition(dev_field_dict, file)
                 self.file_size += dev_field_definition.file_size
                 self.dev_field_definitions.append(dev_field_definition)
 
-    def decode_secondary(self):
-        self.endian = Architecture(self.architecture)
+    def __decode_secondary(self):
+        self.endian = data.Architecture(self.architecture)
         return True
 
     def field(self, field_number):
-        return DefinitionMessageData.reserved_field_indexes.get(field_number, self.message_data.get(field_number, UnknownField(field_number)))
+        return dmd.DefinitionMessageData.reserved_field_indexes.get(field_number, self.message_data.get(field_number, fields.UnknownField(field_number)))
 
     def __str__(self):
         return ("DefinitionMessage: %r %d %s fields" % (self.message_type, self.fields, self.endian.name))

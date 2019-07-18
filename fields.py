@@ -1,23 +1,22 @@
-#
-# copyright Tom Goetz
-#
+"""Object that represent FIT file message fields."""
+
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
 
 import time
 import datetime
 
-import Conversions
-from FieldEnums import *
-from FieldValue import FieldValue
-from FieldDefinition import FieldDefinition
-from Distance import Distance
-from Temperature import Temperature
-from Speed import Speed
-from Weight import Weight
-from Position import Latitude, Longitude
+import conversions
+import FieldEnums as fe
+import fieldvalue as fv
+import FieldDefinition
+import measurement
 
 
 class Field(object):
-    known_field = True
+    """The base object for all FIT file message fields."""
+
     _units = [None, None]
     _conversion_factor = [1, 1]
     _conversion_constant = [0, 0]
@@ -31,7 +30,7 @@ class Field(object):
         if not name:
             self.name = self.type
         self._subfield = {}
-        self.measurement_system = DisplayMeasure.metric
+        self.measurement_system = fe.DisplayMeasure.metric
 
     def name(self):
         return self._name
@@ -72,11 +71,11 @@ class Field(object):
     def convert_many_units(self, value, invalid):
         return self._convert_many(self.convert_single_units, value, invalid)
 
-    def convert(self, value, invalid, measurement_system=DisplayMeasure.metric):
+    def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         self.measurement_system = measurement_system
-        return FieldValue(self, invalid=invalid, value=self.convert_many(value, invalid), orig=value)
+        return fv.FieldValue(self, invalid=invalid, value=self.convert_many(value, invalid), orig=value)
 
-    def reconvert(self, value, invalid, measurement_system=DisplayMeasure.metric):
+    def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         self.measurement_system = measurement_system
         return (self.convert_many(value, invalid), value)
 
@@ -88,8 +87,6 @@ class Field(object):
 # Special fields
 #
 class UnknownField(Field):
-    known_field = False
-
     def __init__(self, index):
         super(UnknownField, self).__init__("unknown_" + str(index))
 
@@ -117,12 +114,12 @@ class ObjectField(Field):
     def convert_single(self, value, invalid):
         return self.output_func(value, self.measurement_system)
 
-    def convert(self, value, invalid, measurement_system=DisplayMeasure.metric):
+    def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         self.measurement_system = measurement_system
         value_obj = self.obj_func(value / self.scale, invalid)
-        return FieldValue(self, invalid=invalid, value=self.convert_many(value_obj, invalid), orig=value_obj)
+        return fv.FieldValue(self, invalid=invalid, value=self.convert_many(value_obj, invalid), orig=value_obj)
 
-    def reconvert(self, value, invalid, measurement_system=DisplayMeasure.metric):
+    def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         self.measurement_system = measurement_system
         value_obj = self.obj_func(value / self.scale, invalid)
         return (self.convert_many(value_obj, invalid), value_obj)
@@ -155,7 +152,7 @@ class EnumField(Field):
 
 
 class SwitchField(EnumField):
-    enum = Switch
+    enum = fe.Switch
 
 
 class BitField(Field):
@@ -231,52 +228,52 @@ class BytesField(Field):
 
 
 class DistanceMetersField(ObjectField):
-    def __init__(self, name, obj_func=Distance.from_meters, output_func=Distance.meters_or_feet, scale=1.0):
+    def __init__(self, name, obj_func=measurement.Distance.from_meters, output_func=measurement.Distance.meters_or_feet, scale=1.0):
         super(DistanceMetersField, self).__init__(name, obj_func, output_func, scale)
 
 
 class EnhancedDistanceMetersField(DistanceMetersField):
     def __init__(self, name):
-        super(EnhancedDistanceMetersField, self).__init__(name, Distance.from_mm, Distance.meters_or_feet)
+        super(EnhancedDistanceMetersField, self).__init__(name, measurement.Distance.from_mm, measurement.Distance.meters_or_feet)
 
 
 class DistanceCentimetersToKmsField(DistanceMetersField):
     def __init__(self, name='distance'):
-        super(DistanceCentimetersToKmsField, self).__init__(name, Distance.from_cm, Distance.kms_or_miles)
+        super(DistanceCentimetersToKmsField, self).__init__(name, measurement.Distance.from_cm, measurement.Distance.kms_or_miles)
 
 
 class DistanceCentimetersToMetersField(DistanceMetersField):
     def __init__(self, name='distance'):
-        super(DistanceCentimetersToMetersField, self).__init__(name, Distance.from_cm, Distance.meters_or_feet)
+        super(DistanceCentimetersToMetersField, self).__init__(name, measurement.Distance.from_cm, measurement.Distance.meters_or_feet)
 
 
 class DistanceMillimetersToMetersField(DistanceMetersField):
     def __init__(self, name='distance'):
-        super(DistanceMillimetersToMetersField, self).__init__(name, Distance.from_mm, Distance.meters_or_feet)
+        super(DistanceMillimetersToMetersField, self).__init__(name, measurement.Distance.from_mm, measurement.Distance.meters_or_feet)
 
 
 class DistanceMillimetersField(DistanceMetersField):
     def __init__(self, name='distance'):
-        super(DistanceMillimetersField, self).__init__(name, Distance.from_mm, Distance.mm_or_inches, 10.0)
+        super(DistanceMillimetersField, self).__init__(name, measurement.Distance.from_mm, measurement.Distance.mm_or_inches, 10.0)
 
 
 #
 #
 #
 class FitBaseUnitField(EnumField):
-    enum = FitBaseUnit
+    enum = fe.FitBaseUnit
 
 
 class DisplayMeasureField(EnumField):
-    enum = DisplayMeasure
+    enum = fe.DisplayMeasure
 
 
 class DisplayHeartField(EnumField):
-    enum = DisplayHeart
+    enum = fe.DisplayHeart
 
 
 class DisplayPositionField(EnumField):
-    enum = DisplayPosition
+    enum = fe.DisplayPosition
 
 
 class FitBaseTypeField(Field):
@@ -298,7 +295,7 @@ class MessageNumberField(Field):
 # Hardware related fields
 #
 class ManufacturerField(EnumField):
-    enum = Manufacturer
+    enum = fe.Manufacturer
 
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='manufacturer', *args, **kwargs)
@@ -307,8 +304,8 @@ class ManufacturerField(EnumField):
         try:
             return self.enum(value)
         except Exception:
-            if value >= Manufacturer.Garmin_local_start.value:
-                return Manufacturer.Garmin_local
+            if value >= fe.Manufacturer.Garmin_local_start.value:
+                return fe.Manufacturer.Garmin_local
             return value
 
 
@@ -318,32 +315,32 @@ class ProductField(EnumField):
 
 
 class GarminProductField(ProductField):
-    enum = GarminProduct
+    enum = fe.GarminProduct
 
 
 class ScoscheProductField(ProductField):
-    enum = ScoscheProduct
+    enum = fe.ScoscheProduct
 
 
 class WahooFitnessProductField(ProductField):
-    enum = WahooFitnessProduct
+    enum = fe.WahooFitnessProduct
 
 
 class UnknownProductField(ProductField):
-    enum = UnknownProduct
+    enum = fe.UnknownProduct
 
 
 class ProductField(Field):
     dependant_field_control_fields = ['manufacturer']
 
     _manufacturer_to_product_fields = {
-        Manufacturer.Garmin                 : GarminProductField,
-        Manufacturer.Dynastream             : GarminProductField,
-        Manufacturer.Dynastream_OEM         : GarminProductField,
-        Manufacturer.Scosche                : ScoscheProductField,
-        Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
-        Manufacturer.Garmin_local           : GarminProductField,
-        Manufacturer.invalid                : GarminProductField,
+        fe.Manufacturer.Garmin                 : GarminProductField,
+        fe.Manufacturer.Dynastream             : GarminProductField,
+        fe.Manufacturer.Dynastream_OEM         : GarminProductField,
+        fe.Manufacturer.Scosche                : ScoscheProductField,
+        fe.Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
+        fe.Manufacturer.Garmin_local           : GarminProductField,
+        fe.Manufacturer.invalid                : GarminProductField,
     }
 
     def dependant_field(self, control_value_list):
@@ -356,56 +353,56 @@ class ProductField(Field):
 
 
 class DisplayOrientationField(EnumField):
-    enum = DisplayOrientation
+    enum = fe.DisplayOrientation
 
 
 class SideField(EnumField):
-    enum = Side
+    enum = fe.Side
 
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='side', *args, **kwargs)
 
 
 class BacklightModeField(EnumField):
-    enum = BacklightMode
+    enum = fe.BacklightMode
 
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='backlight_mode', *args, **kwargs)
 
 
 class AntNetworkField(EnumField):
-    enum = AntNetwork
+    enum = fe.AntNetwork
 
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='ant_network', *args, **kwargs)
 
 
 class SourceTypeField(EnumField):
-    enum = SourceType
+    enum = fe.SourceType
 
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='source_type', *args, **kwargs)
 
 
 class AntplusDeviceTypeField(EnumField):
-    enum = AntplusDeviceType
+    enum = fe.AntplusDeviceType
 
 
 class LocalDeviceTypeField(EnumField):
-    enum = LocalDeviceType
+    enum = fe.LocalDeviceType
 
 
 class UnknownDeviceTypeField(EnumField):
-    enum = UnknownDeviceType
+    enum = fe.UnknownDeviceType
 
 
 class DeviceType(Field):
     dependant_field_control_fields = ['source_type']
 
     _source_to_device_type_fields = {
-        SourceType.ant          : Field('ant_device_type'),
-        SourceType.antplus      : AntplusDeviceTypeField,
-        SourceType.local        : LocalDeviceTypeField,
+        fe.SourceType.ant          : Field('ant_device_type'),
+        fe.SourceType.antplus      : AntplusDeviceTypeField,
+        fe.SourceType.local        : LocalDeviceTypeField,
     }
 
     def __init__(self, *args, **kwargs):
@@ -429,21 +426,21 @@ class BatteryVoltageField(Field):
 
 
 class BatteryStatusField(EnumField):
-    enum = BatteryStatus
+    enum = fe.BatteryStatus
 
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='battery_status', *args, **kwargs)
 
 
 class AutoSyncFrequencyField(EnumField):
-    enum = AutoSyncFrequency
+    enum = fe.AutoSyncFrequency
 
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='auto_sync_frequency', *args, **kwargs)
 
 
 class BodyLocationField(EnumField):
-    enum = BodyLocation
+    enum = fe.BodyLocation
 
 
 class AutoActivityDetectField(BitField):
@@ -475,17 +472,17 @@ class MessageIndexField(Field):
 
 
 class GenderField(EnumField):
-    enum = Gender
+    enum = fe.Gender
 
 
 class HeightField(ObjectField):
     def __init__(self, name='height'):
-        super(HeightField, self).__init__(name, Distance.from_cm, Distance.meters_or_feet)
+        super(HeightField, self).__init__(name, measurement.Distance.from_cm, measurement.Distance.meters_or_feet)
 
 
 class WeightField(ObjectField):
     def __init__(self, name='weight'):
-        super(WeightField, self).__init__(name, Weight.from_cgs, Weight.kgs_or_lbs)
+        super(WeightField, self).__init__(name, measurement.Weight.from_cgs, measurement.Weight.kgs_or_lbs)
 
 
 class CaloriesField(Field):
@@ -528,35 +525,35 @@ class HeartRateField(Field):
 
 
 class HeartRateZoneCalcField(EnumField):
-    enum = HeartRateZoneCalc
+    enum = fe.HeartRateZoneCalc
 
     def __init__(self):
         EnumField.__init__(self, 'hr_calc_type')
 
 
 class PowerCalcField(EnumField):
-    enum = PowerCalc
+    enum = fe.PowerCalc
 
     def __init__(self):
         EnumField.__init__(self, 'pwr_calc_type')
 
 
 class LanguageField(EnumField):
-    enum = Language
+    enum = fe.Language
 
 
 #
 # Time related fields
 #
 class DateModeField(EnumField):
-    enum = DateMode
+    enum = fe.DateMode
 
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='date_mode', *args, **kwargs)
 
 
 class TimeModeField(EnumField):
-    enum = TimeMode
+    enum = fe.TimeMode
 
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='time_mode', *args, **kwargs)
@@ -586,7 +583,7 @@ class TimeMsField(Field):
 
     def convert_single(self, value, invalid):
         if value != invalid:
-            return Conversions.ms_to_dt_time(value / self._conversion_factor)
+            return conversions.ms_to_dt_time(value / self._conversion_factor)
 
 
 class TimeSField(Field):
@@ -603,7 +600,7 @@ class TimeHourField(TimeMsField):
 
     def convert_single(self, value, invalid):
         if value != invalid:
-            return Conversions.hour_to_dt_time(value / self._conversion_factor)
+            return conversions.hours_to_dt_time(value / self._conversion_factor)
 
 
 class TimeMinField(TimeMsField):
@@ -612,18 +609,18 @@ class TimeMinField(TimeMsField):
 
     def convert_single(self, value, invalid):
         if value != invalid:
-            return Conversions.min_to_dt_time(value / self._conversion_factor)
+            return conversions.min_to_dt_time(value / self._conversion_factor)
 
 
 class TimeOfDayField(Field):
     def convert_single(self, value, invalid):
         if value != invalid:
-            return Conversions.secs_to_dt_time(value)
+            return conversions.secs_to_dt_time(value)
 
 
 class SpeedMpsField(ObjectField):
     def __init__(self, name):
-        super(SpeedMpsField, self).__init__(name, Speed.from_mmps, Speed.kph_or_mph)
+        super(SpeedMpsField, self).__init__(name, measurement.Speed.from_mmps, measurement.Speed.kph_or_mph)
 
 
 class CyclesField(Field):
@@ -705,7 +702,7 @@ class ActivityBasedCyclesField(Field):
 
 
 class ActivityField(EnumField):
-    enum = Activity
+    enum = fe.Activity
 
 
 class ActivityTypeField(Field):
@@ -713,10 +710,10 @@ class ActivityTypeField(Field):
         Field.__init__(self, 'activity_type')
 
     def convert_single(self, value, invalid):
-        return ActivityType(value)
+        return fe.ActivityType(value)
 
     def convert_single_units(self, value, invalid):
-        return cycles_activity_to_units(ActivityType(value).name)
+        return cycles_activity_to_units(fe.ActivityType(value).name)
 
 
 class ActivityClassField(Field):
@@ -745,14 +742,14 @@ class ActivityTypeIntensityField(Field):
     def convert(self, value, invalid, measurement_system):
         activity_type = value & 0x1f
         intensity = value >> 5
-        return FieldValue(self, ['activity_type', 'intensity'],
+        return fv.FieldValue(self, ['activity_type', 'intensity'],
                           invalid=invalid, value=self.convert_many(value, invalid), orig=value,
                           activity_type=self._subfield['activity_type'].convert(activity_type, 0xff, measurement_system),
                           intensity=self._subfield['intensity'].convert(intensity, 0xff, measurement_system))
 
 
 class FileField(EnumField):
-    enum = FileType
+    enum = fe.FileType
 
 
 class VersionField(Field):
@@ -767,11 +764,11 @@ class VersionField(Field):
 
 
 class EventField(EnumField):
-    enum = Event
+    enum = fe.Event
 
 
 class EventTypeField(EnumField):
-    enum = EventType
+    enum = fe.EventType
 
 
 class EventDataField(Field):
@@ -790,11 +787,11 @@ class EventDataField(Field):
 
 
 class LapTriggerField(EnumField):
-    enum = LapTrigger
+    enum = fe.LapTrigger
 
 
 class SessionTriggerField(EnumField):
-    enum = SessionTrigger
+    enum = fe.SessionTrigger
 
 
 class SportBasedCyclesField(Field):
@@ -818,7 +815,7 @@ class SportBasedCyclesField(Field):
 
 
 class SportField(EnumField):
-    enum = Sport
+    enum = fe.Sport
     _units = {
         0 : 'cycles',
         1 : 'steps',
@@ -843,7 +840,7 @@ class SportField(EnumField):
 
 
 class SubSportField(EnumField):
-    enum = SubSport
+    enum = fe.SubSport
 
     def __init__(self, *args, **kwargs):
         super(SubSportField, self).__init__(name='sub_sport', *args, **kwargs)
@@ -856,12 +853,12 @@ class PosField(Field):
 
 class LongitudeField(ObjectField):
     def __init__(self, name):
-        super(LongitudeField, self).__init__(name, Longitude.from_semicircles, Longitude.to_degrees)
+        super(LongitudeField, self).__init__(name, measurement.Longitude.from_semicircles, measurement.Longitude.to_degrees)
 
 
 class LatiitudeField(ObjectField):
     def __init__(self, name):
-        super(LatiitudeField, self).__init__(name, Latitude.from_semicircles, Latitude.to_degrees)
+        super(LatiitudeField, self).__init__(name, measurement.Latitude.from_semicircles, measurement.Latitude.to_degrees)
 
 
 class CadenceField(Field):
@@ -886,17 +883,17 @@ class WorkField(Field):
 
 class AltitudeField(DistanceMetersField):
     def __init__(self, name='altitude'):
-        super(AltitudeField, self).__init__(name, Distance.from_cm, Distance.meters_or_feet, 5.0)
+        super(AltitudeField, self).__init__(name, measurement.Distance.from_cm, measurement.Distance.meters_or_feet, 5.0)
 
 
 class EnhancedAltitudeField(DistanceMetersField):
     def __init__(self, name='altitude'):
-        super(EnhancedAltitudeField, self).__init__(name, Distance.from_meters, Distance.meters_or_feet, 6993.0)
+        super(EnhancedAltitudeField, self).__init__(name, measurement.Distance.from_meters, measurement.Distance.meters_or_feet, 6993.0)
 
 
 class TemperatureField(ObjectField):
     def __init__(self, name):
-        super(TemperatureField, self).__init__(name, Temperature.from_celsius, Temperature.c_or_f)
+        super(TemperatureField, self).__init__(name, measurement.Temperature.from_celsius, measurement.Temperature.c_or_f)
 
 
 class TrainingeffectField(Field):
@@ -904,7 +901,7 @@ class TrainingeffectField(Field):
 
 
 class PersonalRecordTypeField(EnumField):
-    enum = PersonalRecordType
+    enum = fe.PersonalRecordType
 
     def __init__(self):
         EnumField.__init__(self, 'pr_type')
@@ -914,10 +911,10 @@ class PersonalRecordField(Field):
     dependant_field_control_fields = ['pr_type']
 
     _type_to_fields = {
-        PersonalRecordType.time         : TimeMsField,
-        PersonalRecordType.distance     : DistanceCentimetersToMetersField,
-        PersonalRecordType.elevation    : AltitudeField,
-        PersonalRecordType.power        : PowerField
+        fe.PersonalRecordType.time         : TimeMsField,
+        fe.PersonalRecordType.distance     : DistanceCentimetersToMetersField,
+        fe.PersonalRecordType.elevation    : AltitudeField,
+        fe.PersonalRecordType.power        : PowerField
     }
 
     def __init__(self, *args, **kwargs):
@@ -938,28 +935,28 @@ class PersonalRecordField(Field):
 
 
 class GoalTypeField(EnumField):
-    enum = GoalType
+    enum = fe.GoalType
 
 
 class GoalRecurrenceField(EnumField):
-    enum = GoalRecurrence
+    enum = fe.GoalRecurrence
 
 
 class GoalSourceField(EnumField):
-    enum = GoalSource
+    enum = fe.GoalSource
 
 
 class GoalValueField(Field):
     dependant_field_control_fields = ['type']
 
     _type_to_fields = {
-        GoalType.time              : TimeMsField,
-        GoalType.distance          : DistanceCentimetersToMetersField,
-        GoalType.calories          : CaloriesField,
-        GoalType.frequency         : Field,
-        GoalType.steps             : Field,
-        GoalType.ascent            : EnhancedAltitudeField,
-        GoalType.active_minutes    : TimeMinField
+        fe.GoalType.time              : TimeMsField,
+        fe.GoalType.distance          : DistanceCentimetersToMetersField,
+        fe.GoalType.calories          : CaloriesField,
+        fe.GoalType.frequency         : Field,
+        fe.GoalType.steps             : Field,
+        fe.GoalType.ascent            : EnhancedAltitudeField,
+        fe.GoalType.active_minutes    : TimeMinField
     }
 
     def __init__(self, *args, **kwargs):
@@ -980,4 +977,4 @@ class GoalValueField(Field):
 
 
 class WatchFaceModeField(EnumField):
-    enum = WatchFaceMode
+    enum = fe.WatchFaceMode

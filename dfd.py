@@ -1,18 +1,21 @@
-#
-# copyright Tom Goetz
-#
+"""Objects defining FIT file developer fields."""
+
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
 
 import collections
 
-from Data import Data, Schema
-from BaseType import BaseType
-from Field import DevField
-from FitExceptions import FitUndefDevMessageType
+import data
+import basetype
+import fields
+import exceptions
 
 
-class DeveloperFieldDefinition(Data, BaseType):
+class DeveloperFieldDefinition(data.Data, basetype.BaseType):
+    """Developer filed definitions decoded from a FIT file."""
 
-    dfd_schema = Schema(
+    dfd_schema = data.Schema(
         'dfd_schema',
         collections.OrderedDict(
             [
@@ -27,7 +30,7 @@ class DeveloperFieldDefinition(Data, BaseType):
         super(DeveloperFieldDefinition, self).__init__(file, DeveloperFieldDefinition.dfd_schema)
         self.dev_field = dev_field_dict.get(self.field_number)
         if self.dev_field is None:
-            raise FitUndefDevMessageType('Dev field %d undefined in %r' % (self.field_number, dev_field_dict))
+            raise exceptions.FitUndefDevMessageType('Dev field %d undefined in %r' % (self.field_number, dev_field_dict))
         self.field_name = self.dev_field['field_name'].value
         self.native_message_num = self.dev_field['native_message_num'].value
         self.native_field_num = self.dev_field['native_field_num'].value
@@ -35,7 +38,7 @@ class DeveloperFieldDefinition(Data, BaseType):
         self.offset = self.dev_field['offset'].value
         self.scale = self.dev_field['scale'].value
 
-    def base_type_value(self):
+    def __base_type_value(self):
         return self.dev_field['fit_base_type_id'].orig
 
     def field(self):
@@ -43,25 +46,25 @@ class DeveloperFieldDefinition(Data, BaseType):
         #     message_data = DefinitionMessageData.get_message(self.native_message_num)
         #     field_dict = message_data[1]
         #     return field_dict[self.native_field_num]
-        return DevField('dev_' + self.field_name, self.units, self.scale, self.offset)
+        return fields.DevField('dev_' + self.field_name, self.units, self.scale, self.offset)
 
     def base_type(self):
-        return self._base_type(self.base_type_value())
+        return self._base_type(self.__base_type_value())
 
     def type_endian(self):
-        return self._type_endian(self.base_type_value())
+        return self._type_endian(self.__base_type_value())
 
     def type_name(self):
-        return self._type_name(self.base_type_value())
+        return self._type_name(self.__base_type_value())
 
     def invalid(self):
-        return self._invalid(self.base_type_value())
+        return self._invalid(self.__base_type_value())
 
     def type_string(self):
-        return self._type_string(self.base_type_value())
+        return self._type_string(self.__base_type_value())
 
     def type_count(self):
-        type_size = Schema.type_to_size(self.type_string())
+        type_size = data.Schema.type_to_size(self.type_string())
         return (self.size / type_size)
 
     def __str__(self):

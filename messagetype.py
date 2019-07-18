@@ -1,13 +1,18 @@
-#
-# copyright Tom Goetz
-#
+"""Objects defining FIT file message types."""
+
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
+
 
 import enum
 
-from FitExceptions import FitMessageType
+import exceptions
 
 
 class UnknownMessageType(object):
+    """Represents an unknown FIT file message type."""
+
     def __init__(self, index):
         self.value = index
         self.name = 'unknown_%d' % index
@@ -26,6 +31,7 @@ class UnknownMessageType(object):
 
 
 class MessageType(enum.Enum):
+    """Enum of all known FIT file message types."""
 
     file_id                         = 0
     capabilities                    = 1
@@ -171,8 +177,9 @@ class MessageType(enum.Enum):
 
     @classmethod
     def get_type(cls, message_number):
+        """Given a message number, return the message type."""
         if message_number < 0 or message_number > cls.mfg_range_max.value:
-            raise FitMessageType('Message number %d out of range' % message_number)
+            raise exceptions.FitMessageType('Message number %d out of range' % message_number)
         try:
             return cls(message_number)
         except ValueError:

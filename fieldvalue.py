@@ -1,9 +1,13 @@
-#
-# copyright Tom Goetz
-#
+"""Object that represents a FIT field message field value."""
+
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
 
 
 class FieldValue(object):
+    """Object that represents a FIT field message field value."""
+
     def __init__(self, field, subfield_names=None, **kwargs):
         self.field = field
         self._subfield_names = subfield_names

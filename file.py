@@ -1,22 +1,26 @@
-#
-# copyright Tom Goetz
-#
+"""Code that manages a FIT file."""
+
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
+
 
 import logging
 
-from FileHeader import FileHeader
-from RecordHeader import RecordHeader, MessageClass
-from DefinitionMessage import DefinitionMessage
-from DataMessage import DataMessage
-from MessageType import MessageType
+import fh
+import rh
+import dm
+import datamessage
+import messagetype as mt
 
 
 logger = logging.getLogger(__name__)
 
+name_regex = r'\w+\.(fit|FIT)'
+
 
 class File(object):
-
-    name_regex = r'\w+\.(fit|FIT)'
+    """Object that represents a FIT file."""
 
     def __init__(self, filename, measurement_system=False):
         self.filename = filename
@@ -28,11 +32,11 @@ class File(object):
         self.matched_timestamp_16 = None
 
         self.file = open(filename, 'rb')
-        self.parse()
+        self.__parse()
 
-    def parse(self):
+    def __parse(self):
         logger.debug("Parsing File %s", self.filename)
-        self.file_header = FileHeader(self.file)
+        self.file_header = fh.FileHeader(self.file)
 
         self.data_size = self.file_header.data_size
 
@@ -45,20 +49,20 @@ class File(object):
         self.last_message_timestamp = None
 
         while self.data_size > data_consumed:
-            record_header = RecordHeader(self.file)
+            record_header = rh.RecordHeader(self.file)
             local_message_num = record_header.local_message()
             data_consumed += record_header.file_size
             self.record_count += 1
             logger.debug("Parsed record %r", record_header)
 
-            if record_header.message_class is MessageClass.definition:
-                definition_message = DefinitionMessage(record_header, self._dev_fields, self.file)
+            if record_header.message_class is rh.MessageClass.definition:
+                definition_message = dm.DefinitionMessage(record_header, self._dev_fields, self.file)
                 logger.debug("  Definition [%d]: %s", local_message_num, definition_message)
                 data_consumed += definition_message.file_size
                 self._definition_messages[local_message_num] = definition_message
             else:
                 definition_message = self._definition_messages[local_message_num]
-                data_message = DataMessage(definition_message, self.file, self.measurement_system)
+                data_message = datamessage.DataMessage(definition_message, self.file, self.measurement_system)
                 logger.debug("  Data [%d]: %s", local_message_num, data_message)
 
                 data_consumed += data_message.file_size
@@ -71,7 +75,7 @@ class File(object):
                 #     raise FitOutOfOrderMessage('Message time stamp %s before previous %s' % (data_message.timestamp, self.last_message_timestamp))
                 self.last_message_timestamp = data_message.timestamp
 
-                if data_message_type == MessageType.field_description:
+                if data_message_type == mt.MessageType.field_description:
                     self._dev_fields[data_message['field_definition_number'].value] = data_message
 
                 logger.debug("Parsed %r", data_message_type)
@@ -86,7 +90,7 @@ class File(object):
         logger.debug("File %s: %s -> %s", self.filename, self.time_created_timestamp, self.last_message_timestamp)
 
     def file_id(self):
-        return self[MessageType.file_id][0]
+        return self[mt.MessageType.file_id][0]
 
     def type(self):
         return self.file_id()['type'].value

@@ -1,9 +1,12 @@
-#
-# copyright Tom Goetz
-#
+"""Manages FIT file format base types."""
+
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
 
 
 class BaseType(object):
+    """Manages FIT file format base types."""
 
     base_type_data = {
         0x00 : [False, 'enum',     0xFF,               'UINT8'],
