@@ -8,9 +8,9 @@ import time
 import datetime
 
 import conversions
-import FieldEnums as fe
+import fieldenums as fe
 import fieldvalue as fv
-import FieldDefinition
+import fd
 import measurement
 
 
