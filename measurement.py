@@ -4,7 +4,7 @@ __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
-import fieldenums as fe
+import field_enums as fe
 
 
 class Measurement(object):

@@ -7,11 +7,11 @@ __license__ = "GPL"
 
 import logging
 
-import fh
-import rh
-import dm
-import datamessage
-import messagetype as mt
+from file_header import FileHeader
+from record_header import RecordHeader, MessageClass
+from definition_message import DefinitionMessage
+from data_message import DataMessage
+from message_type import MessageType
 
 
 logger = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ class File(object):
 
     def __parse(self):
         logger.debug("Parsing File %s", self.filename)
-        self.file_header = fh.FileHeader(self.file)
+        self.file_header = FileHeader(self.file)
 
         self.data_size = self.file_header.data_size
 
@@ -49,20 +49,20 @@ class File(object):
         self.last_message_timestamp = None
 
         while self.data_size > data_consumed:
-            record_header = rh.RecordHeader(self.file)
+            record_header = RecordHeader(self.file)
             local_message_num = record_header.local_message()
             data_consumed += record_header.file_size
             self.record_count += 1
             logger.debug("Parsed record %r", record_header)
 
-            if record_header.message_class is rh.MessageClass.definition:
-                definition_message = dm.DefinitionMessage(record_header, self._dev_fields, self.file)
+            if record_header.message_class is MessageClass.definition:
+                definition_message = DefinitionMessage(record_header, self._dev_fields, self.file)
                 logger.debug("  Definition [%d]: %s", local_message_num, definition_message)
                 data_consumed += definition_message.file_size
                 self._definition_messages[local_message_num] = definition_message
             else:
                 definition_message = self._definition_messages[local_message_num]
-                data_message = datamessage.DataMessage(definition_message, self.file, self.measurement_system)
+                data_message = DataMessage(definition_message, self.file, self.measurement_system)
                 logger.debug("  Data [%d]: %s", local_message_num, data_message)
 
                 data_consumed += data_message.file_size
@@ -75,7 +75,7 @@ class File(object):
                 #     raise FitOutOfOrderMessage('Message time stamp %s before previous %s' % (data_message.timestamp, self.last_message_timestamp))
                 self.last_message_timestamp = data_message.timestamp
 
-                if data_message_type == mt.MessageType.field_description:
+                if data_message_type == MessageType.field_description:
                     self._dev_fields[data_message['field_definition_number'].value] = data_message
 
                 logger.debug("Parsed %r", data_message_type)
@@ -90,27 +90,35 @@ class File(object):
         logger.debug("File %s: %s -> %s", self.filename, self.time_created_timestamp, self.last_message_timestamp)
 
     def file_id(self):
-        return self[mt.MessageType.file_id][0]
+        """Return the file_id message for the file."""
+        return self[MessageType.file_id][0]
 
     def type(self):
+        """Return the file type for the file."""
         return self.file_id()['type'].value
 
     def product(self):
+        """Return the product type from the file."""
         return self.file_id()['product'].value
 
     def serial_number(self):
+        """Return the device serial number from the file."""
         return self.file_id()[0]['serial_number'].value
 
     def device(self):
+        """Return the device from the file."""
         return self.product() + "_" + str(self.serial_number())
 
     def time_created(self):
+        """Return the the time the file was created."""
         return self.file_id()['time_created'].value
 
     def date_span(self):
+        """Return a tuple of the start and end dates of the file."""
         return (self.time_created(), self.last_message_timestamp)
 
     def message_types(self):
+        """Return a list of the message types present in the file."""
         return self._data_message_types
 
     def __getitem__(self, name):

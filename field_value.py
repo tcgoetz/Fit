@@ -20,12 +20,14 @@ class FieldValue(object):
         return self._subfield_names
 
     def type(self):
+        """Return the type of the field."""
         return self.field.type
 
     def reconvert(self, measurement_system):
         (self.value, self.orig) = self.field.reconvert(self.orig, self.invalid, measurement_system)
 
     def units(self):
+        """Return the units of the field."""
         return self.field.units(self.orig)
 
     def stats(self):

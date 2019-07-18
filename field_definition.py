@@ -7,10 +7,10 @@ __license__ = "GPL"
 import collections
 
 import data
-import basetype
+import base_type
 
 
-class FieldDefinition(data.Data, basetype.BaseType):
+class FieldDefinition(data.Data, base_type.BaseType):
     """Object that defines the structure of a FIT file message field."""
 
     fd_schema = data.Schema(

@@ -9,10 +9,10 @@ import collections
 
 import data
 import fields
-import dfd
-import dmd
-import fd
-import messagetype as mt
+from developer_field_definition import DeveloperFieldDefinition
+from definition_message_data import DefinitionMessageData
+from field_definition import FieldDefinition
+from message_type import MessageType
 
 
 class DefinitionMessage(data.Data):
@@ -40,12 +40,12 @@ class DefinitionMessage(data.Data):
     def __init__(self, record_header, dev_field_dict, file):
         super(DefinitionMessage, self).__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.__decode_secondary)])
 
-        self.message_type = mt.MessageType.get_type(self.global_message_number)
-        self.message_data = dmd.DefinitionMessageData.get_message_definition(self.message_type)
+        self.message_type = MessageType.get_type(self.global_message_number)
+        self.message_data = DefinitionMessageData.get_message_definition(self.message_type)
 
         self.field_definitions = []
         for index in xrange(self.fields):
-            field_definition = fd.FieldDefinition(file)
+            field_definition = FieldDefinition(file)
             self.file_size += field_definition.file_size
             self.field_definitions.append(field_definition)
 
@@ -54,7 +54,7 @@ class DefinitionMessage(data.Data):
         if self.has_dev_fields:
             self.decode(DefinitionMessage.dm_dev_schema)
             for index in xrange(self.dev_fields):
-                dev_field_definition = dfd.DeveloperFieldDefinition(dev_field_dict, file)
+                dev_field_definition = DeveloperFieldDefinition(dev_field_dict, file)
                 self.file_size += dev_field_definition.file_size
                 self.dev_field_definitions.append(dev_field_definition)
 
@@ -63,7 +63,7 @@ class DefinitionMessage(data.Data):
         return True
 
     def field(self, field_number):
-        return dmd.DefinitionMessageData.reserved_field_indexes.get(field_number, self.message_data.get(field_number, fields.UnknownField(field_number)))
+        return DefinitionMessageData.reserved_field_indexes.get(field_number, self.message_data.get(field_number, fields.UnknownField(field_number)))
 
     def __str__(self):
         return ("DefinitionMessage: %r %d %s fields" % (self.message_type, self.fields, self.endian.name))

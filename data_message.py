@@ -8,8 +8,8 @@ __license__ = "GPL"
 import logging
 import datetime
 
-import datafield
-import ddf
+from data_field import DataField
+from dev_data_field import DevDataField
 
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class DataMessage(object):
 
         message_fields = {}
         for index in xrange(definition_message.fields):
-            data_field = datafield.DataField(fit_file, definition_message, definition_message.field_definitions[index], measurement_system)
+            data_field = DataField(fit_file, definition_message, definition_message.field_definitions[index], measurement_system)
             self.file_size += data_field.file_size
 
             # expand subfields?
@@ -91,7 +91,7 @@ class DataMessage(object):
     def __convert_dev_fields(self, fit_file, definition_message, measurement_system):
         if definition_message.has_dev_fields:
             for index in xrange(definition_message.dev_fields):
-                data_field = ddf.DevDataField(fit_file, definition_message, definition_message.dev_field_definitions[index], measurement_system)
+                data_field = DevDataField(fit_file, definition_message, definition_message.dev_field_definitions[index], measurement_system)
                 self.file_size += data_field.file_size
                 field_value = data_field._field_value()
                 self._fields[field_value.field.name] = field_value

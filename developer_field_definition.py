@@ -7,12 +7,12 @@ __license__ = "GPL"
 import collections
 
 import data
-import basetype
+import base_type
 import fields
 import exceptions
 
 
-class DeveloperFieldDefinition(data.Data, basetype.BaseType):
+class DeveloperFieldDefinition(data.Data, base_type.BaseType):
     """Developer filed definitions decoded from a FIT file."""
 
     dfd_schema = data.Schema(

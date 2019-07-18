@@ -5,14 +5,14 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 import fields
-import messagetype as mt
+from message_type import MessageType
 
 
 class DefinitionMessageData(object):
     """Structured data for decoding a FIT file definition message."""
 
     known_messages = {
-        mt.MessageType.file_id : {
+        MessageType.file_id : {
             0 : fields.FileField('type'),
             1 : fields.ManufacturerField(),
             2 : fields.ProductField(),
@@ -21,8 +21,8 @@ class DefinitionMessageData(object):
             5 : fields.Field('number'),
             7 : fields.StringField('product_name')
         },
-        mt.MessageType.capabilities : {},
-        mt.MessageType.device_settings : {
+        MessageType.capabilities : {},
+        MessageType.device_settings : {
             0 : fields.Field('active_time_zone'),
             1 : fields.Field('utc_offset'),
             2 : fields.TimeSField('time_offset'),
@@ -78,7 +78,7 @@ class DefinitionMessageData(object):
             134 : fields.SwitchField('tap_interface'),
             141 : fields.SwitchField('switch_141'),
         },
-        mt.MessageType.user_profile : {
+        MessageType.user_profile : {
             1 : fields.GenderField(),
             2 : fields.Field('age'),
             3 : fields.HeightField(),
@@ -109,14 +109,14 @@ class DefinitionMessageData(object):
             47 : fields.DisplayMeasureField('depth_setting'),
             49 : fields.Field('dive_count'),
         },
-        mt.MessageType.hrm_profile : {
+        MessageType.hrm_profile : {
             0 : fields.BoolField('enabled'),
             1 : fields.Field('hrm_ant_id'),
             2 : fields.BoolField('log_hrv'),
             3 : fields.Field('hrm_ant_id_trans_type'),
         },
-        mt.MessageType.sdm_profile : {},
-        mt.MessageType.bike_profile : {
+        MessageType.sdm_profile : {},
+        MessageType.bike_profile : {
             0 : fields.StringField('name'),
             1 : fields.SportField(),
             2 : fields.SubSportField(),
@@ -144,35 +144,35 @@ class DefinitionMessageData(object):
             24 : fields.Field('bike_power_ant_id_trans_type'),
             37 : fields.Field('odometer_rollover'),
         },
-        mt.MessageType.zones_target : {
+        MessageType.zones_target : {
             1 : fields.Field('max_heart_rate'),
             2 : fields.Field('threshold_heart_rate'),
             3 : fields.Field('functional_threshold_power'),
             5 : fields.HeartRateZoneCalcField(),
             7 : fields.PowerCalcField()
         },
-        mt.MessageType.hr_zone : {
+        MessageType.hr_zone : {
             1 : fields.HeartRateField('high_bpm'),
             2 : fields.StringField('name'),
         },
-        mt.MessageType.power_zone : {
+        MessageType.power_zone : {
             1 : fields.PowerField('high_value'),
             2 : fields.StringField('name'),
         },
-        mt.MessageType.met_zone : {},
-        mt.MessageType.sport : {
+        MessageType.met_zone : {},
+        MessageType.sport : {
             0 : fields.SportField(),
             1 : fields.SubSportField(),
             3 : fields.StringField('name'),
         },
-        mt.MessageType.unknown_13 : {
+        MessageType.unknown_13 : {
             5 : fields.PosField('position_5'),
             6 : fields.PosField('position_6'),
         },
-        mt.MessageType.unknown_14 : {
+        MessageType.unknown_14 : {
             10 : fields.Field('sequence'),
         },
-        mt.MessageType.goal : {
+        MessageType.goal : {
             0 : fields.SportField(),
             1 : fields.SubSportField(),
             2 : fields.TimestampField('start_time'),
@@ -186,7 +186,7 @@ class DefinitionMessageData(object):
             10 : fields.BoolField('enabled'),
             11 : fields.GoalSourceField('source')
         },
-        mt.MessageType.session : {
+        MessageType.session : {
             0 : fields.EventField(),
             1 : fields.EventTypeField(),
             2 : fields.TimestampField('start_time'),
@@ -312,7 +312,7 @@ class DefinitionMessageData(object):
             137 : fields.TrainingeffectField('total_anaerobic_training_effect'),
             139 : fields.SpeedMpsField('avg_vam'),
         },
-        mt.MessageType.lap : {
+        MessageType.lap : {
             0 : fields.EventField(),
             1 : fields.EventTypeField(),
             2 : fields.TimestampField('start_time'),
@@ -424,7 +424,7 @@ class DefinitionMessageData(object):
             120 : fields.DistanceMillimetersField('avg_step_length'),
             121 : fields.SpeedMpsField('avg_vam'),
         },
-        mt.MessageType.record : {
+        MessageType.record : {
             0 : fields.LatiitudeField('position_lat'),
             1 : fields.LongitudeField('position_long'),
             2 : fields.AltitudeField(),
@@ -482,7 +482,7 @@ class DefinitionMessageData(object):
             84 : fields.PercentField('stance_time_balance'),
             85 : fields.DistanceMillimetersField('step_length'),
         },
-        mt.MessageType.event : {
+        MessageType.event : {
             0 : fields.EventField('event'),
             1 : fields.EventTypeField(),
             2 : fields.Field('data16'),
@@ -497,8 +497,8 @@ class DefinitionMessageData(object):
             13 : fields.Field('device_index'),
             15 : fields.TimestampField('ts_15'),
         },
-        mt.MessageType.source : {},
-        mt.MessageType.device_info : {
+        MessageType.source : {},
+        MessageType.device_info : {
             0 : fields.Field('device_index'),
             1 : fields.DeviceType(),
             2 : fields.ManufacturerField(),
@@ -519,17 +519,17 @@ class DefinitionMessageData(object):
             25 : fields.SourceTypeField(),
             27 : fields.StringField('product_name'),
         },
-        mt.MessageType.unknown_24 : {
+        MessageType.unknown_24 : {
             2 : fields.BytesField('data'),
         },
-        mt.MessageType.workout : {
+        MessageType.workout : {
             6 : fields.Field('num_valid_steps'),
             8 : fields.StringField('wkt_name'),
         },
-        mt.MessageType.workout_step : {},
-        mt.MessageType.schedule : {},
-        mt.MessageType.location : {},
-        mt.MessageType.weight_scale : {
+        MessageType.workout_step : {},
+        MessageType.schedule : {},
+        MessageType.location : {},
+        MessageType.weight_scale : {
             0 : fields.WeightField(),
             1 : fields.PercentField('percent_fat'),
             2 : fields.PercentField('percent_hydration'),
@@ -543,9 +543,9 @@ class DefinitionMessageData(object):
             11 : fields.Field('visceral_fat_rating'),
             12 : fields.Field('user_profile_index')
         },
-        mt.MessageType.course : {},
-        mt.MessageType.course_point : {},
-        mt.MessageType.totals : {
+        MessageType.course : {},
+        MessageType.course_point : {},
+        MessageType.totals : {
             0 : fields.TimeSField('timer_time'),
             1 : fields.DistanceMetersField('distance'),
             2 : fields.CaloriesField('calories'),
@@ -555,7 +555,7 @@ class DefinitionMessageData(object):
             6 : fields.TimeSField('active_time'),
             9 : fields.Field('sport_index'),
         },
-        mt.MessageType.activity : {
+        MessageType.activity : {
             0 : fields.TimeMsField('total_timer_time'),
             1 : fields.Field('num_sessions'),
             2 : fields.ActivityField(),
@@ -564,20 +564,20 @@ class DefinitionMessageData(object):
             5 : fields.TimestampField('local_timestamp', False),
             6 : fields.Field('event_group'),
         },
-        mt.MessageType.software : {
+        MessageType.software : {
             3 : fields.VersionField('version')
         },
-        mt.MessageType.file_capabilities : {},
-        mt.MessageType.mesg_capabilities : {},
-        mt.MessageType.field_capabilities : {},
-        mt.MessageType.file_creator : {
+        MessageType.file_capabilities : {},
+        MessageType.mesg_capabilities : {},
+        MessageType.field_capabilities : {},
+        MessageType.file_creator : {
             0 : fields.VersionField('software_version'),
             1 : fields.VersionField('hardware_version'),
             2 : fields.BytesField('data')
         },
-        mt.MessageType.blood_pressure : {},
-        mt.MessageType.speed_zone : {},
-        mt.MessageType.monitoring : {
+        MessageType.blood_pressure : {},
+        MessageType.speed_zone : {},
+        MessageType.monitoring : {
             0 : fields.Field('device_index'),
             1 : fields.CaloriesField('calories'),
             2 : fields.DistanceCentimetersToMetersField(),
@@ -600,34 +600,34 @@ class DefinitionMessageData(object):
             35 : fields.DistanceMillimetersToMetersField('cum_ascent'),
             36 : fields.DistanceMillimetersToMetersField('cum_descent')
         },
-        mt.MessageType.training_file : {
+        MessageType.training_file : {
             0 : fields.FileField('type'),
             1 : fields.ManufacturerField(),
             2 : fields.ProductField(),
             3 : fields.Field('serial_number'),
             4 : fields.TimestampField('time_created'),
         },  # timestamp, serial_number, creation_time, product_ID, session_style
-        mt.MessageType.hrv : {
+        MessageType.hrv : {
             0 : fields.TimeMsField('time'),
         },
-        mt.MessageType.ant_rx : {},
-        mt.MessageType.ant_tx : {},
-        mt.MessageType.ant_channel_id : {},
-        mt.MessageType.length : {},
-        mt.MessageType.monitoring_info : {
+        MessageType.ant_rx : {},
+        MessageType.ant_tx : {},
+        MessageType.ant_channel_id : {},
+        MessageType.length : {},
+        MessageType.monitoring_info : {
             0 : fields.TimestampField('local_timestamp', False),
             1 : fields.ActivityTypeField(),
             3 : fields.CyclesDistanceField(),
             4 : fields.CyclesCaloriesField(),
             5 : fields.CaloriesDayField('resting_metabolic_rate')
         },
-        mt.MessageType.battery : {
+        MessageType.battery : {
             0 : fields.TimeMinField('remaining_mins'),
             2 : fields.PercentField('charge')
         },
-        mt.MessageType.pad : {},
-        mt.MessageType.slave_device : {},
-        mt.MessageType.personal_record : {
+        MessageType.pad : {},
+        MessageType.slave_device : {},
+        MessageType.personal_record : {
             0 : fields.PersonalRecordTypeField(),
             1 : fields.SportField(),
             2 : fields.DistanceCentimetersToMetersField('record_distance'),
@@ -635,7 +635,7 @@ class DefinitionMessageData(object):
             4 : fields.DistanceCentimetersToMetersField('actual_distance'),
             5 : fields.PersonalRecordField()
         },
-        mt.MessageType.connectivity : {
+        MessageType.connectivity : {
             0 : fields.BoolField('bluetooth_enabled'),
             1 : fields.BoolField('bluetooth_le_enabled'),
             2 : fields.BoolField('ant_enabled'),
@@ -650,23 +650,23 @@ class DefinitionMessageData(object):
             11 : fields.BoolField('incident_detection_enabled'),
             12 : fields.BoolField('grouptrack_enabled'),
         },
-        mt.MessageType.weather_conditions : {},
-        mt.MessageType.weather_alert : {},
-        mt.MessageType.cadence_zone : {},
-        mt.MessageType.hr : {},
-        mt.MessageType.unknown_140 : {
+        MessageType.weather_conditions : {},
+        MessageType.weather_alert : {},
+        MessageType.cadence_zone : {},
+        MessageType.hr : {},
+        MessageType.unknown_140 : {
             21 : fields.PosField('position_21'),
             24 : fields.PosField('position_24'),
         },
-        mt.MessageType.unknown_141 : {
+        MessageType.unknown_141 : {
             1 : fields.TimestampField('ts_1', False),
             2 : fields.TimestampField('ts_2', False),
             4 : fields.PosField('position_4'),
             5 : fields.PosField('position_5'),
         },
-        mt.MessageType.segment_lap : {},
-        mt.MessageType.memo_glob : {},
-        mt.MessageType.sensor : {
+        MessageType.segment_lap : {},
+        MessageType.memo_glob : {},
+        MessageType.sensor : {
             0 : fields.Field('sensor_id'),
             2 : fields.StringField('name'),
             10 : fields.DistanceMillimetersToMetersField('manual_wheelsize'),
@@ -677,36 +677,36 @@ class DefinitionMessageData(object):
             34 : fields.VersionField('software_version'),
             50 : fields.BytesField('ble_id')
         },
-        mt.MessageType.segment_id : {},
-        mt.MessageType.segment_leaderboard_entry : {},
-        mt.MessageType.segment_point : {},
-        mt.MessageType.segment_file : {},
-        mt.MessageType.workout_session : {},
-        mt.MessageType.watchface_settings : {
+        MessageType.segment_id : {},
+        MessageType.segment_leaderboard_entry : {},
+        MessageType.segment_point : {},
+        MessageType.segment_file : {},
+        MessageType.workout_session : {},
+        MessageType.watchface_settings : {
             0 : fields.WatchFaceModeField('mode'),
             1 : fields.Field('layout'),
         },
-        mt.MessageType.gps_metadata : {},
-        mt.MessageType.camera_event : {},
-        mt.MessageType.timestamp_correlation : {},
-        mt.MessageType.gyroscope_data : {},
-        mt.MessageType.accelerometer_data : {},
-        mt.MessageType.three_d_sensor_calibration : {},
-        mt.MessageType.video_frame : {},
-        mt.MessageType.obdii_data : {},
-        mt.MessageType.nmea_sentence : {},
-        mt.MessageType.aviation_attitude : {},
-        mt.MessageType.video : {},
-        mt.MessageType.video_title : {},
-        mt.MessageType.video_description : {},
-        mt.MessageType.video_clip : {},
-        mt.MessageType.ohr_settings : {
+        MessageType.gps_metadata : {},
+        MessageType.camera_event : {},
+        MessageType.timestamp_correlation : {},
+        MessageType.gyroscope_data : {},
+        MessageType.accelerometer_data : {},
+        MessageType.three_d_sensor_calibration : {},
+        MessageType.video_frame : {},
+        MessageType.obdii_data : {},
+        MessageType.nmea_sentence : {},
+        MessageType.aviation_attitude : {},
+        MessageType.video : {},
+        MessageType.video_title : {},
+        MessageType.video_description : {},
+        MessageType.video_clip : {},
+        MessageType.ohr_settings : {
             0 : fields.SwitchField('enabled'),
         },
-        mt.MessageType.exd_screen_configuration : {},
-        mt.MessageType.exd_data_field_configuration : {},
-        mt.MessageType.exd_data_concept_configuration : {},
-        mt.MessageType.field_description : {
+        MessageType.exd_screen_configuration : {},
+        MessageType.exd_data_field_configuration : {},
+        MessageType.exd_data_concept_configuration : {},
+        MessageType.field_description : {
             0 : fields.Field('developer_data_index'),
             1 : fields.Field('field_definition_number'),
             2 : fields.FitBaseTypeField('fit_base_type_id'),
@@ -722,47 +722,47 @@ class DefinitionMessageData(object):
             14 : fields.Field('native_message_num'),
             15 : fields.Field('native_field_num')
         },
-        mt.MessageType.dev_data_id : {
+        MessageType.dev_data_id : {
             0 : fields.Field('developer_id'),
             1 : fields.BytesField('application_id'),
             2 : fields.ManufacturerField(),
             3 : fields.Field('developer_data_index'),
             4 : fields.Field('application_version')
         },
-        mt.MessageType.magnetometer_data : {},
-        mt.MessageType.barometer_data : {},
-        mt.MessageType.one_d_sensor_calibration : {},
-        mt.MessageType.set : {},
-        mt.MessageType.stress_level : {
+        MessageType.magnetometer_data : {},
+        MessageType.barometer_data : {},
+        MessageType.one_d_sensor_calibration : {},
+        MessageType.set : {},
+        MessageType.stress_level : {
             0 : fields.Field('stress_level_value'),
             1 : fields.TimestampField('stress_level_time', False),
         },
-        mt.MessageType.unknown_233 : {
+        MessageType.unknown_233 : {
             2 : fields.BytesField('unknown_2'),
         },
-        mt.MessageType.local_time : {
+        MessageType.local_time : {
             0 : fields.TimestampField('local_timestamp', False)
         },
-        mt.MessageType.dive_settings : {},
-        mt.MessageType.dive_gas : {},
-        mt.MessageType.dive_alarm : {},
-        mt.MessageType.exercise_title : {},
-        mt.MessageType.dive_summary : {},
+        MessageType.dive_settings : {},
+        MessageType.dive_gas : {},
+        MessageType.dive_alarm : {},
+        MessageType.exercise_title : {},
+        MessageType.dive_summary : {},
         # Names and types for this message are guesses
-        mt.MessageType.start : {
+        MessageType.start : {
             2 : fields.TimestampField('local_timestamp', False),
         },
         # Names and types for this message are guesses
-        mt.MessageType.data : {
+        MessageType.data : {
             0 : fields.BytesField('data'),
         },
         # Names and types for this message are guesses
-        mt.MessageType.end : {},
-        mt.MessageType.unknown_284 : {
+        MessageType.end : {},
+        MessageType.unknown_284 : {
             1 : fields.TimestampField('ts_1', True),
         },
-        mt.MessageType.mfg_range_min : {},
-        mt.MessageType.mfg_range_max : {},
+        MessageType.mfg_range_min : {},
+        MessageType.mfg_range_max : {},
     }
     reserved_field_indexes = {
         250 : fields.Field('part_index'),

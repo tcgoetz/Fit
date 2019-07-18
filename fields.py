@@ -8,9 +8,9 @@ import time
 import datetime
 
 import conversions
-import fieldenums as fe
-import fieldvalue as fv
-import fd
+import field_enums as fe
+from field_value import FieldValue
+from field_definition import FieldDefinition
 import measurement
 
 
@@ -33,51 +33,56 @@ class Field(object):
         self.measurement_system = fe.DisplayMeasure.metric
 
     def name(self):
+        """Return the name of the field."""
         return self._name
 
     def units(self, value):
+        """Return the units of the field."""
         if self._units[self.measurement_system.value]:
-            return self.convert_many_units(value, None)
+            return self._convert_many_units(value, None)
 
-    def invalid_single(self, value, invalid):
+    def _invalid_single(self, value, invalid):
         return (value == invalid)
 
-    def invalid_many(self, values, invalid):
+    def _invalid_many(self, values, invalid):
         for value in values:
-            if self.invalid_single(value, invalid):
+            if self._invalid_single(value, invalid):
                 return True
         return False
 
     def is_invalid(self, value, invalid):
+        """Return if the field's value is valid."""
         if isinstance(value, list):
-            return self.invalid_many(value, invalid)
-        return self.invalid_single(value, invalid)
+            return self._invalid_many(value, invalid)
+        return self._invalid_single(value, invalid)
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value != invalid:
             return (value / self._conversion_factor[self.measurement_system.value]) + self._conversion_constant[self.measurement_system.value]
 
-    def _convert_many(self, _convert_single, value, invalid):
+    def __convert_many(self, _convert_single, value, invalid):
         if isinstance(value, list):
             return [_convert_single(sub_value, invalid) for sub_value in value]
         return _convert_single(value, invalid)
 
-    def convert_many(self, value, invalid):
-        return self._convert_many(self.convert_single, value, invalid)
+    def _convert_many(self, value, invalid):
+        return self.__convert_many(self._convert_single, value, invalid)
 
-    def convert_single_units(self, value, invalid):
+    def _convert_single_units(self, value, invalid):
         return self._units[self.measurement_system.value]
 
-    def convert_many_units(self, value, invalid):
-        return self._convert_many(self.convert_single_units, value, invalid)
+    def _convert_many_units(self, value, invalid):
+        return self.__convert_many(self._convert_single_units, value, invalid)
 
     def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
+        """Return a FieldValue as intepretted by the field's rules."""
         self.measurement_system = measurement_system
-        return fv.FieldValue(self, invalid=invalid, value=self.convert_many(value, invalid), orig=value)
+        return FieldValue(self, invalid=invalid, value=self._convert_many(value, invalid), orig=value)
 
     def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
+        """Return the field's value as intepretted by the field's rules."""
         self.measurement_system = measurement_system
-        return (self.convert_many(value, invalid), value)
+        return (self._convert_many(value, invalid), value)
 
     def __repr__(self):
         return '%s (%s)' % (self.__class__.__name__, self.name)
@@ -108,21 +113,21 @@ class ObjectField(Field):
         self.output_func = output_func
         self.scale = scale
 
-    def invalid_single(self, value, invalid):
+    def _invalid_single(self, value, invalid):
         return value.is_invalid()
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         return self.output_func(value, self.measurement_system)
 
     def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         self.measurement_system = measurement_system
         value_obj = self.obj_func(value / self.scale, invalid)
-        return fv.FieldValue(self, invalid=invalid, value=self.convert_many(value_obj, invalid), orig=value_obj)
+        return FieldValue(self, invalid=invalid, value=self._convert_many(value_obj, invalid), orig=value_obj)
 
     def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         self.measurement_system = measurement_system
         value_obj = self.obj_func(value / self.scale, invalid)
-        return (self.convert_many(value_obj, invalid), value_obj)
+        return (self._convert_many(value_obj, invalid), value_obj)
 
 
 #
@@ -132,7 +137,7 @@ class BoolField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value != invalid:
             try:
                 return bool(value)
@@ -144,7 +149,7 @@ class EnumField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         try:
             return self.enum(value)
         except Exception:
@@ -159,13 +164,13 @@ class BitField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value != invalid:
             return self.bits.get(value, [self.bits[bit] for bit in self.bits if ((bit & value) == bit)])
 
 
 class LeftRightBalanceField(Field):
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value != invalid:
             if value & 0x8000:
                 left_or_right = 'Right'
@@ -198,10 +203,10 @@ class StringField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def invalid_single(self, value, invalid):
+    def _invalid_single(self, value, invalid):
         return (value < 0) or (value > 127)
 
-    def convert_many(self, value, invalid):
+    def _convert_many(self, value, invalid):
         if isinstance(value, list):
             converted_value = ""
             for aschii_index in value:
@@ -217,7 +222,7 @@ class BytesField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def convert_many(self, value, invalid):
+    def _convert_many(self, value, invalid):
         if isinstance(value, list):
             converted_value = bytearray()
             for character in value:
@@ -277,7 +282,7 @@ class DisplayPositionField(EnumField):
 
 
 class FitBaseTypeField(Field):
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value != invalid:
             try:
                 return FieldDefinition._type_name(value)
@@ -286,7 +291,7 @@ class FitBaseTypeField(Field):
 
 
 class MessageNumberField(Field):
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value != invalid:
             return value
 
@@ -300,7 +305,7 @@ class ManufacturerField(EnumField):
     def __init__(self, *args, **kwargs):
         EnumField.__init__(self, name='manufacturer', *args, **kwargs)
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         try:
             return self.enum(value)
         except Exception:
@@ -460,7 +465,7 @@ class AutoActivityDetectField(BitField):
 
 
 class MessageIndexField(Field):
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         converted_value = {}
         converted_value['selected'] = ((value & 0x8000) == 0x8000)
         converted_value['value'] = (value & 0x0FFF)
@@ -564,7 +569,7 @@ class TimestampField(Field):
         self.utc = utc
         Field.__init__(self, name)
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if self.utc:
             timestamp = time.time()
             time_now = datetime.datetime.fromtimestamp(timestamp)
@@ -581,7 +586,7 @@ class TimeMsField(Field):
         self._conversion_factor = scale
         Field.__init__(self, name)
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value != invalid:
             return conversions.ms_to_dt_time(value / self._conversion_factor)
 
@@ -590,7 +595,7 @@ class TimeSField(Field):
     _units = ['s', 's']
 
     # invalid is not allowed, 65535 is a valid value
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         return value
 
 
@@ -598,7 +603,7 @@ class TimeHourField(TimeMsField):
     def __init__(self, name='time', scale=1.0):
         super(TimeHourField, self).__init__(name, scale)
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value != invalid:
             return conversions.hours_to_dt_time(value / self._conversion_factor)
 
@@ -607,13 +612,13 @@ class TimeMinField(TimeMsField):
     def __init__(self, name='time', scale=1.0):
         super(TimeMinField, self).__init__(name, scale)
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value != invalid:
             return conversions.min_to_dt_time(value / self._conversion_factor)
 
 
 class TimeOfDayField(Field):
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value != invalid:
             return conversions.secs_to_dt_time(value)
 
@@ -709,15 +714,15 @@ class ActivityTypeField(Field):
     def __init__(self):
         Field.__init__(self, 'activity_type')
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         return fe.ActivityType(value)
 
-    def convert_single_units(self, value, invalid):
+    def _convert_single_units(self, value, invalid):
         return cycles_activity_to_units(fe.ActivityType(value).name)
 
 
 class ActivityClassField(Field):
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value & 0x80:
             activity_class = "athlete "
         else:
@@ -742,8 +747,8 @@ class ActivityTypeIntensityField(Field):
     def convert(self, value, invalid, measurement_system):
         activity_type = value & 0x1f
         intensity = value >> 5
-        return fv.FieldValue(self, ['activity_type', 'intensity'],
-                          invalid=invalid, value=self.convert_many(value, invalid), orig=value,
+        return FieldValue(self, ['activity_type', 'intensity'],
+                          invalid=invalid, value=self._convert_many(value, invalid), orig=value,
                           activity_type=self._subfield['activity_type'].convert(activity_type, 0xff, measurement_system),
                           intensity=self._subfield['intensity'].convert(intensity, 0xff, measurement_system))
 
@@ -758,7 +763,7 @@ class VersionField(Field):
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
-    def convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid):
         if value != invalid:
             return '{0:2.2f}'.format(value / self._conversion_factor[self.measurement_system.value])
 
