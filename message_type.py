@@ -175,6 +175,10 @@ class MessageType(enum.Enum):
     mfg_range_min                   = 0xFF00
     mfg_range_max                   = 0xFFFE
 
+    def is_unknown(self):
+        """Return if the message type is not a known type."""
+        return "unknown" in self.name
+
     @classmethod
     def get_type(cls, message_number):
         """Given a message number, return the message type."""
