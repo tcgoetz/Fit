@@ -27,6 +27,13 @@ class DeveloperFieldDefinition(data.Data, base_type.BaseType):
     )
 
     def __init__(self, dev_field_dict, file):
+        """
+        Return a DeveloperFieldDefinition instance created by reading data from a FIT file.
+
+        Paramters:
+            dev_field_dict (dict): a dictionary of developer defined fields.
+            file (File):  a FIT File instance.
+        """
         super(DeveloperFieldDefinition, self).__init__(file, DeveloperFieldDefinition.dfd_schema)
         self.dev_field = dev_field_dict.get(self.field_number)
         if self.dev_field is None:
@@ -42,6 +49,7 @@ class DeveloperFieldDefinition(data.Data, base_type.BaseType):
         return self.dev_field['fit_base_type_id'].orig
 
     def field(self):
+        """Return a DevField instance representing the field for this DeveloperFieldDefinition instance."""
         # if self.native_message_num is not None and self.native_field_num is not None:
         #     message_data = DefinitionMessageData.get_message(self.native_message_num)
         #     field_dict = message_data[1]
@@ -49,23 +57,30 @@ class DeveloperFieldDefinition(data.Data, base_type.BaseType):
         return fields.DevField('dev_' + self.field_name, self.units, self.scale, self.offset)
 
     def base_type(self):
+        """Return the base type for the field."""
         return self._base_type(self.__base_type_value())
 
     def type_endian(self):
+        """Return the endian value for the field."""
         return self._type_endian(self.__base_type_value())
 
     def type_name(self):
+        """Return the type name for the field."""
         return self._type_name(self.__base_type_value())
 
     def invalid(self):
+        """Return the invalid value for the field."""
         return self._invalid(self.__base_type_value())
 
     def type_string(self):
+        """Return the type string for the field."""
         return self._type_string(self.__base_type_value())
 
     def type_count(self):
+        """Return the number of values for the field."""
         type_size = data.Schema.type_to_size(self.type_string())
         return (self.size / type_size)
 
     def __str__(self):
+        """Return a string representation for the DeveloperFieldDefinition instance."""
         return ("%s: type %d: %d %d of %s" % (self.__class__.__name__, self.field_number, self.developer_data_index, self.type_count(), self.type_string()))

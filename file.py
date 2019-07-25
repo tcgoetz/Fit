@@ -23,6 +23,13 @@ class File(object):
     """Object that represents a FIT file."""
 
     def __init__(self, filename, measurement_system=False):
+        """
+        Return a File instance by parsing a FIT file.
+
+        Parameters:
+            filename (string): The name of the FIT file including full path.
+            measurement_system (DisplayMeasure): The measurement units (metric, statute, etc) to sue when parsing the FIT file.
+        """
         self.filename = filename
         self.measurement_system = measurement_system
 
@@ -41,7 +48,7 @@ class File(object):
         self.data_size = self.file_header.data_size
 
         self._definition_messages = {}
-        self._dev_fields = {}
+        self.__dev_fields = {}
         self._data_message_types = []
         data_consumed = 0
         self.record_count = 0
@@ -56,7 +63,7 @@ class File(object):
             logger.debug("Parsed record %r", record_header)
 
             if record_header.message_class is MessageClass.definition:
-                definition_message = DefinitionMessage(record_header, self._dev_fields, self.file)
+                definition_message = DefinitionMessage(record_header, self.__dev_fields, self.file)
                 logger.debug("  Definition [%d]: %s", local_message_num, definition_message)
                 data_consumed += definition_message.file_size
                 self._definition_messages[local_message_num] = definition_message
@@ -76,7 +83,7 @@ class File(object):
                 self.last_message_timestamp = data_message.timestamp
 
                 if data_message_type == MessageType.field_description:
-                    self._dev_fields[data_message['field_definition_number'].value] = data_message
+                    self.__dev_fields[data_message['field_definition_number'].value] = data_message
 
                 logger.debug("Parsed %r", data_message_type)
 

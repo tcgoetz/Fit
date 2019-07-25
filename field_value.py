@@ -14,6 +14,7 @@ class FieldValue(object):
         self.__dict__.update(kwargs)
 
     def is_invalid(self):
+        """Return if the field value is valid."""
         return self.field.is_invalid(self.orig, self.invalid)
 
     def subfield_names(self):
@@ -29,9 +30,6 @@ class FieldValue(object):
     def units(self):
         """Return the units of the field."""
         return self.field.units(self.orig)
-
-    def stats(self):
-        return self.field.stats()
 
     def __getitem__(self, key):
         return self.__dict__[key]

@@ -137,15 +137,18 @@ class DataMessage(object):
         return self._fields.get(name)
 
     def __iter__(self):
+        """Iterate over the data message's fields."""
         return iter(self._fields)
 
     def keys(self):
         return self._fields.keys()
 
     def items(self):
+        """Iterate over the data message's fields."""
         return self._fields.items()
 
     def iteritems(self):
+        """Iterate over the data message's fields."""
         return self._fields.iteritems()
 
     def values(self):

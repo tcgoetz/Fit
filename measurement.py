@@ -17,6 +17,7 @@ class Measurement(object):
         self.default_output_units = default_output_units
 
     def is_invalid(self):
+        """Return if the measurement is valid."""
         return (self.raw_value == self.invalid_value)
 
     def __repr__(self):

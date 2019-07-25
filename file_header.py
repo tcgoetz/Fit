@@ -1,4 +1,4 @@
-"""Object that represents a FIT file header."""
+"""Class that represents a FIT file header."""
 
 __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
@@ -11,6 +11,7 @@ import data
 
 
 class FileHeader(data.Data):
+    """Class that represents a FIT file header."""
 
     fh_primary_schema = data.Schema(
         'fh_primary',
@@ -37,6 +38,7 @@ class FileHeader(data.Data):
 #    file_data_type = ['.', 'F', 'I', 'T']
 
     def __init__(self, file):
+        """Return a FileHeader instance created by reading data from a Fit file."""
         super(FileHeader, self).__init__(file, FileHeader.fh_primary_schema, [(FileHeader.fh_optional_schema, self.__decode_secondary)])
         self.__check()
 
@@ -52,5 +54,6 @@ class FileHeader(data.Data):
             raise exceptions.FitFileDataType("%r < %r" % (self.data_type, FileHeader.file_data_type))
 
     def __str__(self):
+        """Return a string representation of a FileHeader instance."""
         return ("%s(header size %d prot ver %x prof ver %d)" %
                 (self.__class__.__name__, self.header_size, self.protocol_version, self.profile_version))

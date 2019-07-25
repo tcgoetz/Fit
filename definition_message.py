@@ -38,6 +38,14 @@ class DefinitionMessage(data.Data):
     )
 
     def __init__(self, record_header, dev_field_dict, file):
+        """
+        Return a DefinitionMessage instance created by reading data from a FIT file.
+
+        Paramters:
+            record_header (RecordHeader): the record header associated with this definition message.
+            dev_field_dict (dict): a dictionary of developer defoined fields in the FIT file.
+            file (File): the FIT file instance to read the definition message data from.
+        """
         super(DefinitionMessage, self).__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.__decode_secondary)])
 
         self.message_type = MessageType.get_type(self.global_message_number)
@@ -63,7 +71,9 @@ class DefinitionMessage(data.Data):
         return True
 
     def field(self, field_number):
+        """Return an instance of the proper Field subclass for the given field definition."""
         return DefinitionMessageData.reserved_field_indexes.get(field_number, self.message_data.get(field_number, fields.UnknownField(field_number)))
 
     def __str__(self):
+        """Return a string representation of a DefinitionMessage instance."""
         return ("DefinitionMessage: %r %d %s fields" % (self.message_type, self.fields, self.endian.name))

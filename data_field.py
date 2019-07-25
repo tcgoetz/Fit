@@ -32,6 +32,7 @@ class DataField(data.Data):
         return self.value_obj
 
     def __iter__(self):
+        """Iterate over the data fields data."""
         return iter(self.value_obj)
 
     def keys(self):

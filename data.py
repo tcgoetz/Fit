@@ -79,6 +79,7 @@ class Schema(object):
         return decoded_data
 
     def printable_data(self, decoded_data):
+        """Filter the decoded data return a string containing only printable characters."""
         printable_data = {}
         for (key, (type, count, format)) in self.ordered_dict.iteritems():
             if count > 1:
@@ -92,6 +93,7 @@ class Data(object):
     """The base object for decoding FIT file data."""
 
     def __init__(self, file, primary_schema, secondary_schemas=None, endian=Architecture.Little_Endian):
+        """Return a Data instance created by parsing data from a FIT file."""
         self.file = file
         self.primary_schema = primary_schema
         self.secondary_schemas = secondary_schemas
