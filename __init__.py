@@ -9,4 +9,5 @@ import exceptions
 from message_type import UnknownMessageType, MessageType
 import field_enums
 import conversions
+import units
 from measurement import Distance, Latitude, Longitude, Speed, Weight, Temperature
