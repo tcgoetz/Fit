@@ -437,7 +437,7 @@ class DefinitionMessageData(object):
             9 : fields.PercentField('grade'),
             10 : fields.Field('resistance'),
             11 : fields.TimeMsField('time_from_course'),
-            12 : fields.DistanceMetersField('cycle_length', 100),
+            12 : fields.DistanceMetersField('cycle_length', scale=100),
             13 : fields.TemperatureField('temperature'),
             17 : fields.SpeedMpsField('speed_1s'),
             18 : fields.ActivityBasedCyclesField(),
