@@ -154,6 +154,12 @@ class DataMessage(object):
     def values(self):
         return self._fields.values()
 
+    def get(self, fieldname, default=None):
+        """Return the field with named fieldname if preesent otherwise return default."""
+        if fieldname in self.keys():
+            return self[fieldname]
+        return default
+
     def __str__(self):
         fields_str = "".join(["%s, " % value for value in self._fields.values()])
         return "%s: %r: %s" % (self.__class__.__name__, self.type(), fields_str)
