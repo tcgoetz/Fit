@@ -8,6 +8,7 @@ import enum
 
 
 def name_for_enum(enum_instance):
+    """Return the name if variable is enum or UnknownEnumValue."""
     if enum_instance is not None:
         name = getattr(enum_instance, 'name', None)
         if name:
@@ -17,10 +18,16 @@ def name_for_enum(enum_instance):
 
 
 class UnknownEnumValue(object):
+    """Returned when a value can not be cast to an FieldEnum."""
+
     def __init__(self, type, index):
         self.type = type
         self.value = index
-        self.name = '%s_%d' % (type, index)
+        self.name = '%s_%s' % (type, index)
+
+    @classmethod
+    def from_string(cls, string):
+        return cls(string)
 
     def __eq__(self, other):
         return other and (isinstance(other, UnknownEnumValue) and self.value == other.value) or (not isinstance(other, UnknownEnumValue) and self.value == other)
@@ -32,56 +39,79 @@ class UnknownEnumValue(object):
         return self.value
 
     def __repr__(self):
-        return '<%s.%s: %d>' % (self.type, self.name, self.value)
+        return '<%s.%s: %s>' % (self.type, self.name, self.value)
 
 
 class FieldEnum(enum.Enum):
+    """A enum representing a FIT file message field value."""
+
     @classmethod
-    def from_string_ext(cls, string):
-        for name, value in cls.__members__.items():
-            if name in string:
-                return value
+    def _from_string(cls, string):
+        try:
+            return cls(string)
+        except Exception:
+            return getattr(cls, string)
 
     @classmethod
     def from_string(cls, string):
+        """Return an instance of FieldEnum instantiated with string."""
         try:
-            try:
-                return cls(string)
-            except Exception:
-                return getattr(cls, string)
-        except AttributeError:
+            return cls._from_string(string)
+        except (AttributeError, TypeError):
+            return UnknownEnumValue(cls.__name__, string)
+
+
+class FuzzyFieldEnum(FieldEnum):
+    """A enum representing a field value that can be instantiated with a fuzzy match."""
+
+    @classmethod
+    def from_string_ext(cls, string):
+        """Return an instance of FieldEnum instantiated with string using a fuzzy match."""
+        for name, value in cls.__members__.items():
+            if name in str(string):
+                return value
+        return UnknownEnumValue(cls.__name__, string)
+
+    @classmethod
+    def from_string(cls, string):
+        """Return an instance of FieldEnum instantiated with string."""
+        try:
+            return cls._from_string(string)
+        except (AttributeError, TypeError):
             return cls.from_string_ext(string)
 
 
-class Switch(enum.Enum):
+class Switch(FieldEnum):
+    """An enum representing a FIT swicth FIT field value."""
+
     off         = 0
     on          = 1
     auto        = 2
     invalid     = 255
 
 
-class FitBaseUnit(enum.Enum):
+class FitBaseUnit(FieldEnum):
     other       = 0
     kg          = 1
     lb          = 2
     invalid     = 255
 
 
-class DisplayMeasure(FieldEnum):
+class DisplayMeasure(FuzzyFieldEnum):
     metric      = 0
     statute     = 1
     nautical    = 2
     invalid     = 255
 
 
-class DisplayHeart(enum.Enum):
+class DisplayHeart(FieldEnum):
     bpm     = 0
     max     = 1
     reserve = 2
     invalid = 255
 
 
-class DisplayPosition(enum.Enum):
+class DisplayPosition(FieldEnum):
     degree = 0
     dregree_minute = 1
     degree_minute_second = 2
@@ -127,7 +157,7 @@ class DisplayPosition(enum.Enum):
     invalid = 255
 
 
-class Manufacturer(FieldEnum):
+class Manufacturer(FuzzyFieldEnum):
     #
     # Garmin defined values
     #
@@ -304,7 +334,7 @@ class Manufacturer(FieldEnum):
     invalid                         = 65535
 
 
-class GarminProduct(FieldEnum):
+class GarminProduct(FuzzyFieldEnum):
     Bluetooth_Low_Energy_Chipset    = 0
     HRM1                            = 1
     axh01                           = 2
@@ -509,11 +539,11 @@ class GarminProduct(FieldEnum):
     connect                         = 65534
 
 
-class WahooFitnessProduct(FieldEnum):
+class WahooFitnessProduct(FuzzyFieldEnum):
     RPM_Sensor                      = 6
 
 
-class ScoscheProduct(FieldEnum):
+class ScoscheProduct(FuzzyFieldEnum):
     Rhythm_Plus_Armband_HRM         = 2
 
 
@@ -534,7 +564,7 @@ def product_enum(manufacturer, product_str):
     return _manufacturer_to_product_enum[manufacturer].from_string(product_str)
 
 
-class DisplayOrientation(enum.Enum):
+class DisplayOrientation(FieldEnum):
     auto = 0
     portrait = 1
     landscape = 2
@@ -543,13 +573,13 @@ class DisplayOrientation(enum.Enum):
     invalid = 255
 
 
-class Side(enum.Enum):
+class Side(FieldEnum):
     right = 0
     left = 1
     invalid = 255
 
 
-class BacklightMode(enum.Enum):
+class BacklightMode(FieldEnum):
     off = 0
     manual = 1
     key_and_messages = 2
@@ -560,14 +590,14 @@ class BacklightMode(enum.Enum):
     invalid = 255
 
 
-class AntNetwork(enum.Enum):
+class AntNetwork(FieldEnum):
     public  = 0
     antplus = 1
     antfs   = 2
     invalid = 255
 
 
-class SourceType(enum.Enum):
+class SourceType(FieldEnum):
     ant = 0
     antplus = 1
     bluetooth = 2
@@ -577,7 +607,7 @@ class SourceType(enum.Enum):
     invalid = 255
 
 
-class AntplusDeviceType(enum.Enum):
+class AntplusDeviceType(FieldEnum):
     antfs                       = 1
     bike_power                  = 11
     environment_sensor_legacy   = 12
@@ -604,7 +634,7 @@ class AntplusDeviceType(enum.Enum):
     stride_speed_distance       = 124
 
 
-class LocalDeviceType(enum.Enum):
+class LocalDeviceType(FieldEnum):
     gps                             = 0
     accelerometer                   = 3
     barometer                       = 4
@@ -617,7 +647,7 @@ class UnknownDeviceType(UnknownEnumValue):
         UnknownEnumValue.__init__(self, 'UnknownDeviceType', index)
 
 
-class BatteryStatus(enum.Enum):
+class BatteryStatus(FieldEnum):
     new = 1
     good = 2
     ok = 3
@@ -628,7 +658,7 @@ class BatteryStatus(enum.Enum):
     invalid = 255
 
 
-class AutoSyncFrequency(enum.Enum):
+class AutoSyncFrequency(FieldEnum):
     never = 0
     occasionally = 1
     frequent = 2
@@ -637,7 +667,7 @@ class AutoSyncFrequency(enum.Enum):
     invalid = 255
 
 
-class BodyLocation(enum.Enum):
+class BodyLocation(FieldEnum):
     left_leg = 0
     left_calf = 1
     left_shin = 2
@@ -681,25 +711,25 @@ class BodyLocation(enum.Enum):
     invalid = 255
 
 
-class Gender(enum.Enum):
+class Gender(FieldEnum):
     female = 0
     male = 1
 
 
-class HeartRateZoneCalc(enum.Enum):
+class HeartRateZoneCalc(FieldEnum):
     custom = 0
     percent_max_hr = 1
     percent_hrr = 2
     invalid = 255
 
 
-class PowerCalc(enum.Enum):
+class PowerCalc(FieldEnum):
     custom = 0
     percent_ftp = 1
     invalid = 255
 
 
-class Language(enum.Enum):
+class Language(FieldEnum):
     English = 0
     French = 1
     Italian = 2
@@ -742,13 +772,13 @@ class Language(enum.Enum):
     Invalid = 255
 
 
-class DateMode(enum.Enum):
+class DateMode(FieldEnum):
     day_month   = 0
     month_day   = 1
     invalid     = 255
 
 
-class TimeMode(enum.Enum):
+class TimeMode(FieldEnum):
     twelve_hour             = 0
     twentyfour_hour         = 1
     military                = 2
@@ -758,12 +788,12 @@ class TimeMode(enum.Enum):
     invalid                 = 255
 
 
-class Activity(enum.Enum):
+class Activity(FieldEnum):
     manual              = 0
     auto_multi_sport    = 1
 
 
-class ActivityType(enum.Enum):
+class ActivityType(FieldEnum):
     generic             = 0
     running             = 1
     cycling             = 2
@@ -778,7 +808,7 @@ class ActivityType(enum.Enum):
     invalid             = 255
 
 
-class FileType(enum.Enum):
+class FileType(FieldEnum):
     #
     # Garmin defined values
     #
@@ -809,7 +839,7 @@ class FileType(enum.Enum):
     invalid                     = 255
 
 
-class Event(enum.Enum):
+class Event(FieldEnum):
     timer = 0
     workout = 3
     workout_step = 4
@@ -849,7 +879,7 @@ class Event(enum.Enum):
     comm_timeout = 47
 
 
-class EventType(enum.Enum):
+class EventType(FieldEnum):
     start = 0
     stop = 1
     consecutive_depreciated = 2
@@ -862,7 +892,7 @@ class EventType(enum.Enum):
     stop_disable_all = 9
 
 
-class LapTrigger(enum.Enum):
+class LapTrigger(FieldEnum):
     manual = 0
     time = 1
     distance = 2
@@ -873,14 +903,14 @@ class LapTrigger(enum.Enum):
     fitness_equipment = 8
 
 
-class SessionTrigger(enum.Enum):
+class SessionTrigger(FieldEnum):
     activity_end = 0
     manual = 1
     auto_multi_sport = 2
     fitness_equipment = 3
 
 
-class Sport(enum.Enum):
+class Sport(FieldEnum):
     generic                 = 0
     running                 = 1
     cycling                 = 2
@@ -934,7 +964,7 @@ class Sport(enum.Enum):
     invalid                 = 255
 
 
-class SubSport(enum.Enum):
+class SubSport(FieldEnum):
     generic                 = 0
     treadmill               = 1
     street                  = 2
@@ -999,14 +1029,14 @@ class SubSport(enum.Enum):
     invalid                 = 255
 
 
-class PersonalRecordType(enum.Enum):
+class PersonalRecordType(FieldEnum):
     time        = 0
     distance    = 1
     elevation   = 2
     power       = 3
 
 
-class GoalType(enum.Enum):
+class GoalType(FieldEnum):
     time            = 0
     distance        = 1
     calories        = 2
@@ -1016,7 +1046,7 @@ class GoalType(enum.Enum):
     active_minutes  = 6
 
 
-class GoalRecurrence(enum.Enum):
+class GoalRecurrence(FieldEnum):
     off             = 0
     daily           = 1
     weekly          = 2
@@ -1025,13 +1055,13 @@ class GoalRecurrence(enum.Enum):
     custom          = 5
 
 
-class GoalSource(enum.Enum):
+class GoalSource(FieldEnum):
     auto            = 0
     community       = 1
     user            = 2
 
 
-class WatchFaceMode(enum.Enum):
+class WatchFaceMode(FieldEnum):
     digital         = 0
     analog          = 1
     connect_iq      = 2

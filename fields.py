@@ -134,6 +134,8 @@ class ObjectField(Field):
 # Basic field types
 #
 class BoolField(Field):
+    """A FIT file message field with a boolean value."""
+
     def __init__(self, *args, **kwargs):
         Field.__init__(self, *args, **kwargs)
 
@@ -150,10 +152,7 @@ class EnumField(Field):
         Field.__init__(self, *args, **kwargs)
 
     def _convert_single(self, value, invalid):
-        try:
-            return self.enum(value)
-        except Exception:
-            return value
+        return self.enum.from_string(value)
 
 
 class SwitchField(EnumField):
