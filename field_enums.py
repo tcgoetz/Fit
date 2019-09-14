@@ -931,6 +931,7 @@ class Sport(enum.Enum):
     boxing                  = 47
     floor_climbing          = 48
     all                     = 254
+    invalid                 = 255
 
 
 class SubSport(enum.Enum):
@@ -995,6 +996,7 @@ class SubSport(enum.Enum):
     virtual_activity        = 58
     obstacle                = 59
     all                     = 254
+    invalid                 = 255
 
 
 class PersonalRecordType(enum.Enum):
