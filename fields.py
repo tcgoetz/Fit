@@ -322,6 +322,10 @@ class GarminProductField(ProductField):
     enum = fe.GarminProduct
 
 
+class GarminLocalProductField(ProductField):
+    enum = fe.GarminLocalProduct
+
+
 class ScoscheProductField(ProductField):
     enum = fe.ScoscheProduct
 
@@ -343,7 +347,7 @@ class ProductField(Field):
         fe.Manufacturer.Dynastream_OEM         : GarminProductField,
         fe.Manufacturer.Scosche                : ScoscheProductField,
         fe.Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
-        fe.Manufacturer.Garmin_local           : GarminProductField,
+        fe.Manufacturer.Garmin_local           : GarminLocalProductField,
         fe.Manufacturer.invalid                : GarminProductField,
     }
 

@@ -330,12 +330,11 @@ class Manufacturer(FuzzyFieldEnum):
     # Privates values
     #
     Garmin_local                    = 0
-    Garmin_local_start              = 7000
+    Garmin_local_start              = 1000
     invalid                         = 65535
 
 
 class GarminProduct(FuzzyFieldEnum):
-    Bluetooth_Low_Energy_Chipset    = 0
     HRM1                            = 1
     axh01                           = 2
     axb01                           = 3
@@ -349,7 +348,6 @@ class GarminProduct(FuzzyFieldEnum):
     axs01                           = 11
     hrm_tri_single_byte_product_id  = 12
     fr225_single_byte_product_id    = 14
-    Accelerometer_16                = 16
     fr301_china                     = 473
     fr301_japan                     = 474
     fr301_korea                     = 475
@@ -393,9 +391,6 @@ class GarminProduct(FuzzyFieldEnum):
     edge810                         = 1567
     Tempe                           = 1570
     fr910xt_japan                   = 1600
-    GPS_1619                        = 1619
-    GPS_1620                        = 1620
-    GPS_1621                        = 1621
     fr620                           = 1623
     fr220                           = 1632
     fr910xt_korea                   = 1664
@@ -504,7 +499,6 @@ class GarminProduct(FuzzyFieldEnum):
     Fenix5s_Plus                    = 2900
     Edge_130                        = 2909
     Vivosmart_4                     = 2927
-    GPS_2957                        = 2957
     Approach_x10                    = 2962
     VivoActive_3m_w                 = 2988
     Edge_Explore                    = 3011
@@ -518,9 +512,24 @@ class GarminProduct(FuzzyFieldEnum):
     Instinct                        = 3126
     Approach_S40                    = 3314
     HRM_Dual                        = 3299
+    FootPod_SDM4                    = 10007
+    edge_remote                     = 10014
+    Training_Center                 = 20119
+    Connectiq_Simulator             = 65531
+    Android_Antplus_plugin          = 65532
+    connect                         = 65534
+
+class GarminLocalProduct(FuzzyFieldEnum):
+    Bluetooth_Low_Energy_Chipset    = 0
+    Accelerometer_12                = 12
+    Accelerometer_16                = 16
+    Accelerometer_18                = 18
+    GPS_1619                        = 1619
+    GPS_1620                        = 1620
+    GPS_1621                        = 1621
+    GPS_2957                        = 2957
     Accelerometer_8194              = 8194
     Accelerometer_8195              = 8195
-    FootPod_SDM4                    = 10007
     Accelerometer_12529             = 12529
     Accelerometer_12533             = 12533
     Accelerometer_16150             = 16150
@@ -530,13 +539,8 @@ class GarminProduct(FuzzyFieldEnum):
     Accelerometer_16427             = 16427
     Accelerometer_16354             = 16354
     Accelerometer_17350             = 17530
-    edge_remote                     = 10014
-    Training_Center                 = 20119
     Accelerometer_21909             = 21909
     BTLE_Chipset                    = 24832
-    Connectiq_Simulator             = 65531
-    Android_Antplus_plugin          = 65532
-    connect                         = 65534
 
 
 class WahooFitnessProduct(FuzzyFieldEnum):
@@ -555,6 +559,7 @@ class UnknownProduct(UnknownEnumValue):
 def product_enum(manufacturer, product_str):
     _manufacturer_to_product_enum = {
         Manufacturer.Garmin                 : GarminProduct,
+        Manufacturer.Garmin_local           : GarminLocalProduct,
         Manufacturer.Dynastream             : GarminProduct,
         Manufacturer.Dynastream_OEM         : GarminProduct,
         Manufacturer.Scosche                : ScoscheProduct,
