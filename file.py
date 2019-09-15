@@ -29,6 +29,7 @@ class File(object):
         Parameters:
             filename (string): The name of the FIT file including full path.
             measurement_system (DisplayMeasure): The measurement units (metric, statute, etc) to sue when parsing the FIT file.
+
         """
         self.filename = filename
         self.measurement_system = measurement_system

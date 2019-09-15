@@ -65,7 +65,7 @@ class Schema(object):
             self.__compile_unpack(endian)
         return (self.unpack_format[endian.value], self.file_size[endian.value])
 
-    def decode(self, data):
+    def _decode(self, data):
         """Create a dict of message fields given a bytesarray."""
         decoded_data = {}
         index = 0
@@ -102,22 +102,20 @@ class Data(object):
         self.decode_all()
         self._convert()
 
-    def __read(self, schema):
+    def _decode(self, schema):
+        """Given a schema decode file data into fields and add them as properties of the data object."""
         (unpack_format, file_size) = schema.get_unpack(self.endian)
         self.file_size += file_size
-        return struct.unpack(unpack_format, self.file.read(file_size))
-
-    def decode(self, schema):
-        """Given a schema decode file data into fields and add them as properties of the data object."""
-        self.__dict__.update(schema.decode(self.__read(schema)))
+        bytes = struct.unpack(unpack_format, self.file.read(file_size))
+        self.__dict__.update(schema._decode(bytes))
 
     def decode_all(self):
         """Decode file data using all of the data objects schemas."""
-        self.decode(self.primary_schema)
+        self._decode(self.primary_schema)
         if self.secondary_schemas is not None:
             for schema, control_func in self.secondary_schemas:
                 if control_func():
-                    self.decode(schema)
+                    self._decode(schema)
 
     def _convert(self):
         pass
