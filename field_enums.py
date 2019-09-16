@@ -391,6 +391,9 @@ class GarminProduct(FuzzyFieldEnum):
     edge810                         = 1567
     Tempe                           = 1570
     fr910xt_japan                   = 1600
+    GPS_1619                        = 1619
+    GPS_1620                        = 1620
+    GPS_1621                        = 1621
     fr620                           = 1623
     fr220                           = 1632
     fr910xt_korea                   = 1664
@@ -499,6 +502,7 @@ class GarminProduct(FuzzyFieldEnum):
     Fenix5s_Plus                    = 2900
     Edge_130                        = 2909
     Vivosmart_4                     = 2927
+    GPS_2957                        = 2957
     Approach_x10                    = 2962
     VivoActive_3m_w                 = 2988
     Edge_Explore                    = 3011
@@ -518,6 +522,7 @@ class GarminProduct(FuzzyFieldEnum):
     Connectiq_Simulator             = 65531
     Android_Antplus_plugin          = 65532
     connect                         = 65534
+    invalid                         = 65535
 
 class GarminLocalProduct(FuzzyFieldEnum):
     Bluetooth_Low_Energy_Chipset    = 0
