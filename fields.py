@@ -85,6 +85,7 @@ class Field(object):
         return (self._convert_many(value, invalid), value)
 
     def __repr__(self):
+        """Return a string representation of a Field instance."""
         return '%s (%s)' % (self.__class__.__name__, self.name)
 
 
@@ -92,11 +93,15 @@ class Field(object):
 # Special fields
 #
 class UnknownField(Field):
+    """Class that handles fields that are not documented."""
+
     def __init__(self, index):
         super(UnknownField, self).__init__("unknown_" + str(index))
 
 
 class DevField(Field):
+    """Class that handles a developer fields."""
+
     def __init__(self, name, units, scale, offset, *args, **kwargs):
         self._units = [units, units]
         if scale is not None:
@@ -107,6 +112,8 @@ class DevField(Field):
 
 
 class ObjectField(Field):
+    """Class that handles a field that translates into a Python object."""
+
     def __init__(self, name, obj_func, output_func, scale=1.0):
         super(ObjectField, self).__init__(name)
         self.obj_func = obj_func

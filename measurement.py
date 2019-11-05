@@ -21,6 +21,7 @@ class Measurement(object):
         return (self.raw_value == self.invalid_value)
 
     def __repr__(self):
+        """Return a string representation of a Measurement instance."""
         if self.is_invalid():
             value = 'invalid'
         else:
@@ -28,6 +29,7 @@ class Measurement(object):
         return self.__class__.__name__ + '(' + value + ')'
 
     def __str__(self):
+        """Return a string representation of a Measurement instance."""
         return self.__repr__()
 
 

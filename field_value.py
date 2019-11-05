@@ -35,6 +35,7 @@ class FieldValue(object):
         return self.__dict__[key]
 
     def __str__(self):
+        """Return a string representation of a FieldValue instance."""
         field_string = self.field.name + "("
         if self.is_invalid():
             field_string += "[invalid]"
@@ -48,4 +49,5 @@ class FieldValue(object):
         return field_string
 
     def __repr__(self):
+        """Return a string representation of a FieldValue instance."""
         return str(self)

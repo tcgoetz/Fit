@@ -4,7 +4,6 @@ __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
-
 import struct
 import logging
 import enum

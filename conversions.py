@@ -12,25 +12,25 @@ import string
 def ms_to_dt_time(time_ms):
     """Convert time in milli seconds to a datetime object."""
     if time_ms is not None:
-        return (datetime.datetime.min + datetime.timedelta(0, 0, 0, time_ms)).time()
+        return (datetime.datetime.min + datetime.timedelta(milliseconds=time_ms)).time()
 
 
 def secs_to_dt_time(time_secs):
     """Convert time in seconds to a datetime object."""
     if time_secs is not None:
-        return (datetime.datetime.min + datetime.timedelta(0, time_secs)).time()
+        return (datetime.datetime.min + datetime.timedelta(seconds=time_secs)).time()
 
 
 def min_to_dt_time(time_mins):
     """Convert time in minutes to a datetime object."""
     if time_mins is not None:
-        return secs_to_dt_time(time_mins * 60)
+        return (datetime.datetime.min + datetime.timedelta(minutes=time_mins)).time()
 
 
 def hours_to_dt_time(time_hours):
     """Convert time in hours to a datetime object."""
     if time_hours is not None:
-        return secs_to_dt_time(time_hours * 360)
+        return (datetime.datetime.min + datetime.timedelta(hours=time_hours)).time()
 
 
 def time_to_secs(time):

@@ -130,7 +130,9 @@ class File(object):
         return self._data_message_types
 
     def __getitem__(self, name):
+        """Return the attribute named name."""
         return self.__dict__.get(name, [])
 
     def __str__(self):
+        """Return a string representation of the class instance."""
         return "File(%r)" % self.type()
