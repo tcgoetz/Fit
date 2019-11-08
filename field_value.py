@@ -25,6 +25,7 @@ class FieldValue(object):
         return self.field.type
 
     def reconvert(self, measurement_system):
+        """Redo field conversion based on new information."""
         (self.value, self.orig) = self.field.reconvert(self.orig, self.invalid, measurement_system)
 
     def units(self):

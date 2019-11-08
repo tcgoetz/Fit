@@ -22,6 +22,7 @@ class Field(object):
     _conversion_constant = [0, 0]
 
     def __init__(self, name=''):
+        """Return a new instance of the Field class."""
         self.name = name
         if self.__class__.__name__ == 'Field':
             self.type = 'number'
@@ -96,6 +97,7 @@ class UnknownField(Field):
     """Class that handles fields that are not documented."""
 
     def __init__(self, index):
+        """Return a new instance of the UnknownField class."""
         super(UnknownField, self).__init__("unknown_" + str(index))
 
 
