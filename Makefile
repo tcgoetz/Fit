@@ -1,9 +1,14 @@
 
+PROJECT_BASE=$(CURDIR)
+export PROJECT_BASE
+
+PIP ?= pip3
+
 deps:
-	pip install --upgrade --requirement requirements.txt
+	$(PIP) install --user --upgrade --requirement requirements.txt
 
 remove_deps:
-	pip uninstall --requirement requirements.txt
+	$(PIP) uninstall --requirement requirements.txt
 
 test:
 	$(MAKE) -C test

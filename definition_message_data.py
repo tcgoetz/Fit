@@ -4,11 +4,11 @@ __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
-import fields
-from message_type import MessageType
+import Fit.fields as fields
+from Fit.message_type import MessageType
 
 
-class DefinitionMessageData(object):
+class DefinitionMessageData():
     """Structured data for decoding a FIT file definition message."""
 
     known_messages = {
@@ -16,7 +16,7 @@ class DefinitionMessageData(object):
             0 : fields.FileField('type'),
             1 : fields.ManufacturerField(),
             2 : fields.ProductField(),
-            3 : fields.Field('serial_number'),
+            3 : fields.IntegerField('serial_number'),
             4 : fields.TimestampField('time_created'),
             5 : fields.Field('number'),
             7 : fields.StringField('product_name')
@@ -502,7 +502,7 @@ class DefinitionMessageData(object):
             0 : fields.Field('device_index'),
             1 : fields.DeviceType(),
             2 : fields.ManufacturerField(),
-            3 : fields.Field('serial_number'),
+            3 : fields.IntegerField('serial_number'),
             4 : fields.ProductField(),
             5 : fields.VersionField('software_version'),
             6 : fields.Field('hardware_version'),
@@ -604,7 +604,7 @@ class DefinitionMessageData(object):
             0 : fields.FileField('type'),
             1 : fields.ManufacturerField(),
             2 : fields.ProductField(),
-            3 : fields.Field('serial_number'),
+            3 : fields.IntegerField('serial_number'),
             4 : fields.TimestampField('time_created'),
         },  # timestamp, serial_number, creation_time, product_ID, session_style
         MessageType.hrv : {

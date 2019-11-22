@@ -8,8 +8,8 @@ __license__ = "GPL"
 import logging
 import datetime
 
-from data_field import DataField
-from dev_data_field import DevDataField
+from Fit.data_field import DataField
+from Fit.dev_data_field import DevDataField
 
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ class DataMessage(object):
         self.file_size = 0
 
         message_fields = {}
-        for index in xrange(definition_message.fields):
+        for index in range(definition_message.fields):
             data_field = DataField(fit_file, definition_message, definition_message.field_definitions[index], measurement_system)
             self.file_size += data_field.file_size
 
@@ -90,7 +90,7 @@ class DataMessage(object):
 
     def __convert_dev_fields(self, fit_file, definition_message, measurement_system):
         if definition_message.has_dev_fields:
-            for index in xrange(definition_message.dev_fields):
+            for index in range(definition_message.dev_fields):
                 data_field = DevDataField(fit_file, definition_message, definition_message.dev_field_definitions[index], measurement_system)
                 self.file_size += data_field.file_size
                 field_value = data_field._field_value()
@@ -117,7 +117,7 @@ class DataMessage(object):
 
     def to_dict(self, ignore_none_values=False):
         fields = {}
-        for field_name, field_value in self._fields.iteritems():
+        for field_name, field_value in self._fields.items():
             if field_name == 'timestamp_16':
                 fields['timestamp'] = self.timestamp
             elif not ignore_none_values or field_value.value is not None:
@@ -126,7 +126,7 @@ class DataMessage(object):
 
     def to_lower_dict(self, ignore_none_values=False):
         fields = {}
-        for field_name, field_value in self._fields.iteritems():
+        for field_name, field_value in self._fields.items():
             if field_name == 'timestamp_16':
                 fields['timestamp'] = self.timestamp
             elif not ignore_none_values or field_value.value is not None:
@@ -146,10 +146,6 @@ class DataMessage(object):
     def items(self):
         """Iterate over the data message's fields."""
         return self._fields.items()
-
-    def iteritems(self):
-        """Iterate over the data message's fields."""
-        return self._fields.iteritems()
 
     def values(self):
         return self._fields.values()

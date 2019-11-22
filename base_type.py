@@ -5,7 +5,7 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 
-class BaseType(object):
+class BaseType():
     """Manages FIT file format base types."""
 
     base_type_data = {

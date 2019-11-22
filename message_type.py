@@ -7,7 +7,7 @@ __license__ = "GPL"
 
 import enum
 
-import exceptions
+from Fit.exceptions import FitMessageType
 
 
 class UnknownMessageType(object):
@@ -183,7 +183,7 @@ class MessageType(enum.Enum):
     def get_type(cls, message_number):
         """Given a message number, return the message type."""
         if message_number < 0 or message_number > cls.mfg_range_max.value:
-            raise exceptions.FitMessageType('Message number %d out of range' % message_number)
+            raise FitMessageType('Message number %d out of range' % message_number)
         try:
             return cls(message_number)
         except ValueError:

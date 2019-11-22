@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """Test FIT file parsing."""
 
@@ -8,12 +8,9 @@ __license__ = "GPL"
 
 import unittest
 import logging
-import sys
 
-sys.path.append('../.')
-
-import field_enums
-import fields
+from Fit import field_enums
+from Fit import fields
 
 
 root_logger = logging.getLogger()

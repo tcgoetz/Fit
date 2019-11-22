@@ -4,7 +4,7 @@ __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
-import field_enums as fe
+import Fit.field_enums as fe
 
 
 class Measurement(object):

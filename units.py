@@ -6,7 +6,7 @@ __license__ = "GPL"
 
 import enum
 
-from field_enums import DisplayMeasure
+from Fit.field_enums import DisplayMeasure
 
 
 class UnitTypes(enum.Enum):

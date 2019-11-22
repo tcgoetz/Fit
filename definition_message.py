@@ -7,30 +7,30 @@ __license__ = "GPL"
 
 import collections
 
-import data
-import fields
-from developer_field_definition import DeveloperFieldDefinition
-from definition_message_data import DefinitionMessageData
-from field_definition import FieldDefinition
-from message_type import MessageType
+from Fit.data import Schema, Data, Architecture
+import Fit.fields as fields
+from Fit.developer_field_definition import DeveloperFieldDefinition
+from Fit.definition_message_data import DefinitionMessageData
+from Fit.field_definition import FieldDefinition
+from Fit.message_type import MessageType
 
 
-class DefinitionMessage(data.Data):
+class DefinitionMessage(Data):
     """FIT file definition message."""
 
-    dm_primary_schema = data.Schema(
+    dm_primary_schema = Schema(
         'dm_primary',
         collections.OrderedDict(
             [('reserved', ['UINT8', 1, '%x']), ('architecture', ['UINT8', 1, '%x'])]
         )
     )
-    dm_secondary_schema = data.Schema(
+    dm_secondary_schema = Schema(
         'dm_secondary',
         collections.OrderedDict(
             [('global_message_number', ['UINT16', 1, '%x']), ('fields', ['UINT8', 1, '%x'])]
         )
     )
-    dm_dev_schema = data.Schema(
+    dm_dev_schema = Schema(
         'dm_dev',
         collections.OrderedDict(
             [('dev_fields', ['UINT8', 1, '%x'])]
@@ -52,7 +52,7 @@ class DefinitionMessage(data.Data):
         self.message_data = DefinitionMessageData.get_message_definition(self.message_type)
 
         self.field_definitions = []
-        for index in xrange(self.fields):
+        for index in range(self.fields):
             field_definition = FieldDefinition(file)
             self.file_size += field_definition.file_size
             self.field_definitions.append(field_definition)
@@ -61,13 +61,13 @@ class DefinitionMessage(data.Data):
         self.dev_field_definitions = []
         if self.has_dev_fields:
             self._decode(DefinitionMessage.dm_dev_schema)
-            for index in xrange(self.dev_fields):
+            for index in range(self.dev_fields):
                 dev_field_definition = DeveloperFieldDefinition(dev_field_dict, file)
                 self.file_size += dev_field_definition.file_size
                 self.dev_field_definitions.append(dev_field_definition)
 
     def __decode_secondary(self):
-        self.endian = data.Architecture(self.architecture)
+        self.endian = Architecture(self.architecture)
         return True
 
     def field(self, field_number):

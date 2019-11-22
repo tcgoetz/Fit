@@ -7,7 +7,7 @@ __license__ = "GPL"
 import collections
 import enum
 
-import data
+from Fit.data import Schema, Data
 
 
 class MessageClass(enum.Enum):
@@ -17,10 +17,10 @@ class MessageClass(enum.Enum):
     definition  = 1
 
 
-class RecordHeader(data.Data):
+class RecordHeader(Data):
     """Object that represents a FIT file record header."""
 
-    rh_schema = data.Schema('rh', collections.OrderedDict([('record_header', ['UINT8', 1, '%x'])]))
+    rh_schema = Schema('rh', collections.OrderedDict([('record_header', ['UINT8', 1, '%x'])]))
     message_type_string = ['data', 'definition']
 
     def __init__(self, file):

@@ -12,10 +12,13 @@ class FitException(Exception):
         self.message = message
 
     def __str__(self):
+        """Return a string representation of a FitException instance."""
         return self.message
 
 
 class FitFileError(FitException):
+    """An exception when parsing a FIT file."""
+
     pass
 
 

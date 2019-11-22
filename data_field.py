@@ -7,15 +7,16 @@ __license__ = "GPL"
 
 import collections
 
-import data
+from Fit.data import Data, Schema
 
 
-class DataField(data.Data):
+class DataField(Data):
     """FIT file data field."""
 
     __schema_cache = {}
 
     def __init__(self, file, definition_message, field_definition, measurement_system):
+        """Return an instance of the DataField class."""
         self.field_definition = field_definition
         self.measurement_system = measurement_system
         self.field = definition_message.field(field_definition.field_definition_number)
@@ -24,7 +25,7 @@ class DataField(data.Data):
 
     def __populate_schema_cache(self, schema_sig, field_name, type, count):
         """Cache schema on the assumption that the set of schemas is much smaller than the number of times they are used."""
-        schema = data.Schema(field_name, collections.OrderedDict([(field_name, [type, count, '%d'])]))
+        schema = Schema(field_name, collections.OrderedDict([(field_name, [type, count, '%d'])]))
         self.__schema_cache[schema_sig] = schema
         return schema
 

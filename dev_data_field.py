@@ -6,10 +6,10 @@ __license__ = "GPL"
 
 import collections
 
-import data
+from Fit.data import Data, Schema
 
 
-class DevDataField(data.Data):
+class DevDataField(Data):
     """Object that represents a FIT file developer data field."""
 
     def __init__(self, file, definition_message, dev_field_definition, measurement_system):
@@ -18,7 +18,7 @@ class DevDataField(data.Data):
         self.field = dev_field_definition.field()
         type = dev_field_definition.type_string()
         count = dev_field_definition.type_count()
-        schema = data.Schema(self.field.name, collections.OrderedDict([(self.field.name, [type, count, '%d'])]))
+        schema = Schema(self.field.name, collections.OrderedDict([(self.field.name, [type, count, '%d'])]))
         super(DevDataField, self).__init__(file, schema, None, definition_message.endian)
 
     def _convert(self):

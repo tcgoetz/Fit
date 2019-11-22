@@ -6,14 +6,14 @@ __license__ = "GPL"
 
 import collections
 
-import exceptions
-import data
+from Fit.exceptions import FitFileBadHeaderSize, FitFileBadProtocolVersion, FitFileDataType
+from Fit.data import Schema, Data
 
 
-class FileHeader(data.Data):
+class FileHeader(Data):
     """Class that represents a FIT file header."""
 
-    fh_primary_schema = data.Schema(
+    fh_primary_schema = Schema(
         'fh_primary',
         collections.OrderedDict(
             [
@@ -25,7 +25,7 @@ class FileHeader(data.Data):
             ]
         )
     )
-    fh_optional_schema = data.Schema(
+    fh_optional_schema = Schema(
         'fh_optional',
         collections.OrderedDict([('crc', ['UINT16', 1, '%x'])])
     )
@@ -47,11 +47,11 @@ class FileHeader(data.Data):
 
     def __check(self):
         if self.header_size < FileHeader.min_file_header_size:
-            raise exceptions.FitFileBadHeaderSize("%d < %d" % (self.header_size, FileHeader.min_file_header_size))
+            raise FitFileBadHeaderSize("%d < %d" % (self.header_size, FileHeader.min_file_header_size))
         if self.protocol_version < FileHeader.min_protocol_version:
-            raise exceptions.FitFileBadProtocolVersion("%d < %d" % (self.protocol_version, FileHeader.min_protocol_version))
+            raise FitFileBadProtocolVersion("%d < %d" % (self.protocol_version, FileHeader.min_protocol_version))
         if self.data_type != FileHeader.file_data_type:
-            raise exceptions.FitFileDataType("%r < %r" % (self.data_type, FileHeader.file_data_type))
+            raise FitFileDataType("%r < %r" % (self.data_type, FileHeader.file_data_type))
 
     def __str__(self):
         """Return a string representation of a FileHeader instance."""

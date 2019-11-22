@@ -53,7 +53,7 @@ class Schema(object):
             unpack_format = ''
         for key in self.ordered_dict:
             (type, count, format) = self.ordered_dict[key]
-            for index in xrange(count):
+            for index in range(count):
                 unpack_format += self.__type_to_unpack_format(type)
                 self.file_size[endian.value] += self.type_to_size(type)
         self.unpack_format[endian.value] = unpack_format
@@ -68,9 +68,9 @@ class Schema(object):
         """Create a dict of message fields given a bytesarray."""
         decoded_data = {}
         index = 0
-        for (key, (type, count, format)) in self.ordered_dict.iteritems():
+        for (key, (type, count, format)) in self.ordered_dict.items():
             if count > 1:
-                decoded_data[key] = [data[index + repeat] for repeat in xrange(count)]
+                decoded_data[key] = [data[index + repeat] for repeat in range(count)]
                 index += count
             else:
                 decoded_data[key] = data[index]
@@ -80,9 +80,9 @@ class Schema(object):
     def printable_data(self, decoded_data):
         """Filter the decoded data return a string containing only printable characters."""
         printable_data = {}
-        for (key, (type, count, format)) in self.ordered_dict.iteritems():
+        for (key, (type, count, format)) in self.ordered_dict.items():
             if count > 1:
-                printable_data[key] = [(format % decoded_data[repeat]) for repeat in xrange(count)]
+                printable_data[key] = [(format % decoded_data[repeat]) for repeat in range(count)]
             else:
                 printable_data[key] = (format % decoded_data[key])
         return printable_data

@@ -6,14 +6,14 @@ __license__ = "GPL"
 
 import collections
 
-import data
-import base_type
+from Fit.data import Data, Schema
+from Fit.base_type import BaseType
 
 
-class FieldDefinition(data.Data, base_type.BaseType):
+class FieldDefinition(Data, BaseType):
     """Object that defines the structure of a FIT file message field."""
 
-    fd_schema = data.Schema(
+    fd_schema = Schema(
         'fd',
         collections.OrderedDict(
             [
@@ -55,8 +55,8 @@ class FieldDefinition(data.Data, base_type.BaseType):
 
     def type_count(self):
         """Return the number of values for the field."""
-        type_size = data.Schema.type_to_size(self.type_string())
-        return (self.size / type_size)
+        type_size = Schema.type_to_size(self.type_string())
+        return int(self.size / type_size)
 
     def __str__(self):
         """Return a string representation for the FieldDefinition instance."""

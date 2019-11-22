@@ -1,7 +1,11 @@
 #
 # This Makefile automates running tests for the project.
 #
-PYTHON=python
+PROJECT_BASE ?= $(CURDIR)/..
+
+PYTHON=python3
+PYTHONPATH=${PROJECT_BASE}/..
+export PYTHONPATH
 
 TEST_GROUPS=fit_field_enum fit_dependant_field
 

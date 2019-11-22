@@ -7,11 +7,12 @@ __license__ = "GPL"
 
 import logging
 
-from file_header import FileHeader
-from record_header import RecordHeader, MessageClass
-from definition_message import DefinitionMessage
-from data_message import DataMessage
-from message_type import MessageType
+from Fit.file_header import FileHeader
+from Fit.record_header import RecordHeader, MessageClass
+from Fit.definition_message import DefinitionMessage
+from Fit.data_message import DataMessage
+from Fit.message_type import MessageType
+from Fit.field_enums import DisplayMeasure
 
 
 logger = logging.getLogger(__name__)
@@ -22,13 +23,13 @@ name_regex = r'\w+\.(fit|FIT)'
 class File(object):
     """Object that represents a FIT file."""
 
-    def __init__(self, filename, measurement_system=False):
+    def __init__(self, filename, measurement_system=DisplayMeasure.statute):
         """
         Return a File instance by parsing a FIT file.
 
         Parameters:
             filename (string): The name of the FIT file including full path.
-            measurement_system (DisplayMeasure): The measurement units (metric, statute, etc) to sue when parsing the FIT file.
+            measurement_system (DisplayMeasure): The measurement units (metric, statute, etc) to uwe when parsing the FIT file.
 
         """
         self.filename = filename
@@ -41,6 +42,10 @@ class File(object):
 
         self.file = open(filename, 'rb')
         self.__parse()
+
+    def __del__(self):
+        """Delete the File instance."""
+        self.file.close()
 
     def __parse(self):
         logger.debug("Parsing File %s", self.filename)

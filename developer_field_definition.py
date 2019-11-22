@@ -6,16 +6,16 @@ __license__ = "GPL"
 
 import collections
 
-import data
-import base_type
-import fields
-import exceptions
+from Fit.data import Data, Schema
+from Fit.base_type import BaseType
+import Fit.fields as fields
+from Fit.exceptions import FitUndefDevMessageType
 
 
-class DeveloperFieldDefinition(data.Data, base_type.BaseType):
+class DeveloperFieldDefinition(Data, BaseType):
     """Developer filed definitions decoded from a FIT file."""
 
-    dfd_schema = data.Schema(
+    dfd_schema = Schema(
         'dfd_schema',
         collections.OrderedDict(
             [
@@ -37,7 +37,7 @@ class DeveloperFieldDefinition(data.Data, base_type.BaseType):
         super(DeveloperFieldDefinition, self).__init__(file, DeveloperFieldDefinition.dfd_schema)
         self.dev_field = dev_field_dict.get(self.field_number)
         if self.dev_field is None:
-            raise exceptions.FitUndefDevMessageType('Dev field %d undefined in %r' % (self.field_number, dev_field_dict))
+            raise FitUndefDevMessageType('Dev field %d undefined in %r' % (self.field_number, dev_field_dict))
         self.field_name = self.dev_field['field_name'].value
         self.native_message_num = self.dev_field['native_message_num'].value
         self.native_field_num = self.dev_field['native_field_num'].value
@@ -78,8 +78,8 @@ class DeveloperFieldDefinition(data.Data, base_type.BaseType):
 
     def type_count(self):
         """Return the number of values for the field."""
-        type_size = data.Schema.type_to_size(self.type_string())
-        return (self.size / type_size)
+        type_size = Schema.type_to_size(self.type_string())
+        return int(self.size / type_size)
 
     def __str__(self):
         """Return a string representation for the DeveloperFieldDefinition instance."""

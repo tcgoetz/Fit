@@ -7,11 +7,11 @@ __license__ = "GPL"
 import time
 import datetime
 
-import conversions
-import field_enums as fe
-from field_value import FieldValue
-from field_definition import FieldDefinition
-import measurement
+import Fit.conversions as conversions
+import Fit.field_enums as fe
+from Fit.field_value import FieldValue
+from Fit.field_definition import FieldDefinition
+import Fit.measurement as measurement
 
 
 class Field(object):
@@ -142,6 +142,20 @@ class ObjectField(Field):
 #
 # Basic field types
 #
+class IntegerField(Field):
+    """A FIT file message field with a boolean value."""
+
+    def __init__(self, *args, **kwargs):
+        Field.__init__(self, *args, **kwargs)
+
+    def _convert_single(self, value, invalid):
+        if value != invalid:
+            try:
+                return int(value)
+            except Exception:
+                return value
+
+
 class BoolField(Field):
     """A FIT file message field with a boolean value."""
 
@@ -751,6 +765,7 @@ class IntensityField(Field):
 
 
 class ActivityTypeIntensityField(Field):
+
     def __init__(self, *args, **kwargs):
         super(ActivityTypeIntensityField, self).__init__(*args, **kwargs)
         self._subfield['activity_type'] = ActivityTypeField()
@@ -980,6 +995,7 @@ class GoalValueField(Field):
         super(GoalValueField, self).__init__(name='target_value', *args, **kwargs)
 
     def dependant_field(self, control_value_list):
+        """Return the dependant field class for this instance."""
         goal_type = control_value_list[0]
         field_name = 'unknown_goal'
         if goal_type is not None:

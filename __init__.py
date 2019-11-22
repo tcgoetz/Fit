@@ -4,10 +4,10 @@ __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
-import file
-import exceptions
-from message_type import UnknownMessageType, MessageType
-import field_enums
-import conversions
-import units
-from measurement import Distance, Latitude, Longitude, Speed, Weight, Temperature
+from Fit.file import File
+import Fit.exceptions
+from Fit.message_type import UnknownMessageType, MessageType
+import Fit.field_enums as field_enums
+import Fit.conversions as conversions
+import Fit.units as units
+from Fit.measurement import Distance, Latitude, Longitude, Speed, Weight, Temperature

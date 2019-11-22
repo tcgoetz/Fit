@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """Test FIT file parsing."""
 
@@ -8,12 +8,9 @@ __license__ = "GPL"
 
 import unittest
 import logging
-import sys
 
-sys.path.append('../.')
-
-import field_enums
-import fields
+from Fit import field_enums
+from Fit import fields
 
 
 root_logger = logging.getLogger()
@@ -37,8 +34,11 @@ class TestFitFieldEnum(unittest.TestCase):
     def test_field_enum_unknown_conversion(self):
         self.assertIsInstance(field_enums.Switch.from_string('junk'), field_enums.UnknownEnumValue)
 
-    def test_field_enum_fuzzy_conversion(self):
+    def test_field_enum_fuzzy_metric(self):
         self.assertEqual(field_enums.DisplayMeasure.from_string('metric_system'), field_enums.DisplayMeasure.metric)
+
+    def test_field_enum_fuzzy_statute(self):
+        self.assertEqual(field_enums.DisplayMeasure.from_string('statute_us'), field_enums.DisplayMeasure.statute)
 
     def test_enum_field_valid_conversion(self):
         switch = fields.SwitchField()
