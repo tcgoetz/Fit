@@ -4,6 +4,8 @@ __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
+# flake8: noqa
+
 from Fit.file import File
 import Fit.exceptions
 from Fit.message_type import UnknownMessageType, MessageType

@@ -16,21 +16,21 @@ logger = logging.getLogger(__name__)
 
 
 class DataMessage(object):
+    """Class decodes and holds a FIT file data message."""
 
     matched_timestamp_16 = None
     last_timestamp = None
     last_absolute_timestamp = None
 
     def __init__(self, definition_message, fit_file, measurement_system):
+        """Return a DataMessage instance decoded from the supplied FIT file using the supplied definition message."""
         self.definition_message = definition_message
         self._fields = {}
         self.file_size = 0
-
         message_fields = {}
         for index in range(definition_message.fields):
             data_field = DataField(fit_file, definition_message, definition_message.field_definitions[index], measurement_system)
             self.file_size += data_field.file_size
-
             # expand subfields?
             field_value = data_field._field_value()
             subfield_names = field_value.subfield_names()
@@ -46,14 +46,12 @@ class DataMessage(object):
                 message_fields[data_field._field_name()] = data_field._field_value()
         self.__convert_fields(message_fields, measurement_system)
         self.__convert_dev_fields(fit_file, definition_message, measurement_system)
-
         time_created_timestamp_field = self._fields.get('time_created')
         if time_created_timestamp_field:
             self.time_created_timestamp = time_created_timestamp_field.value
             self.__track_dates(self.time_created_timestamp)
         else:
             self.time_created_timestamp = None
-
         timestamp_field = self._fields.get('timestamp')
         if timestamp_field:
             self.__track_dates(timestamp_field.value)
@@ -113,9 +111,11 @@ class DataMessage(object):
         return DataMessage.last_absolute_timestamp + datetime.timedelta(0, delta)
 
     def type(self):
+        """Return the message type."""
         return self.definition_message.message_type
 
     def to_dict(self, ignore_none_values=False):
+        """Return the message as dictionary of field name-value entries."""
         fields = {}
         for field_name, field_value in self._fields.items():
             if field_name == 'timestamp_16':
@@ -125,6 +125,7 @@ class DataMessage(object):
         return fields
 
     def to_lower_dict(self, ignore_none_values=False):
+        """Return the message as dictionary of field name-value entries with field names converted to lower case."""
         fields = {}
         for field_name, field_value in self._fields.items():
             if field_name == 'timestamp_16':
@@ -134,6 +135,7 @@ class DataMessage(object):
         return fields
 
     def __getitem__(self, name):
+        """Return a message field's value given the field name."""
         return self._fields.get(name)
 
     def __iter__(self):
@@ -141,6 +143,7 @@ class DataMessage(object):
         return iter(self._fields)
 
     def keys(self):
+        """Return the message's field's names."""
         return self._fields.keys()
 
     def items(self):
@@ -148,6 +151,7 @@ class DataMessage(object):
         return self._fields.items()
 
     def values(self):
+        """Return the message's field's values."""
         return self._fields.values()
 
     def get(self, fieldname, default=None):
@@ -157,8 +161,10 @@ class DataMessage(object):
         return default
 
     def __str__(self):
+        """Return a string representation of a DataMessage instance."""
         fields_str = "".join(["%s, " % value for value in self._fields.values()])
         return "%s: %r: %s" % (self.__class__.__name__, self.type(), fields_str)
 
     def __repr__(self):
+        """Return a string representation of a DataMessage instance."""
         return "%s: %r: %r" % (self.__class__.__name__, self.type(), self._fields)

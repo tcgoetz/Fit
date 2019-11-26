@@ -50,12 +50,15 @@ class DataField(Data):
         return iter(self.value_obj)
 
     def keys(self):
+        """Return the keys to the value object dictionary."""
         return self.value_obj.keys()
 
     def items(self):
+        """Return the key-value pairs for the value object dictionary."""
         return self.value_obj.items()
 
     def values(self):
+        """Return the values to the value object dictionary."""
         return self.value_obj.values()
 
     def __str__(self):
