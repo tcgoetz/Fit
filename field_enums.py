@@ -20,25 +20,31 @@ def name_for_enum(enum_instance):
 class UnknownEnumValue(object):
     """Returned when a value can not be cast to an FieldEnum."""
 
-    def __init__(self, type, index):
+    def __init__(self, type, value):
+        """Return a UnknownEnumValue instance."""
         self.type = type
-        self.value = index
-        self.name = '%s_%s' % (type, index)
+        self.value = value
+        self.name = '%s_%s' % (type, value)
 
     @classmethod
     def from_string(cls, string):
+        """Return a UnknownEnumValue instance created from a string."""
         return cls(string)
 
     def __eq__(self, other):
+        """Test two UnknownEnumValue instances for equivelence."""
         return other and (isinstance(other, UnknownEnumValue) and self.value == other.value) or (not isinstance(other, UnknownEnumValue) and self.value == other)
 
     def __ne__(self, other):
+        """Test two UnknownEnumValue instances for equivelence."""
         return not self.__eq__(other)
 
     def __hash__(self):
+        """Return a hash value for a UnknownEnumValue instance."""
         return self.value
 
     def __repr__(self):
+        """Return a string representation of a UnknownEnumValue instance."""
         return '<%s.%s: %s>' % (self.type, self.name, self.value)
 
 
@@ -524,6 +530,7 @@ class GarminProduct(FuzzyFieldEnum):
     connect                         = 65534
     invalid                         = 65535
 
+
 class GarminLocalProduct(FuzzyFieldEnum):
     Bluetooth_Low_Energy_Chipset    = 0
     Accelerometer_12                = 12
@@ -819,9 +826,8 @@ class ActivityType(FieldEnum):
 
 
 class FileType(FieldEnum):
-    #
-    # Garmin defined values
-    #
+    """Garmin defined values."""
+
     unknown0                    = 0
     device                      = 1
     settings                    = 2

@@ -105,6 +105,7 @@ class DevField(Field):
     """Class that handles a developer fields."""
 
     def __init__(self, name, units, scale, offset, *args, **kwargs):
+        """Return a DevField instance."""
         self._units = [units, units]
         if scale is not None:
             self._conversion_factor = [scale, scale]
@@ -117,6 +118,7 @@ class ObjectField(Field):
     """Class that handles a field that translates into a Python object."""
 
     def __init__(self, name, obj_func, output_func, scale=1.0):
+        """Return a ObjectField instance."""
         super(ObjectField, self).__init__(name)
         self.obj_func = obj_func
         self.output_func = output_func
@@ -785,14 +787,17 @@ class FileField(EnumField):
 
 
 class VersionField(Field):
-    _conversion_factor = [100.0, 100.0]
+    """A field that contains a software or hardware version."""
+
+    _conversion_factor = 100.0
 
     def __init__(self, *args, **kwargs):
+        """Return an instance of VersionField."""
         Field.__init__(self, *args, **kwargs)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
-            return '{0:2.2f}'.format(value / self._conversion_factor[self.measurement_system.value])
+            return '{0:2.2f}'.format(value / self._conversion_factor)
 
 
 class EventField(EnumField):

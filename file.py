@@ -23,7 +23,7 @@ name_regex = r'\w+\.(fit|FIT)'
 class File(object):
     """Object that represents a FIT file."""
 
-    def __init__(self, filename, measurement_system=DisplayMeasure.statute):
+    def __init__(self, filename, measurement_system=DisplayMeasure.metric):
         """
         Return a File instance by parsing a FIT file.
 
