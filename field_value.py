@@ -9,6 +9,7 @@ class FieldValue(object):
     """Object that represents a FIT field message field value."""
 
     def __init__(self, field, subfield_names=None, **kwargs):
+        """Return a FieldValue instance given the field."""
         self.field = field
         self._subfield_names = subfield_names
         self.__dict__.update(kwargs)

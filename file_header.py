@@ -39,7 +39,7 @@ class FileHeader(Data):
 
     def __init__(self, file):
         """Return a FileHeader instance created by reading data from a Fit file."""
-        super(FileHeader, self).__init__(file, FileHeader.fh_primary_schema, [(FileHeader.fh_optional_schema, self.__decode_secondary)])
+        super().__init__(file, FileHeader.fh_primary_schema, [(FileHeader.fh_optional_schema, self.__decode_secondary)])
         self.__check()
 
     def __decode_secondary(self):

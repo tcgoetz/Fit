@@ -14,6 +14,7 @@ class UnknownMessageType(object):
     """Represents an unknown FIT file message type."""
 
     def __init__(self, index):
+        """Return an instance of UnknownMessageType."""
         self.value = index
         self.name = 'unknown_%d' % index
 
@@ -27,6 +28,7 @@ class UnknownMessageType(object):
         return self.value
 
     def __repr__(self):
+        """Return a string representation of the UnknownMessageType instance."""
         return '<UnknownMessageType.%s: %d>' % (self.name, self.value)
 
 

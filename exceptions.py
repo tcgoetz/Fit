@@ -9,6 +9,7 @@ class FitException(Exception):
     """Base class for FIT file exceptions."""
 
     def __init__(self, message):
+        """Return a FitException instance."""
         self.message = message
 
     def __str__(self):
@@ -35,6 +36,8 @@ class FitFileBadProtocolVersion(FitFileError):
 
 
 class FitFileDataType(FitFileError):
+    """An exception happenbed will parsing FIT file data."""
+
     pass
 
 
@@ -45,16 +48,18 @@ class FitMessageType(FitFileError):
 
 
 class FitMessageParse(FitFileError):
+    """An exception happenbed will parsing a FIT file message."""
+
     pass
 
 
 class FitUndefDevMessageType(FitFileError):
-    pass
+    """An undefined message type was encountered."""
 
-
-class FitDependantField(FitFileError):
     pass
 
 
 class FitOutOfOrderMessage(FitFileError):
+    """The message's timestamp preceeded the previous message's."""
+
     pass

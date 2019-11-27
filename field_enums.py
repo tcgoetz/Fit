@@ -981,6 +981,8 @@ class Sport(FieldEnum):
 
 
 class SubSport(FieldEnum):
+    """An enum field containing more specific sport information."""
+
     generic                 = 0
     treadmill               = 1
     street                  = 2

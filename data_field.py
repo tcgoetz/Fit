@@ -21,7 +21,7 @@ class DataField(Data):
         self.measurement_system = measurement_system
         self.field = definition_message.field(field_definition.field_definition_number)
         schema = self.__get_schema(self.field.name, field_definition.type_string(), field_definition.type_count())
-        super(DataField, self).__init__(file, schema, None, definition_message.endian)
+        super().__init__(file, schema, None, definition_message.endian)
 
     def __populate_schema_cache(self, schema_sig, field_name, type, count):
         """Cache schema on the assumption that the set of schemas is much smaller than the number of times they are used."""

@@ -31,7 +31,7 @@ class FieldDefinition(Data, BaseType):
         Paramters:
             file (File):  a FIT File instance.
         """
-        super(FieldDefinition, self).__init__(file, FieldDefinition.fd_schema)
+        super().__init__(file, FieldDefinition.fd_schema)
 
     def base_type(self):
         """Return the base type for the field."""

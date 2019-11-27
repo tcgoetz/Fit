@@ -98,7 +98,7 @@ class UnknownField(Field):
 
     def __init__(self, index):
         """Return a new instance of the UnknownField class."""
-        super(UnknownField, self).__init__("unknown_" + str(index))
+        super().__init__("unknown_" + str(index))
 
 
 class DevField(Field):
@@ -111,18 +111,19 @@ class DevField(Field):
             self._conversion_factor = [scale, scale]
         if offset is not None:
             self._conversion_constant = [offset, offset]
-        super(DevField, self).__init__(name=name, *args, **kwargs)
+        super().__init__(name=name, *args, **kwargs)
 
 
 class ObjectField(Field):
     """Class that handles a field that translates into a Python object."""
 
-    def __init__(self, name, obj_func, output_func, scale=1.0):
+    def __init__(self, name, obj_func, output_func, scale=1.0, offset=0.0):
         """Return a ObjectField instance."""
-        super(ObjectField, self).__init__(name)
+        super().__init__(name)
         self.obj_func = obj_func
         self.output_func = output_func
         self.scale = scale
+        self.offset = offset
 
     def _invalid_single(self, value, invalid):
         return value.is_invalid()
@@ -131,13 +132,15 @@ class ObjectField(Field):
         return self.output_func(value, self.measurement_system)
 
     def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
+        """Returna FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
-        value_obj = self.obj_func(value / self.scale, invalid)
+        value_obj = self.obj_func((value / self.scale) - self.offset, invalid)
         return FieldValue(self, invalid=invalid, value=self._convert_many(value_obj, invalid), orig=value_obj)
 
     def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
+        """Returna FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
-        value_obj = self.obj_func(value / self.scale, invalid)
+        value_obj = self.obj_func((value / self.scale) - self.offset, invalid)
         return (self._convert_many(value_obj, invalid), value_obj)
 
 
@@ -148,7 +151,8 @@ class IntegerField(Field):
     """A FIT file message field with a boolean value."""
 
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+        """Return a field instance that holds an integer."""
+        super().__init__(*args, **kwargs)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -162,7 +166,7 @@ class BoolField(Field):
     """A FIT file message field with a boolean value."""
 
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -174,7 +178,7 @@ class BoolField(Field):
 
 class EnumField(Field):
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _convert_single(self, value, invalid):
         return self.enum.from_string(value)
@@ -186,7 +190,7 @@ class SwitchField(EnumField):
 
 class BitField(Field):
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -209,7 +213,7 @@ class PercentField(Field):
 
     def __init__(self, name, scale=1.0, *args, **kwargs):
         self._conversion_factor = [100.0 * scale, 100.0 * scale]
-        Field.__init__(self, name, *args, **kwargs)
+        super().__init__(name, *args, **kwargs)
 
 
 class BytePercentField(Field):
@@ -220,12 +224,12 @@ class BytePercentField(Field):
 class NumberField(Field):
     def __init__(self, name, scale=1.0, *args, **kwargs):
         self._conversion_factor = [scale, scale]
-        super(NumberField, self).__init__(name, *args, **kwargs)
+        super().__init__(name, *args, **kwargs)
 
 
 class StringField(Field):
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _invalid_single(self, value, invalid):
         return (value < 0) or (value > 127)
@@ -244,7 +248,7 @@ class StringField(Field):
 
 class BytesField(Field):
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _convert_many(self, value, invalid):
         if isinstance(value, list):
@@ -257,33 +261,36 @@ class BytesField(Field):
 
 
 class DistanceMetersField(ObjectField):
-    def __init__(self, name, obj_func=measurement.Distance.from_meters, output_func=measurement.Distance.meters_or_feet, scale=1.0):
-        super(DistanceMetersField, self).__init__(name, obj_func, output_func, scale)
+    """Field holding a distance measure in meters."""
+
+    def __init__(self, name, obj_func=measurement.Distance.from_meters, output_func=measurement.Distance.feet_or_meters, scale=1.0, offset=1.0):
+        """Return a new instance of DistanceMetersField."""
+        super().__init__(name, obj_func, output_func, scale, offset)
 
 
 class EnhancedDistanceMetersField(DistanceMetersField):
     def __init__(self, name):
-        super(EnhancedDistanceMetersField, self).__init__(name, measurement.Distance.from_mm, measurement.Distance.meters_or_feet)
+        super().__init__(name, measurement.Distance.from_mm, measurement.Distance.feet_or_meters)
 
 
 class DistanceCentimetersToKmsField(DistanceMetersField):
     def __init__(self, name='distance'):
-        super(DistanceCentimetersToKmsField, self).__init__(name, measurement.Distance.from_cm, measurement.Distance.kms_or_miles)
+        super().__init__(name, measurement.Distance.from_cm, measurement.Distance.kms_or_miles)
 
 
 class DistanceCentimetersToMetersField(DistanceMetersField):
     def __init__(self, name='distance'):
-        super(DistanceCentimetersToMetersField, self).__init__(name, measurement.Distance.from_cm, measurement.Distance.meters_or_feet)
+        super().__init__(name, measurement.Distance.from_cm, measurement.Distance.feet_or_meters)
 
 
 class DistanceMillimetersToMetersField(DistanceMetersField):
     def __init__(self, name='distance'):
-        super(DistanceMillimetersToMetersField, self).__init__(name, measurement.Distance.from_mm, measurement.Distance.meters_or_feet)
+        super().__init__(name, measurement.Distance.from_mm, measurement.Distance.feet_or_meters)
 
 
 class DistanceMillimetersField(DistanceMetersField):
     def __init__(self, name='distance'):
-        super(DistanceMillimetersField, self).__init__(name, measurement.Distance.from_mm, measurement.Distance.mm_or_inches, 10.0)
+        super().__init__(name, measurement.Distance.from_mm, measurement.Distance.inches_or_mm, 10.0)
 
 
 #
@@ -510,12 +517,12 @@ class GenderField(EnumField):
 
 class HeightField(ObjectField):
     def __init__(self, name='height'):
-        super(HeightField, self).__init__(name, measurement.Distance.from_cm, measurement.Distance.meters_or_feet)
+        super().__init__(name, measurement.Distance.from_cm, measurement.Distance.feet_or_meters)
 
 
 class WeightField(ObjectField):
     def __init__(self, name='weight'):
-        super(WeightField, self).__init__(name, measurement.Weight.from_cgs, measurement.Weight.kgs_or_lbs)
+        super().__init__(name, measurement.Weight.from_cgs, measurement.Weight.lbs_or_kgs)
 
 
 class CaloriesField(Field):
@@ -524,14 +531,14 @@ class CaloriesField(Field):
 
 class ActiveCaloriesField(CaloriesField):
     def __init__(self, *args, **kwargs):
-        CaloriesField.__init__(self, name='active_calories', *args, **kwargs)
+        super().__init__(name='active_calories', *args, **kwargs)
 
 
 class CaloriesDayField(Field):
     _units = ['kcal/day', 'kcal/day']
 
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class CyclesCaloriesField(Field):
@@ -539,7 +546,7 @@ class CyclesCaloriesField(Field):
     _conversion_factor = [5019.6, 5019.6]
 
     def __init__(self):
-        Field.__init__(self, 'cycles_to_calories')
+        super().__init__('cycles_to_calories')
 
 
 class CyclesDistanceField(Field):
@@ -547,28 +554,28 @@ class CyclesDistanceField(Field):
     _conversion_factor = [5000.0, 5000.0]
 
     def __init__(self):
-        Field.__init__(self, 'cycles_to_distance')
+        super().__init__('cycles_to_distance')
 
 
 class HeartRateField(Field):
     _units = ['bpm', 'bpm']
 
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class HeartRateZoneCalcField(EnumField):
     enum = fe.HeartRateZoneCalc
 
     def __init__(self):
-        EnumField.__init__(self, 'hr_calc_type')
+        super().__init__('hr_calc_type')
 
 
 class PowerCalcField(EnumField):
     enum = fe.PowerCalc
 
     def __init__(self):
-        EnumField.__init__(self, 'pwr_calc_type')
+        super().__init__('pwr_calc_type')
 
 
 class LanguageField(EnumField):
@@ -582,20 +589,20 @@ class DateModeField(EnumField):
     enum = fe.DateMode
 
     def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='date_mode', *args, **kwargs)
+        super().__init__(name='date_mode', *args, **kwargs)
 
 
 class TimeModeField(EnumField):
     enum = fe.TimeMode
 
     def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='time_mode', *args, **kwargs)
+        super().__init__(name='time_mode', *args, **kwargs)
 
 
 class TimestampField(Field):
     def __init__(self, name='timestamp', utc=True):
         self.utc = utc
-        Field.__init__(self, name)
+        super().__init__(name)
 
     def _convert_single(self, value, invalid):
         if self.utc:
@@ -612,7 +619,7 @@ class TimestampField(Field):
 class TimeMsField(Field):
     def __init__(self, name='time', scale=1.0):
         self._conversion_factor = scale
-        Field.__init__(self, name)
+        super().__init__(name)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -629,7 +636,7 @@ class TimeSField(Field):
 
 class TimeHourField(TimeMsField):
     def __init__(self, name='time', scale=1.0):
-        super(TimeHourField, self).__init__(name, scale)
+        super().__init__(name, scale)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -638,7 +645,7 @@ class TimeHourField(TimeMsField):
 
 class TimeMinField(TimeMsField):
     def __init__(self, name='time', scale=1.0):
-        super(TimeMinField, self).__init__(name, scale)
+        super().__init__(name, scale)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -653,7 +660,7 @@ class TimeOfDayField(Field):
 
 class SpeedMpsField(ObjectField):
     def __init__(self, name):
-        super(SpeedMpsField, self).__init__(name, measurement.Speed.from_mmps, measurement.Speed.kph_or_mph)
+        super().__init__(name, measurement.Speed.from_mmps, measurement.Speed.mph_or_kph)
 
 
 class CyclesField(Field):
@@ -661,7 +668,7 @@ class CyclesField(Field):
 
     def __init__(self, name, scale=2.0, *args, **kwargs):
         self. _conversion_factor = [scale, scale]
-        Field.__init__(self, name)
+        super().__init__(name)
 
 
 class FractionalCyclesField(Field):
@@ -674,7 +681,7 @@ class StepsField(Field):
 
     def __init__(self, name, scale=1.0, *args, **kwargs):
         self. _conversion_factor = [scale, scale]
-        Field.__init__(self, name)
+        super().__init__(name)
 
 
 class StrokesField(Field):
@@ -682,7 +689,7 @@ class StrokesField(Field):
 
     def __init__(self, name, scale=2.0, *args, **kwargs):
         self. _conversion_factor = [scale, scale]
-        Field.__init__(self, name)
+        super().__init__(name)
 
 
 def cycles_units_to_field(name):
@@ -725,7 +732,7 @@ class ActivityBasedCyclesField(Field):
     dependant_field_control_fields = ['activity_type']
 
     def __init__(self, name='cycles', *args, **kwargs):
-        Field.__init__(self, name, *args, **kwargs)
+        super().__init__(name, *args, **kwargs)
 
     def dependant_field(self, control_value_list):
         activity_type = control_value_list[0]
@@ -740,7 +747,7 @@ class ActivityField(EnumField):
 
 class ActivityTypeField(Field):
     def __init__(self):
-        Field.__init__(self, 'activity_type')
+        super().__init__('activity_type')
 
     def _convert_single(self, value, invalid):
         return fe.ActivityType(value)
@@ -763,13 +770,13 @@ class IntensityField(Field):
     _max_intensity = 8
 
     def __init__(self, *args, **kwargs):
-        super(IntensityField, self).__init__("intensity", *args, **kwargs)
+        super().__init__("intensity", *args, **kwargs)
 
 
 class ActivityTypeIntensityField(Field):
 
     def __init__(self, *args, **kwargs):
-        super(ActivityTypeIntensityField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._subfield['activity_type'] = ActivityTypeField()
         self._subfield['intensity'] = IntensityField()
 
@@ -793,7 +800,7 @@ class VersionField(Field):
 
     def __init__(self, *args, **kwargs):
         """Return an instance of VersionField."""
-        Field.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -816,7 +823,7 @@ class EventDataField(Field):
     dependant_field_control_fields = ['event']
 
     def __init__(self, *args, **kwargs):
-        super(EventDataField, self).__init__(name='event_data', *args, **kwargs)
+        super().__init__(name='event_data', *args, **kwargs)
 
     def dependant_field(self, control_value_list):
         event = control_value_list[0]
@@ -866,7 +873,7 @@ class SportField(EnumField):
     }
 
     def __init__(self, *args, **kwargs):
-        super(SportField, self).__init__(name='sport', *args, **kwargs)
+        super().__init__(name='sport', *args, **kwargs)
 
     @classmethod
     def units(cls, sport_index):
@@ -880,7 +887,7 @@ class SubSportField(EnumField):
     enum = fe.SubSport
 
     def __init__(self, *args, **kwargs):
-        super(SubSportField, self).__init__(name='sub_sport', *args, **kwargs)
+        super().__init__(name='sub_sport', *args, **kwargs)
 
 
 class PosField(Field):
@@ -890,12 +897,12 @@ class PosField(Field):
 
 class LongitudeField(ObjectField):
     def __init__(self, name):
-        super(LongitudeField, self).__init__(name, measurement.Longitude.from_semicircles, measurement.Longitude.to_degrees)
+        super().__init__(name, measurement.Longitude.from_semicircles, measurement.Longitude.to_degrees)
 
 
 class LatiitudeField(ObjectField):
     def __init__(self, name):
-        super(LatiitudeField, self).__init__(name, measurement.Latitude.from_semicircles, measurement.Latitude.to_degrees)
+        super().__init__(name, measurement.Latitude.from_semicircles, measurement.Latitude.to_degrees)
 
 
 class CadenceField(Field):
@@ -911,7 +918,7 @@ class PowerField(Field):
     _units = ['watts', 'watts']
 
     def __init__(self, name='power'):
-        super(PowerField, self).__init__(name)
+        super().__init__(name)
 
 
 class WorkField(Field):
@@ -919,18 +926,24 @@ class WorkField(Field):
 
 
 class AltitudeField(DistanceMetersField):
+    """A field containing a altitude reading."""
+
     def __init__(self, name='altitude'):
-        super(AltitudeField, self).__init__(name, measurement.Distance.from_cm, measurement.Distance.meters_or_feet, 5.0)
+        """Return an instance of AltitudeField."""
+        super().__init__(name, measurement.Distance.from_cm, measurement.Distance.feet_or_meters, 5.0)
 
 
 class EnhancedAltitudeField(DistanceMetersField):
-    def __init__(self, name='altitude'):
-        super(EnhancedAltitudeField, self).__init__(name, measurement.Distance.from_meters, measurement.Distance.meters_or_feet, 6993.0)
+    """A field containing a altitude reading with greater range."""
+
+    def __init__(self, name='enhanced_altitude'):
+        """Return an instance of EnhancedAltitudeField."""
+        super().__init__(name, measurement.Distance.from_meters, measurement.Distance.feet_or_meters, 5.0, 500.0)
 
 
 class TemperatureField(ObjectField):
     def __init__(self, name):
-        super(TemperatureField, self).__init__(name, measurement.Temperature.from_celsius, measurement.Temperature.c_or_f)
+        super().__init__(name, measurement.Temperature.from_celsius, measurement.Temperature.f_or_c)
 
 
 class TrainingeffectField(Field):
@@ -941,7 +954,7 @@ class PersonalRecordTypeField(EnumField):
     enum = fe.PersonalRecordType
 
     def __init__(self):
-        EnumField.__init__(self, 'pr_type')
+        super().__init__('pr_type')
 
 
 class PersonalRecordField(Field):
@@ -955,7 +968,7 @@ class PersonalRecordField(Field):
     }
 
     def __init__(self, *args, **kwargs):
-        super(PersonalRecordField, self).__init__(name='personal_record', *args, **kwargs)
+        super().__init__(name='personal_record', *args, **kwargs)
 
     def dependant_field(self, control_value_list):
         pr_type = control_value_list[0]
@@ -997,7 +1010,7 @@ class GoalValueField(Field):
     }
 
     def __init__(self, *args, **kwargs):
-        super(GoalValueField, self).__init__(name='target_value', *args, **kwargs)
+        super().__init__(name='target_value', *args, **kwargs)
 
     def dependant_field(self, control_value_list):
         """Return the dependant field class for this instance."""

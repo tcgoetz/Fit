@@ -46,7 +46,7 @@ class DefinitionMessage(Data):
             dev_field_dict (dict): a dictionary of developer defoined fields in the FIT file.
             file (File): the FIT file instance to read the definition message data from.
         """
-        super(DefinitionMessage, self).__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.__decode_secondary)])
+        super().__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.__decode_secondary)])
 
         self.message_type = MessageType.get_type(self.global_message_number)
         self.message_data = DefinitionMessageData.get_message_definition(self.message_type)

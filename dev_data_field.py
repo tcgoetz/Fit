@@ -20,7 +20,7 @@ class DevDataField(Data):
         type = dev_field_definition.type_string()
         count = dev_field_definition.type_count()
         schema = Schema(self.field.name, collections.OrderedDict([(self.field.name, [type, count, '%d'])]))
-        super(DevDataField, self).__init__(file, schema, None, definition_message.endian)
+        super().__init__(file, schema, None, definition_message.endian)
 
     def _convert(self):
         self.value_obj = self.field.convert(self.__dict__[self.field.name], self.dev_field_definition.invalid(), self.measurement_system)

@@ -34,7 +34,7 @@ class DeveloperFieldDefinition(Data, BaseType):
             dev_field_dict (dict): a dictionary of developer defined fields.
             file (File):  a FIT File instance.
         """
-        super(DeveloperFieldDefinition, self).__init__(file, DeveloperFieldDefinition.dfd_schema)
+        super().__init__(file, DeveloperFieldDefinition.dfd_schema)
         self.dev_field = dev_field_dict.get(self.field_number)
         if self.dev_field is None:
             raise FitUndefDevMessageType('Dev field %d undefined in %r' % (self.field_number, dev_field_dict))
