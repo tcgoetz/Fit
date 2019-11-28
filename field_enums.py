@@ -164,6 +164,8 @@ class DisplayPosition(FieldEnum):
 
 
 class Manufacturer(FuzzyFieldEnum):
+    """Manufacturer codes used in FIT files."""
+
     #
     # Garmin defined values
     #
@@ -341,6 +343,8 @@ class Manufacturer(FuzzyFieldEnum):
 
 
 class GarminProduct(FuzzyFieldEnum):
+    """Garmin product codes used in FIT files."""
+
     HRM1                            = 1
     axh01                           = 2
     axb01                           = 3
@@ -516,12 +520,14 @@ class GarminProduct(FuzzyFieldEnum):
     Approach_S10                    = 3049
     VivoActive_3M_l                 = 3066
     Approach_G80                    = 3085
+    GPS_3107                        = 3107
     Fenix5_plus                     = 3110
     Fenix5x_plus                    = 3111
     Edge_520_plus                   = 3112
     Instinct                        = 3126
-    Approach_S40                    = 3314
+    Fenix6                          = 3289
     HRM_Dual                        = 3299
+    Approach_S40                    = 3314
     FootPod_SDM4                    = 10007
     edge_remote                     = 10014
     Training_Center                 = 20119

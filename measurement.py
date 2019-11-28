@@ -21,9 +21,9 @@ class Measurement(object):
     @classmethod
     def from_units(cls, value, scale, invalid_value=None):
         """Create a Distance object from a distance measurement."""
-        return cls((value / scale) if value is not None else None, value, invalid_value)
+        return cls((value * scale) if value is not None else None, value, invalid_value)
 
-    def to_units(self, scale):
+    def to_units(self, scale=1.0):
         """Return a measurement value given the current value and a scale."""
         if self.value is not None:
             return self.value * scale
@@ -60,17 +60,17 @@ class Distance(Measurement):
     @classmethod
     def from_cm(cls, cm, invalid_value=None):
         """Create a Distance object from a distance measurement in centimeters."""
-        return cls.from_units(cm, 100.0, invalid_value)
+        return cls.from_units(cm, 0.01, invalid_value)
 
     @classmethod
     def from_mm(cls, mm, invalid_value=None):
         """Create a Distance object from a distance measurement in millimeters."""
-        return cls.from_units(mm, 1000.0, invalid_value)
+        return cls.from_units(mm, 0.001, invalid_value)
 
     @classmethod
     def from_feet(cls, feet, invalid_value=None):
         """Create a Distance object from a distance measurement in feet."""
-        return cls.from_units(feet, 3.2808399, invalid_value)
+        return cls.from_units(feet, 0.3048, invalid_value)
 
     @classmethod
     def from_meters_or_feet(cls, distance, measurement_system=fe.DisplayMeasure.metric):
@@ -83,7 +83,7 @@ class Distance(Measurement):
 
     def to_meters(self):
         """Return the distance measurement as meters."""
-        return self.to_units(1.0)
+        return self.to_units()
 
     def to_kms(self):
         """Return the distance measurement as kilometers."""
@@ -148,7 +148,7 @@ class Position(Measurement):
 
     def to_degrees(self, measurement_system=fe.DisplayMeasure.metric):
         """Return the position measurement as degrees."""
-        return self.to_units(1/11930326.891)
+        return self.to_units(180.0 / 2147483648.0)
 
 
 class Latitude(Position):
@@ -202,7 +202,7 @@ class Speed(Measurement):
 
     def to_kph(self):
         """Return the speed measurement as kilometers per hour."""
-        return self.to_units((60.0 * 60.0) / 1000.0)
+        return self.to_units(3.6)
 
     def to_mph(self):
         """Return the speed measurement as miles per hour."""
@@ -237,12 +237,12 @@ class Weight(Measurement):
     @classmethod
     def from_cgs(cls, centigrams, invalid_value=None):
         """Return a Weight instance created from a value in centigrams."""
-        return cls.from_units(centigrams, 0.01, invalid_value)
+        return cls.from_units(centigrams, 0.1, invalid_value)
 
     @classmethod
     def from_lbs(cls, lbs, invalid_value=None):
         """Return a Weight instance created from a value in pounds."""
-        return cls.from_units(lbs, 1.0/2.204623, invalid_value)
+        return cls.from_units(lbs, 0.4535924, invalid_value)
 
     def to_kgs(self):
         """Return the weight measurement as kilograms."""
