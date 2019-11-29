@@ -83,4 +83,4 @@ class DeveloperFieldDefinition(Data, BaseType):
 
     def __str__(self):
         """Return a string representation for the DeveloperFieldDefinition instance."""
-        return ("%s: type %d: %d %d of %s" % (self.__class__.__name__, self.field_number, self.developer_data_index, self.type_count(), self.type_string()))
+        return f'{self.__class__.__name__}: type {self.field_number}: {self.developer_data_index} {self.type_count()} of {self.type_string()}'

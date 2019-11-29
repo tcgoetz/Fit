@@ -87,7 +87,7 @@ class Field(object):
 
     def __repr__(self):
         """Return a string representation of a Field instance."""
-        return '%s (%s)' % (self.__class__.__name__, self.name)
+        return f'{self.__class__.__name__} ({self.name})'
 
 
 #
@@ -205,7 +205,7 @@ class LeftRightBalanceField(Field):
             else:
                 left_or_right = 'Left'
             percentage = (value & 0x3fff) / 100
-            return '%s %s %%' % (left_or_right, percentage)
+            return f'{left_or_right} {percentage} %'
 
 
 class PercentField(Field):

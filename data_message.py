@@ -34,7 +34,7 @@ class DataMessage(object):
             # expand subfields?
             field_value = data_field._field_value()
             subfield_names = field_value.subfield_names()
-            if subfield_names:
+            if subfield_names is not None:
                 for subfield_name in subfield_names:
                     subfield_value = field_value[subfield_name]
                     subfield_formal_name = subfield_value.field.name
@@ -163,8 +163,8 @@ class DataMessage(object):
     def __str__(self):
         """Return a string representation of a DataMessage instance."""
         fields_str = "".join(["%s, " % value for value in self._fields.values()])
-        return "%s: %r: %s" % (self.__class__.__name__, self.type(), fields_str)
+        return f'{self.__class__.__name__}: {repr(self.type())}: {fields_str}'
 
     def __repr__(self):
         """Return a string representation of a DataMessage instance."""
-        return "%s: %r: %r" % (self.__class__.__name__, self.type(), self._fields)
+        return f'{self.__class__.__name__}: {repr(self.type())}: {repr(self._fields)}'

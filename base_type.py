@@ -37,7 +37,7 @@ class BaseType():
         try:
             return cls.base_type_data[index]
         except Exception:
-            raise IndexError("Unknown base type index %x" % index)
+            raise IndexError(f'Unknown base type index {index}')
 
     @classmethod
     def _type_endian(cls, index):

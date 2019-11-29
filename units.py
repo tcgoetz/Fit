@@ -10,6 +10,8 @@ from Fit.field_enums import DisplayMeasure
 
 
 class UnitTypes(enum.Enum):
+    """An enumeration of unit types."""
+
     distance_long   = 1
     pace            = 2
     speed           = 3

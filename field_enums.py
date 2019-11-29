@@ -24,7 +24,7 @@ class UnknownEnumValue(object):
         """Return a UnknownEnumValue instance."""
         self.type = type
         self.value = value
-        self.name = '%s_%s' % (type, value)
+        self.name = f'{type}_{value}'
 
     @classmethod
     def from_string(cls, string):
@@ -45,7 +45,7 @@ class UnknownEnumValue(object):
 
     def __repr__(self):
         """Return a string representation of a UnknownEnumValue instance."""
-        return '<%s.%s: %s>' % (self.type, self.name, self.value)
+        return f'<{self.type}.{self.name}: {self.value}>'
 
 
 class FieldEnum(enum.Enum):

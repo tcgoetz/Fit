@@ -47,13 +47,12 @@ class FileHeader(Data):
 
     def __check(self):
         if self.header_size < FileHeader.min_file_header_size:
-            raise FitFileBadHeaderSize("%d < %d" % (self.header_size, FileHeader.min_file_header_size))
+            raise FitFileBadHeaderSize(f'{self.header_size} < {FileHeader.min_file_header_size}')
         if self.protocol_version < FileHeader.min_protocol_version:
-            raise FitFileBadProtocolVersion("%d < %d" % (self.protocol_version, FileHeader.min_protocol_version))
+            raise FitFileBadProtocolVersion(f'{self.protocol_version} < {FileHeader.min_protocol_version}')
         if self.data_type != FileHeader.file_data_type:
-            raise FitFileDataType("%r < %r" % (self.data_type, FileHeader.file_data_type))
+            raise FitFileDataType(f'{repr(self.data_type)} < {repr(FileHeader.file_data_type)}')
 
     def __str__(self):
         """Return a string representation of a FileHeader instance."""
-        return ("%s(header size %d prot ver %x prof ver %d)" %
-                (self.__class__.__name__, self.header_size, self.protocol_version, self.profile_version))
+        return f'{self.__class__.__name__}(header size {self.header_size} prot ver {self.protocol_version} prof ver {self.profile_versio}'

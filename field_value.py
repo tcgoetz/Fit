@@ -19,6 +19,7 @@ class FieldValue(object):
         return self.field.is_invalid(self.orig, self.invalid)
 
     def subfield_names(self):
+        """Return a list of the names of sub-fields."""
         return self._subfield_names
 
     def type(self):

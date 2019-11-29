@@ -29,7 +29,7 @@ class UnknownMessageType(object):
 
     def __repr__(self):
         """Return a string representation of the UnknownMessageType instance."""
-        return '<UnknownMessageType.%s: %d>' % (self.name, self.value)
+        return f'<UnknownMessageType.{self.name}: {self.value}>'
 
 
 class MessageType(enum.Enum):
@@ -185,7 +185,7 @@ class MessageType(enum.Enum):
     def get_type(cls, message_number):
         """Given a message number, return the message type."""
         if message_number < 0 or message_number > cls.mfg_range_max.value:
-            raise FitMessageType('Message number %d out of range' % message_number)
+            raise FitMessageType(f'Message number {message_number} out of range')
         try:
             return cls(message_number)
         except ValueError:

@@ -30,7 +30,7 @@ class DataField(Data):
         return schema
 
     def __get_schema(self, field_name, type, count):
-        schema_sig = '%s_%s_%d' % (field_name, type, count)
+        schema_sig = f'{field_name}_{type}_{count}'
         schema = self.__schema_cache.get(schema_sig)
         if schema is not None:
             return schema
@@ -63,4 +63,4 @@ class DataField(Data):
 
     def __str__(self):
         """Return a string reprsentation of the DataField instance."""
-        return '<DataField: %s' % self.value_obj
+        return f'<DataField: {self.value_obj}'

@@ -60,4 +60,4 @@ class FieldDefinition(Data, BaseType):
 
     def __str__(self):
         """Return a string representation for the FieldDefinition instance."""
-        return ("FieldDefinition: type %d: %d of %s" % (self.field_definition_number, self.type_count(), self.type_string()))
+        return f'FieldDefinition: type {self.field_definition_number}: {self.type_count()} of {self.type_string()}'

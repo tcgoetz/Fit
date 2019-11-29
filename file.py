@@ -140,4 +140,4 @@ class File(object):
 
     def __str__(self):
         """Return a string representation of the class instance."""
-        return "File(%r)" % self.type()
+        return f'File({repr(self.type())})'

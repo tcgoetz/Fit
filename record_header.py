@@ -45,8 +45,7 @@ class RecordHeader(Data):
 
     def __str__(self):
         """Return a string representation of a RecordHeader instance."""
-        return ("RecordHeader: Local %s message %d (Compressed %d)" %
-                (self.message_class.name, self.local_message(), self.__compressed_timestamp()))
+        return f'RecordHeader: Local {self.message_class.name} message {self.local_message()} (Compressed {self.__compressed_timestamp()})'
 
     def __repr__(self):
         """Return a string representation of a RecordHeader instance."""
