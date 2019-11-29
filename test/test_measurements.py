@@ -9,7 +9,7 @@ __license__ = "GPL"
 import unittest
 import logging
 
-from Fit import Distance
+from Fit import Distance, Weight, Temperature
 
 
 root_logger = logging.getLogger()
@@ -35,6 +35,16 @@ class TestMeasurement(unittest.TestCase):
         self.assertEqual(distance.to_kms(), 1.0)
         self.assertEqual(distance.to_mm(), 1000000)
         self.assertEqual(distance.to_miles(), 0.6213712)
+
+    def test_weight(self):
+        weight = Weight.from_grams(100000)
+        self.assertEqual(weight.value, 100.0)
+        self.assertAlmostEqual(weight.to_lbs(),  220.46, 2)
+
+    def test_temperature(self):
+        temp = Temperature.from_celsius(100.0)
+        self.assertEqual(temp.value, 100.0)
+        self.assertEqual(temp.to_f(), 212.0)
 
 
 if __name__ == '__main__':
