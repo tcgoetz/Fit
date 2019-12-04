@@ -262,6 +262,35 @@ class Weight(Measurement):
         return self.to_kgs() if measurement_system is fe.DisplayMeasure.metric else self.to_lbs()
 
 
+class Volume(Measurement):
+    """Object that represents a volume measurement."""
+
+    def __init__(self, kgs, raw_value, invalid_value):
+        """Return a Volume instance intialized with a value in liters."""
+        super().__init__(kgs, raw_value, invalid_value, self.to_ounces, 'Ounces')
+
+    @classmethod
+    def from_milliliters(cls, milliliters, invalid_value=None):
+        """Return a Volume instance created from a value in milliliters."""
+        return cls.from_units(milliliters, 0.001, invalid_value)
+
+    def to_liters(self):
+        """Return the volume measurement as liters."""
+        return self.value
+
+    def to_milliliters(self):
+        """Return the volume measurement as milliliters."""
+        return self.to_units(1000.0)
+
+    def to_ounces(self):
+        """Return the volume measurement as ounces."""
+        return self.to_units(35.19503)
+
+    def ml_or_oz(self, measurement_system=fe.DisplayMeasure.metric):
+        """Return the volume measurement as milliliters or ounces."""
+        return self.to_milliliters() if measurement_system is fe.DisplayMeasure.metric else self.to_ounces()
+
+
 class Temperature(Measurement):
     """Object that represents a temperature measurement."""
 
