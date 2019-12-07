@@ -32,6 +32,11 @@ class Measurement(object):
         """Return if the measurement is valid."""
         return (self.raw_value == self.invalid_value)
 
+    def __eq__(self, other):
+        if not isinstance(other, Measurement):
+            return NotImplemented
+        return (self.value == other.value)
+
     def __repr__(self):
         """Return a string representation of a Measurement instance."""
         if self.is_invalid():
