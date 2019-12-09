@@ -23,10 +23,11 @@ class Measurement(object):
         """Create a Distance object from a distance measurement."""
         return cls((value * scale) if value is not None else None, value, invalid_value)
 
-    def to_units(self, scale=1.0):
+    def to_units(self, scale=1.0, rounded=False):
         """Return a measurement value given the current value and a scale."""
         if self.value is not None:
-            return self.value * scale
+            value = self.value * scale
+            return round(value) if rounded else value
 
     def is_invalid(self):
         """Return if the measurement is valid."""
@@ -283,17 +284,17 @@ class Volume(Measurement):
         """Return the volume measurement as liters."""
         return self.value
 
-    def to_milliliters(self):
+    def to_milliliters(self, rounded=False):
         """Return the volume measurement as milliliters."""
-        return self.to_units(1000.0)
+        return self.to_units(1000.0, rounded=rounded)
 
-    def to_ounces(self):
+    def to_ounces(self, rounded=False):
         """Return the volume measurement as ounces."""
-        return self.to_units(35.19503)
+        return self.to_units(35.19503, rounded=rounded)
 
-    def ml_or_oz(self, measurement_system=fe.DisplayMeasure.metric):
+    def ml_or_oz(self, measurement_system=fe.DisplayMeasure.metric, rounded=False):
         """Return the volume measurement as milliliters or ounces."""
-        return self.to_milliliters() if measurement_system is fe.DisplayMeasure.metric else self.to_ounces()
+        return self.to_milliliters(rounded) if measurement_system is fe.DisplayMeasure.metric else self.to_ounces(rounded)
 
 
 class Temperature(Measurement):
