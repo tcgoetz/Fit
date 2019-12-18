@@ -20,46 +20,30 @@ class FitException(Exception):
 class FitFileError(FitException):
     """An exception when parsing a FIT file."""
 
-    pass
-
 
 class FitFileBadHeaderSize(FitFileError):
     """An exception do to a bad FIT file header size."""
-
-    pass
 
 
 class FitFileBadProtocolVersion(FitFileError):
     """An exception do to a bad FIT file protocol version."""
 
-    pass
-
 
 class FitFileDataType(FitFileError):
     """An exception happenbed will parsing FIT file data."""
-
-    pass
 
 
 class FitMessageType(FitFileError):
     """An exception do to a unrecognized FIT file message type."""
 
-    pass
-
 
 class FitMessageParse(FitFileError):
     """An exception happenbed will parsing a FIT file message."""
-
-    pass
 
 
 class FitUndefDevMessageType(FitFileError):
     """An undefined message type was encountered."""
 
-    pass
-
 
 class FitOutOfOrderMessage(FitFileError):
     """The message's timestamp preceeded the previous message's."""
-
-    pass

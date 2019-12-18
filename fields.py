@@ -98,7 +98,7 @@ class UnknownField(Field):
 
     def __init__(self, index):
         """Return a new instance of the UnknownField class."""
-        super().__init__("unknown_" + str(index))
+        super().__init__(f"unknown_{index}")
 
 
 class DevField(Field):
@@ -138,7 +138,7 @@ class ObjectField(Field):
         return FieldValue(self, invalid=invalid, value=self._convert_many(value_obj, invalid), orig=value_obj)
 
     def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
-        """Returna FieldValue containing the field value as a Python object."""
+        """Return a FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
         value_obj = self.obj_func((value / self.scale) - self.offset, invalid)
         return (self._convert_many(value_obj, invalid), value_obj)
@@ -147,33 +147,41 @@ class ObjectField(Field):
 #
 # Basic field types
 #
-class IntegerField(Field):
+class TypeField(Field):
+    """A base class for fields based on python types."""
+
+    def __init__(self, type_func, *args, **kwargs):
+        """Return a field instance that holds an integer."""
+        super().__init__(*args, **kwargs)
+        self.type_func = type_func
+
+    def _convert_single(self, value, invalid):
+        if value != invalid:
+            try:
+                return self.type_func(value)
+            except Exception:
+                return value
+
+
+class IntegerField(TypeField):
     """A FIT file message field with a boolean value."""
 
     def __init__(self, *args, **kwargs):
         """Return a field instance that holds an integer."""
-        super().__init__(*args, **kwargs)
-
-    def _convert_single(self, value, invalid):
-        if value != invalid:
-            try:
-                return int(value)
-            except Exception:
-                return value
+        super().__init__(int, *args, **kwargs)
 
 
-class BoolField(Field):
+class FloatField(TypeField):
+    def __init__(self, name, scale=1.0, *args, **kwargs):
+        self._conversion_factor = [scale, scale]
+        super().__init__(float, name, *args, **kwargs)
+
+
+class BoolField(TypeField):
     """A FIT file message field with a boolean value."""
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def _convert_single(self, value, invalid):
-        if value != invalid:
-            try:
-                return bool(value)
-            except Exception:
-                return value
+        super().__init__(bool, *args, **kwargs)
 
 
 class EnumField(Field):
@@ -219,12 +227,6 @@ class PercentField(Field):
 class BytePercentField(Field):
     _units = ['%', '%']
     _conversion_factor = [2.0, 2.0]
-
-
-class NumberField(Field):
-    def __init__(self, name, scale=1.0, *args, **kwargs):
-        self._conversion_factor = [scale, scale]
-        super().__init__(name, *args, **kwargs)
 
 
 class StringField(Field):
@@ -334,7 +336,7 @@ class ManufacturerField(EnumField):
     enum = fe.Manufacturer
 
     def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='manufacturer', *args, **kwargs)
+        super().__init__(name='manufacturer', *args, **kwargs)
 
     def _convert_single(self, value, invalid):
         try:
@@ -347,7 +349,7 @@ class ManufacturerField(EnumField):
 
 class ProductField(EnumField):
     def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='product', *args, **kwargs)
+        super().__init__(name='product', *args, **kwargs)
 
 
 class GarminProductField(ProductField):
@@ -400,28 +402,28 @@ class SideField(EnumField):
     enum = fe.Side
 
     def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='side', *args, **kwargs)
+        super().__init__(name='side', *args, **kwargs)
 
 
 class BacklightModeField(EnumField):
     enum = fe.BacklightMode
 
     def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='backlight_mode', *args, **kwargs)
+        super().__init__(name='backlight_mode', *args, **kwargs)
 
 
 class AntNetworkField(EnumField):
     enum = fe.AntNetwork
 
     def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='ant_network', *args, **kwargs)
+        super().__init__(name='ant_network', *args, **kwargs)
 
 
 class SourceTypeField(EnumField):
     enum = fe.SourceType
 
     def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='source_type', *args, **kwargs)
+        super().__init__(name='source_type', *args, **kwargs)
 
 
 class AntplusDeviceTypeField(EnumField):
@@ -446,7 +448,7 @@ class DeviceType(Field):
     }
 
     def __init__(self, *args, **kwargs):
-        Field.__init__(self, name='device_type', *args, **kwargs)
+        super().__init__(name='device_type', *args, **kwargs)
 
     def dependant_field(self, control_value_list):
         source_type = control_value_list[0]
@@ -469,14 +471,14 @@ class BatteryStatusField(EnumField):
     enum = fe.BatteryStatus
 
     def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='battery_status', *args, **kwargs)
+        super().__init__(name='battery_status', *args, **kwargs)
 
 
 class AutoSyncFrequencyField(EnumField):
     enum = fe.AutoSyncFrequency
 
     def __init__(self, *args, **kwargs):
-        EnumField.__init__(self, name='auto_sync_frequency', *args, **kwargs)
+        super().__init__(name='auto_sync_frequency', *args, **kwargs)
 
 
 class BodyLocationField(EnumField):
@@ -496,7 +498,7 @@ class AutoActivityDetectField(BitField):
     }
 
     def __init__(self, *args, **kwargs):
-        BitField.__init__(self, name='auto_activity_detect', *args, **kwargs)
+        super().__init__(name='auto_activity_detect', *args, **kwargs)
 
 
 class MessageIndexField(Field):
