@@ -2,7 +2,9 @@
 PROJECT_BASE=$(CURDIR)
 export PROJECT_BASE
 
-PIP ?= pip3
+include defines.mk
+
+all: deps
 
 deps:
 	$(PIP) install --user --upgrade --requirement requirements.txt
