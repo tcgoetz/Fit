@@ -985,6 +985,9 @@ class Sport(FieldEnum):
     all                     = 254
     invalid                 = 255
 
+    def preferred(self):
+        return self.value > Sport.generic.value and self.value < Sport.all.value
+
 
 class SubSport(FieldEnum):
     """An enum field containing more specific sport information."""
