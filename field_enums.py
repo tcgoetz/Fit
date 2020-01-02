@@ -68,7 +68,7 @@ class FieldEnum(enum.Enum):
 
     @classmethod
     def from_string(cls, string):
-        """Return an instance of FieldEnum instantiated with string."""
+        """Return an instance of FieldEnum instantiated with string or an instancxe of UnknownEnumValue if not found."""
         try:
             return cls._from_string(string)
         except (AttributeError, TypeError):
@@ -82,7 +82,7 @@ class FuzzyFieldEnum(FieldEnum):
     def from_string_ext(cls, string):
         """Return an instance of FieldEnum instantiated with string using a fuzzy match."""
         for name, value in cls.__members__.items():
-            if name in str(string):
+            if name.lower() in str(string).lower():
                 return value
         return UnknownEnumValue(cls.__name__, string)
 
