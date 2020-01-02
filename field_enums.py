@@ -59,6 +59,14 @@ class FieldEnum(enum.Enum):
             return getattr(cls, string)
 
     @classmethod
+    def strict_from_string(cls, string):
+        """Return an instance of FieldEnum instantiated with string."""
+        try:
+            return cls._from_string(string)
+        except (AttributeError, TypeError):
+            return None
+
+    @classmethod
     def from_string(cls, string):
         """Return an instance of FieldEnum instantiated with string."""
         try:
@@ -1054,6 +1062,9 @@ class SubSport(FieldEnum):
     obstacle                = 59
     all                     = 254
     invalid                 = 255
+
+    def preferred(self):
+        return self.value > SubSport.generic.value and self.value < SubSport.all.value
 
 
 class PersonalRecordType(FieldEnum):
