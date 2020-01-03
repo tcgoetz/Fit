@@ -322,3 +322,25 @@ class Temperature(Measurement):
     def c_or_f(self, measurement_system=fe.DisplayMeasure.metric):
         """Return the temperature measurement as farenheit or celsius."""
         return self.value if measurement_system is fe.DisplayMeasure.metric else self.to_f()
+
+
+class Cadence(Measurement):
+    """Object that represents a cadence measurement."""
+
+    def __init__(self, cycles, raw_value, invalid_value):
+        """Return a Cadence instance intialized with a value in cycles."""
+        super().__init__(cycles, raw_value, invalid_value, self.to_f, 'cycles')
+
+    @classmethod
+    def from_cycles(cls, cycles, invalid_value=None):
+        """Return a Temperature instance intialized with a value in celsius."""
+        return cls(cycles, cycles, invalid_value)
+
+    def to_cycles(self):
+        """Return the cadence measurement as cycles."""
+        return self.value
+
+    def to_spm(self):
+        """Return the cadence measurement as steps per minute."""
+        if self.value is not None:
+            return (self.value * 2)
