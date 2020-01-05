@@ -5,11 +5,17 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 import collections
+import logging
 
 from Fit.data import Data, Schema
 from Fit.base_type import BaseType
+from Fit.message_type import MessageType
+from Fit.definition_message_data import DefinitionMessageData
 import Fit.fields as fields
 from Fit.exceptions import FitUndefDevMessageType
+
+
+logger = logging.getLogger(__name__)
 
 
 class DeveloperFieldDefinition(Data, BaseType):
@@ -39,22 +45,25 @@ class DeveloperFieldDefinition(Data, BaseType):
         if self.dev_field is None:
             raise FitUndefDevMessageType('Dev field %d undefined in %r' % (self.field_number, dev_field_dict))
         self.field_name = self.dev_field['field_name'].value
-        self.native_message_num = self.dev_field['native_message_num'].value
+        self.native_message_type = MessageType(self.dev_field['native_message_num'].value)
         self.native_field_num = self.dev_field['native_field_num'].value
+        if self.native_message_type and self.native_field_num:
+            field_dict = DefinitionMessageData.get_message_definition(self.native_message_type)
+            field = field_dict[self.native_field_num]
+            self.display_field_name = 'dev_' + field.name
+        else:
+            self.display_field_name = 'dev_' + self.field_name
         self.units = self.dev_field['units'].value
         self.offset = self.dev_field['offset'].value
         self.scale = self.dev_field['scale'].value
+        logger.info('%s for %r field %s', self, self.native_message_type, self.native_field_num)
 
     def __base_type_value(self):
         return self.dev_field['fit_base_type_id'].orig
 
     def field(self):
         """Return a DevField instance representing the field for this DeveloperFieldDefinition instance."""
-        # if self.native_message_num is not None and self.native_field_num is not None:
-        #     message_data = DefinitionMessageData.get_message(self.native_message_num)
-        #     field_dict = message_data[1]
-        #     return field_dict[self.native_field_num]
-        return fields.DevField('dev_' + self.field_name, self.units, self.scale, self.offset)
+        return fields.DevField(self.display_field_name, self.units, self.scale, self.offset)
 
     def base_type(self):
         """Return the base type for the field."""
@@ -83,4 +92,4 @@ class DeveloperFieldDefinition(Data, BaseType):
 
     def __str__(self):
         """Return a string representation for the DeveloperFieldDefinition instance."""
-        return f'{self.__class__.__name__}: type {self.field_number}: {self.developer_data_index} {self.type_count()} of {self.type_string()}'
+        return f'{self.__class__.__name__}({self.display_field_name}[{self.field_name}]: {self.developer_data_index} {self.type_count()} of {self.type_string()})'

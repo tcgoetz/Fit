@@ -719,8 +719,8 @@ class DefinitionMessageData():
             9 : fields.StringField('bits'),
             10 : fields.StringField('accumulate'),
             13 : fields.FitBaseUnitField('fit_base_unit_id'),
-            14 : fields.Field('native_message_num'),
-            15 : fields.Field('native_field_num')
+            14 : fields.IntegerField('native_message_num'),
+            15 : fields.IntegerField('native_field_num')
         },
         MessageType.dev_data_id : {
             0 : fields.Field('developer_id'),
