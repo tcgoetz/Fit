@@ -1,4 +1,4 @@
-"""Object that represent FIT file message fields."""
+"""Objects that represent FIT file message fields."""
 
 __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
@@ -11,7 +11,6 @@ import Fit.conversions as conversions
 import Fit.field_enums as fe
 from Fit.field_value import FieldValue
 from Fit.field_definition import FieldDefinition
-import Fit.measurement as measurement
 
 
 class Field(object):
@@ -99,49 +98,6 @@ class UnknownField(Field):
     def __init__(self, index):
         """Return a new instance of the UnknownField class."""
         super().__init__(f"unknown_{index}")
-
-
-class DevField(Field):
-    """Class that handles a developer fields."""
-
-    def __init__(self, name, units, scale, offset, *args, **kwargs):
-        """Return a DevField instance."""
-        self._units = [units, units]
-        if scale is not None:
-            self._conversion_factor = [scale, scale]
-        if offset is not None:
-            self._conversion_constant = [offset, offset]
-        super().__init__(name=name, *args, **kwargs)
-
-
-class ObjectField(Field):
-    """Class that handles a field that translates into a Python object."""
-
-    def __init__(self, name, obj_func, output_func, scale=1.0, offset=0.0):
-        """Return a ObjectField instance."""
-        super().__init__(name)
-        self.obj_func = obj_func
-        self.output_func = output_func
-        self.scale = scale
-        self.offset = offset
-
-    def _invalid_single(self, value, invalid):
-        return value.is_invalid()
-
-    def _convert_single(self, value, invalid):
-        return self.output_func(value, self.measurement_system)
-
-    def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
-        """Returna FieldValue containing the field value as a Python object."""
-        self.measurement_system = measurement_system
-        value_obj = self.obj_func((value / self.scale) - self.offset, invalid)
-        return FieldValue(self, invalid=invalid, value=self._convert_many(value_obj, invalid), orig=value_obj)
-
-    def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
-        """Return a FieldValue containing the field value as a Python object."""
-        self.measurement_system = measurement_system
-        value_obj = self.obj_func((value / self.scale) - self.offset, invalid)
-        return (self._convert_many(value_obj, invalid), value_obj)
 
 
 #
@@ -260,39 +216,6 @@ class BytesField(Field):
         else:
             converted_value = bytearray(value)
         return converted_value
-
-
-class DistanceMetersField(ObjectField):
-    """Field holding a distance measure in meters."""
-
-    def __init__(self, name, obj_func=measurement.Distance.from_meters, output_func=measurement.Distance.feet_or_meters, scale=1.0, offset=1.0):
-        """Return a new instance of DistanceMetersField."""
-        super().__init__(name, obj_func, output_func, scale, offset)
-
-
-class EnhancedDistanceMetersField(DistanceMetersField):
-    def __init__(self, name):
-        super().__init__(name, measurement.Distance.from_mm, measurement.Distance.feet_or_meters)
-
-
-class DistanceCentimetersToKmsField(DistanceMetersField):
-    def __init__(self, name='distance'):
-        super().__init__(name, measurement.Distance.from_cm, measurement.Distance.kms_or_miles)
-
-
-class DistanceCentimetersToMetersField(DistanceMetersField):
-    def __init__(self, name='distance'):
-        super().__init__(name, measurement.Distance.from_cm, measurement.Distance.feet_or_meters)
-
-
-class DistanceMillimetersToMetersField(DistanceMetersField):
-    def __init__(self, name='distance'):
-        super().__init__(name, measurement.Distance.from_mm, measurement.Distance.feet_or_meters)
-
-
-class DistanceMillimetersField(DistanceMetersField):
-    def __init__(self, name='distance'):
-        super().__init__(name, measurement.Distance.from_mm, measurement.Distance.inches_or_mm, 10.0)
 
 
 #
@@ -517,16 +440,6 @@ class GenderField(EnumField):
     enum = fe.Gender
 
 
-class HeightField(ObjectField):
-    def __init__(self, name='height'):
-        super().__init__(name, measurement.Distance.from_cm, measurement.Distance.feet_or_meters)
-
-
-class WeightField(ObjectField):
-    def __init__(self, name='weight'):
-        super().__init__(name, measurement.Weight.from_cgs, measurement.Weight.lbs_or_kgs)
-
-
 class CaloriesField(Field):
     _units = ['kcal', 'kcal']
 
@@ -658,11 +571,6 @@ class TimeOfDayField(Field):
     def _convert_single(self, value, invalid):
         if value != invalid:
             return conversions.secs_to_dt_time(value)
-
-
-class SpeedMpsField(ObjectField):
-    def __init__(self, name):
-        super().__init__(name, measurement.Speed.from_mmps, measurement.Speed.mph_or_kph)
 
 
 class CyclesField(Field):
@@ -897,16 +805,6 @@ class PosField(Field):
     _conversion_factor = [11930326.891, 11930326.891]
 
 
-class LongitudeField(ObjectField):
-    def __init__(self, name):
-        super().__init__(name, measurement.Longitude.from_semicircles, measurement.Longitude.to_degrees)
-
-
-class LatiitudeField(ObjectField):
-    def __init__(self, name):
-        super().__init__(name, measurement.Latitude.from_semicircles, measurement.Latitude.to_degrees)
-
-
 class CadenceField(Field):
     _units = ['rpm', 'rpm']
 
@@ -927,106 +825,8 @@ class WorkField(Field):
     _units = ['J', 'J']
 
 
-class AltitudeField(DistanceMetersField):
-    """A field containing a altitude reading."""
-
-    def __init__(self, name='altitude'):
-        """Return an instance of AltitudeField."""
-        super().__init__(name, measurement.Distance.from_cm, measurement.Distance.feet_or_meters, 5.0)
-
-
-class EnhancedAltitudeField(DistanceMetersField):
-    """A field containing a altitude reading with greater range."""
-
-    def __init__(self, name='enhanced_altitude'):
-        """Return an instance of EnhancedAltitudeField."""
-        super().__init__(name, measurement.Distance.from_meters, measurement.Distance.feet_or_meters, 5.0, 500.0)
-
-
-class TemperatureField(ObjectField):
-    def __init__(self, name):
-        super().__init__(name, measurement.Temperature.from_celsius, measurement.Temperature.f_or_c)
-
-
 class TrainingeffectField(Field):
     _conversion_factor = [10.0, 10.0]
-
-
-class PersonalRecordTypeField(EnumField):
-    enum = fe.PersonalRecordType
-
-    def __init__(self):
-        super().__init__('pr_type')
-
-
-class PersonalRecordField(Field):
-    dependant_field_control_fields = ['pr_type']
-
-    _type_to_fields = {
-        fe.PersonalRecordType.time         : TimeMsField,
-        fe.PersonalRecordType.distance     : DistanceCentimetersToMetersField,
-        fe.PersonalRecordType.elevation    : AltitudeField,
-        fe.PersonalRecordType.power        : PowerField
-    }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='personal_record', *args, **kwargs)
-
-    def dependant_field(self, control_value_list):
-        pr_type = control_value_list[0]
-        field_name = 'unknown_pr'
-        if pr_type is not None:
-            try:
-                _dependant_field = self._type_to_fields[pr_type]
-                field_name = pr_type.name
-            except Exception:
-                _dependant_field = UnknownField
-        else:
-            _dependant_field = Field
-        return _dependant_field(field_name)
-
-
-class GoalTypeField(EnumField):
-    enum = fe.GoalType
-
-
-class GoalRecurrenceField(EnumField):
-    enum = fe.GoalRecurrence
-
-
-class GoalSourceField(EnumField):
-    enum = fe.GoalSource
-
-
-class GoalValueField(Field):
-    dependant_field_control_fields = ['type']
-
-    _type_to_fields = {
-        fe.GoalType.time              : TimeMsField,
-        fe.GoalType.distance          : DistanceCentimetersToMetersField,
-        fe.GoalType.calories          : CaloriesField,
-        fe.GoalType.frequency         : Field,
-        fe.GoalType.steps             : Field,
-        fe.GoalType.ascent            : EnhancedAltitudeField,
-        fe.GoalType.active_minutes    : TimeMinField
-    }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='target_value', *args, **kwargs)
-
-    def dependant_field(self, control_value_list):
-        """Return the dependant field class for this instance."""
-        goal_type = control_value_list[0]
-        field_name = 'unknown_goal'
-        if goal_type is not None:
-            try:
-                _dependant_field = self._type_to_fields[goal_type]
-                field_name = goal_type.name
-            except Exception:
-                _dependant_field = UnknownField
-        else:
-            _dependant_field = Field
-        return _dependant_field(field_name)
 
 
 class WatchFaceModeField(EnumField):

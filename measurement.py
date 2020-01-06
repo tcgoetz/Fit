@@ -59,6 +59,11 @@ class Distance(Measurement):
         super().__init__(meters, raw_value, invalid_value, self.to_meters, 'meters')
 
     @classmethod
+    def from_kilometers(cls, kms, invalid_value=None):
+        """Create a Distance object from a distance measurement in kilometers."""
+        return cls.from_units(kms, 1000.0, invalid_value)
+
+    @classmethod
     def from_meters(cls, meters, invalid_value=None):
         """Create a Distance object from a distance measurement in meters."""
         return cls(meters, meters, invalid_value)
@@ -77,6 +82,11 @@ class Distance(Measurement):
     def from_feet(cls, feet, invalid_value=None):
         """Create a Distance object from a distance measurement in feet."""
         return cls.from_units(feet, 0.3048, invalid_value)
+
+    @classmethod
+    def from_miles(cls, feet, invalid_value=None):
+        """Create a Distance object from a distance measurement in miles."""
+        return cls.from_units(feet, 1609.344, invalid_value)
 
     @classmethod
     def from_meters_or_feet(cls, distance, measurement_system=fe.DisplayMeasure.metric):
@@ -184,7 +194,7 @@ class Speed(Measurement):
     @classmethod
     def from_kph(cls, km_per_hour, invalid_value=None):
         """Return a Speed instance intialized with a value in kilometers per hour."""
-        return cls.from_units(km_per_hour, 1000.0, invalid_value)
+        return cls.from_units(km_per_hour, 0.2777778, invalid_value)
 
     @classmethod
     def from_mph(cls, miles_per_hour, invalid_value=None):

@@ -11,7 +11,8 @@ from Fit.data import Data, Schema
 from Fit.base_type import BaseType
 from Fit.message_type import MessageType
 from Fit.definition_message_data import DefinitionMessageData
-import Fit.fields as fields
+from Fit.object_fields import DistanceMetersField, SpeedMpsField
+from Fit.dev_field import DevField, DevDistanceField, DerivedDevDistanceField, DevSpeedField, DerivedDevSpeedField
 from Fit.exceptions import FitUndefDevMessageType
 
 
@@ -47,23 +48,44 @@ class DeveloperFieldDefinition(Data, BaseType):
         self.field_name = self.dev_field['field_name'].value
         self.native_message_type = MessageType(self.dev_field['native_message_num'].value)
         self.native_field_num = self.dev_field['native_field_num'].value
+        self.units = self.dev_field['units'].value
+        self.offset = self.dev_field['offset'].value
+        self.scale = self.dev_field['scale'].value
         if self.native_message_type and self.native_field_num:
             field_dict = DefinitionMessageData.get_message_definition(self.native_message_type)
             field = field_dict[self.native_field_num]
             self.display_field_name = 'dev_' + field.name
+            self._field = self.derive_field(self.display_field_name, self.units, self.scale, self.offset, field)
         else:
             self.display_field_name = 'dev_' + self.field_name
-        self.units = self.dev_field['units'].value
-        self.offset = self.dev_field['offset'].value
-        self.scale = self.dev_field['scale'].value
+            self._field = self.map_field(self.display_field_name, self.units, self.scale, self.offset)
         logger.info('%s for %r field %s', self, self.native_message_type, self.native_field_num)
 
     def __base_type_value(self):
         return self.dev_field['fit_base_type_id'].orig
 
+    @classmethod
+    def derive_field(cls, field_name, units, scale, offset, field_obj):
+        if isinstance(field_obj, DistanceMetersField):
+            return DerivedDevDistanceField(field_name, units, scale, offset, field_obj)
+        if isinstance(field_obj, SpeedMpsField):
+            return DerivedDevSpeedField(field_name, units, scale, offset, field_obj)
+        return DevField(field_name, units, scale, offset)
+
+    @classmethod
+    def map_field(cls, field_name, units, scale, offset):
+        field_map = {
+            'dev_distance'  : DevDistanceField,
+            'dev_speed'     : DevSpeedField
+        }
+        field = field_map.get(field_name)
+        if field is not None:
+            return field(field_name, units, scale, offset)
+        return DevField(field_name, units, scale, offset)
+
     def field(self):
-        """Return a DevField instance representing the field for this DeveloperFieldDefinition instance."""
-        return fields.DevField(self.display_field_name, self.units, self.scale, self.offset)
+        """Return a field instance representing the field for this DeveloperFieldDefinition instance."""
+        return self._field
 
     def base_type(self):
         """Return the base type for the field."""
@@ -92,4 +114,5 @@ class DeveloperFieldDefinition(Data, BaseType):
 
     def __str__(self):
         """Return a string representation for the DeveloperFieldDefinition instance."""
-        return f'{self.__class__.__name__}({self.display_field_name}[{self.field_name}]: {self.developer_data_index} {self.type_count()} of {self.type_string()})'
+        return (f'{self.__class__.__name__}({self.display_field_name}[{self.field_name}]: '
+                + f'scale {self.scale} offset {self.offset}, {self.type_count()} of {self.type_string()})')
