@@ -10,7 +10,7 @@ import unittest
 import logging
 
 from Fit import field_enums
-from Fit import fields
+from Fit import manufacturer_product_fields as mp_fields
 
 
 root_logger = logging.getLogger()
@@ -29,12 +29,12 @@ class TestFitDependantField(unittest.TestCase):
         pass
 
     def test_product_field_reconvert(self):
-        manufacturer = fields.ManufacturerField()
+        manufacturer = mp_fields.ManufacturerField()
         field_value = manufacturer.convert(field_enums.Manufacturer.Garmin.value, field_enums.Manufacturer.invalid.value)
-        product = fields.ProductField()
+        product = mp_fields.ProductField()
         field_value = product.convert(field_enums.GarminProduct.Fenix5_Sapphire.value, field_enums.GarminProduct.invalid.value)
-        self.assertIsInstance(field_value.field, fields.ProductField)
-        field_value.field = fields.GarminProductField()
+        self.assertIsInstance(field_value.field, mp_fields.ProductField)
+        field_value.field = mp_fields.GarminProductField()
         field_value.reconvert(field_enums.DisplayMeasure.metric)
         self.assertEqual(field_value.value, field_enums.GarminProduct.Fenix5_Sapphire)
 

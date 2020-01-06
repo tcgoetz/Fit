@@ -10,7 +10,7 @@ import unittest
 import logging
 
 from Fit import field_enums
-from Fit import fields
+from Fit import enum_fields
 
 
 root_logger = logging.getLogger()
@@ -41,12 +41,12 @@ class TestFitFieldEnum(unittest.TestCase):
         self.assertEqual(field_enums.DisplayMeasure.from_string('statute_us'), field_enums.DisplayMeasure.statute)
 
     def test_enum_field_valid_conversion(self):
-        switch = fields.SwitchField()
+        switch = enum_fields.SwitchField()
         field_value = switch.convert(1, 255)
         self.assertEqual(field_value.value, field_enums.Switch.on)
 
     def test_enum_field_unknown_conversion(self):
-        switch = fields.SwitchField()
+        switch = enum_fields.SwitchField()
         field_value = switch.convert(10, 255)
         self.assertIsInstance(field_value.value, field_enums.UnknownEnumValue)
 

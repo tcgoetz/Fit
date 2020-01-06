@@ -1,0 +1,95 @@
+"""Objects that represent FIT file device message fields."""
+
+__author__ = "Tom Goetz"
+__copyright__ = "Copyright Tom Goetz"
+__license__ = "GPL"
+
+
+from Fit.fields import Field
+
+
+class TypeField(Field):
+    """A base class for fields based on python types."""
+
+    def __init__(self, type_func, *args, **kwargs):
+        """Return a field instance that holds an integer."""
+        super().__init__(*args, **kwargs)
+        self.type_func = type_func
+
+    def _convert_single(self, value, invalid):
+        if value != invalid:
+            try:
+                return self.type_func(value)
+            except Exception:
+                return value
+
+
+class IntegerField(TypeField):
+    """A FIT file message field with a integer value."""
+
+    def __init__(self, *args, **kwargs):
+        """Return a field instance that holds an integer."""
+        super().__init__(int, *args, **kwargs)
+
+
+class FloatField(TypeField):
+    """A FIT file message field with a float value."""
+
+    def __init__(self, name, scale=1.0, *args, **kwargs):
+        self._conversion_factor = [scale, scale]
+        super().__init__(float, name, *args, **kwargs)
+
+
+class BoolField(TypeField):
+    """A FIT file message field with a boolean value."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(bool, *args, **kwargs)
+
+
+class BitField(Field):
+    """A FIT file message field with a bitfield value."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _convert_single(self, value, invalid):
+        if value != invalid:
+            return self.bits.get(value, [self.bits[bit] for bit in self.bits if ((bit & value) == bit)])
+
+
+class StringField(Field):
+    """A FIT file message field with a string value."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _invalid_single(self, value, invalid):
+        return (value < 0) or (value > 127)
+
+    def _convert_many(self, value, invalid):
+        if isinstance(value, list):
+            converted_value = ""
+            for aschii_index in value:
+                if aschii_index == 0:
+                    break
+                converted_value += chr(aschii_index)
+        else:
+            converted_value = str(value)
+        return converted_value.strip()
+
+
+class BytesField(Field):
+    """A FIT file message field with a bytearray value."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _convert_many(self, value, invalid):
+        if isinstance(value, list):
+            converted_value = bytearray()
+            for character in value:
+                converted_value.append(character)
+        else:
+            converted_value = bytearray(value)
+        return converted_value

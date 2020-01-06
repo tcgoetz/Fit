@@ -5,7 +5,8 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 
-from Fit.fields import Field, EnumField, TimeMsField, PowerField, UnknownField, CaloriesField, TimeMinField
+from Fit.fields import Field, TimeMsField, PowerField, UnknownField, CaloriesField, TimeMinField
+from Fit.enum_fields import EnumField
 from Fit.object_fields import DistanceCentimetersToMetersField, AltitudeField, EnhancedAltitudeField
 import Fit.field_enums as fe
 
