@@ -339,7 +339,7 @@ class Cadence(Measurement):
 
     def __init__(self, cycles, raw_value, invalid_value):
         """Return a Cadence instance intialized with a value in cycles."""
-        super().__init__(cycles, raw_value, invalid_value, self.to_f, 'cycles')
+        super().__init__(cycles, raw_value, invalid_value, self.to_cycles, 'cycles')
 
     @classmethod
     def from_cycles(cls, cycles, invalid_value=None):
