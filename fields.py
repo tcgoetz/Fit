@@ -187,12 +187,8 @@ class CyclesDistanceField(Field):
 #
 class TimestampField(NamedField):
 
-    def __init__(self, name, utc=True, **kwargs):
-        self.utc = utc
-        super().__init__(name, **kwargs)
-
     def _convert_single(self, value, invalid):
-        if self.utc:
+        if self._utc:
             timestamp = time.time()
             time_now = datetime.datetime.fromtimestamp(timestamp)
             time_utc = datetime.datetime.utcfromtimestamp(timestamp)
@@ -205,11 +201,6 @@ class TimestampField(NamedField):
 
 class TimeMsField(NamedField):
 
-    _name = 'time'
-
-    def __init__(self, name, **kwargs):
-        super().__init__(name, **kwargs)
-
     def _convert_single(self, value, invalid):
         if value != invalid:
             return conversions.ms_to_dt_time(value / self._scale)
@@ -217,7 +208,6 @@ class TimeMsField(NamedField):
 
 class TimeSField(NamedField):
 
-    _name = 'time'
     _units = 's'
 
     # invalid is not allowed, 65535 is a valid value
@@ -227,17 +217,12 @@ class TimeSField(NamedField):
 
 class TimeHourField(TimeMsField):
 
-    def __init__(self, name, **kwargs):
-        super().__init__(name, **kwargs)
-
     def _convert_single(self, value, invalid):
         if value != invalid:
             return conversions.hours_to_dt_time(value / self._scale)
 
 
 class TimeMinField(TimeMsField):
-    def __init__(self, name, **kwargs):
-        super().__init__(name, **kwargs)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -245,8 +230,6 @@ class TimeMinField(TimeMsField):
 
 
 class TimeOfDayField(NamedField):
-
-    _name = 'time'
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -307,12 +290,6 @@ class EventDataField(Field):
     def dependant_field(self, control_value_list):
         event = control_value_list[0]
         return EventDataField._dependant_field[event]
-
-
-class PosField(NamedField):
-
-    _units = 'degrees'
-    _scale = 11930326.891
 
 
 class CadenceField(NamedField):

@@ -12,6 +12,7 @@ import Fit.field_enums as fe
 
 
 class BatteryVoltageField(Field):
+    """A Field that holds a battery voltage reading for the device."""
 
     _name = 'battery_voltage'
     _units = 'v'
@@ -34,18 +35,21 @@ class AutoActivityDetectField(BitField):
 
 
 class DisplayOrientationField(EnumField):
+    """A Field that holds the display orientation setting for the device."""
 
     _name = 'display_orientation'
     _enum = fe.DisplayOrientation
 
 
 class SideField(EnumField):
+    """A Field that holds the left/right wrist setting for the device."""
 
     _name = 'side'
     _enum = fe.Side
 
 
 class BacklightModeField(EnumField):
+    """A Field that holds the backlight setting for the device."""
 
     _name = 'backlight_mode'
     _enum = fe.BacklightMode

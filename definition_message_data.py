@@ -25,7 +25,7 @@ class DefinitionMessageData():
             1 : mp_fields.ManufacturerField(),
             2 : mp_fields.ProductField(),
             3 : type_fields.IntegerField('serial_number'),
-            4 : fields.TimestampField('time_created'),
+            4 : fields.TimestampField('time_created', utc=True),
             5 : type_fields.IntegerField('number'),
             7 : type_fields.StringField('product_name')
         },
@@ -40,7 +40,7 @@ class DefinitionMessageData():
             35 : enum_fields.SwitchField('switch_35'),
             36 : type_fields.BoolField('activity_tracker_enabled'),
             38 : enum_fields.SwitchField('switch_38'),
-            39 : fields.TimestampField('clock_time'),
+            39 : fields.TimestampField('clock_time', utc=True),
             40 : fields.NamedField('pages_enabled'),
             41 : enum_fields.SwitchField('switch_41'),
             42 : enum_fields.SwitchField('switch_42'),
@@ -112,8 +112,8 @@ class DefinitionMessageData():
             30 : enum_fields.DisplayMeasureField('height_setting'),
             31 : object_fields.EnhancedDistanceMetersField('user_running_step_length'),
             32 : object_fields.EnhancedDistanceMetersField('user_walking_step_length'),
-            35 : fields.TimestampField('ts_35'),
-            41 : fields.TimestampField('ts_41'),
+            35 : fields.TimestampField('ts_35', utc=True),
+            41 : fields.TimestampField('ts_41', utc=True),
             47 : enum_fields.DisplayMeasureField('depth_setting'),
             49 : type_fields.IntegerField('dive_count'),
         },
@@ -174,8 +174,8 @@ class DefinitionMessageData():
             3 : type_fields.StringField('name'),
         },
         MessageType.unknown_13 : {
-            5 : fields.PosField('position_5'),
-            6 : fields.PosField('position_6'),
+            5 : object_fields.LatiitudeField('lat_5'),
+            6 : object_fields.LongitudeField('long_6'),
         },
         MessageType.unknown_14 : {
             10 : fields.Field(name='sequence'),
@@ -183,8 +183,8 @@ class DefinitionMessageData():
         MessageType.goal : {
             0 : activity_fields.SportField(),
             1 : activity_fields.SubSportField(),
-            2 : fields.TimestampField('start_time'),
-            3 : fields.TimestampField('end_time'),
+            2 : fields.TimestampField('start_time', utc=True),
+            3 : fields.TimestampField('end_time', utc=True),
             4 : record_fields.GoalTypeField('type'),
             5 : fields.NamedField('value'),
             6 : type_fields.BoolField('repeat'),
@@ -197,7 +197,7 @@ class DefinitionMessageData():
         MessageType.session : {
             0 : enum_fields.EventField(),
             1 : enum_fields.EventTypeField(),
-            2 : fields.TimestampField('start_time'),
+            2 : fields.TimestampField('start_time', utc=True),
             3 : object_fields.LatiitudeField('start_position_lat'),
             4 : object_fields.LongitudeField('start_position_long'),
             5 : activity_fields.SportField(),
@@ -323,7 +323,7 @@ class DefinitionMessageData():
         MessageType.lap : {
             0 : enum_fields.EventField(),
             1 : enum_fields.EventTypeField(),
-            2 : fields.TimestampField('start_time'),
+            2 : fields.TimestampField('start_time', utc=True),
             3 : object_fields.LatiitudeField('start_position_lat'),
             4 : object_fields.LongitudeField('start_position_long'),
             5 : object_fields.LatiitudeField('end_position_lat'),
@@ -347,10 +347,10 @@ class DefinitionMessageData():
             24 : enum_fields.LapTriggerField(),
             25 : activity_fields.SportField(),
             26 : fields.NamedField('event_group'),
-            27 : fields.PosField('unknown_lat_27'),
-            28 : fields.PosField('unknown_long_28'),
-            29 : fields.PosField('unknown_lat_29'),
-            30 : fields.PosField('unknown_long_30'),
+            27 : object_fields.LatiitudeField('unknown_lat_27'),
+            28 : object_fields.LongitudeField('unknown_long_28'),
+            29 : object_fields.LatiitudeField('unknown_lat_29'),
+            30 : object_fields.LongitudeField('unknown_long_30'),
             32 : type_fields.IntegerField('num_lengths'),
             33 : fields.PowerField('normalized_power'),
             34 : fields.LeftRightBalanceField('left_right_balance'),
@@ -503,7 +503,7 @@ class DefinitionMessageData():
             11 : fields.NamedField('rear_gear_num'),
             12 : fields.NamedField('rear_gear'),
             13 : type_fields.IntegerField('device_index'),
-            15 : fields.TimestampField('ts_15'),
+            15 : fields.TimestampField('ts_15', utc=True),
         },
         MessageType.source : {},
         MessageType.device_info : {
@@ -569,7 +569,7 @@ class DefinitionMessageData():
             2 : activity_fields.ActivityField(),
             3 : enum_fields.EventField(),
             4 : enum_fields.EventTypeField(),
-            5 : fields.TimestampField('local_timestamp', False),
+            5 : fields.TimestampField('local_timestamp', utc=False),
             6 : fields.NamedField('event_group'),
         },
         MessageType.software : {
@@ -613,7 +613,7 @@ class DefinitionMessageData():
             1 : mp_fields.ManufacturerField(),
             2 : mp_fields.ProductField(),
             3 : type_fields.IntegerField('serial_number'),
-            4 : fields.TimestampField('time_created'),
+            4 : fields.TimestampField('time_created', utc=True),
         },  # timestamp, serial_number, creation_time, product_ID, session_style
         MessageType.hrv : {
             0 : fields.TimeMsField('time'),
@@ -623,7 +623,7 @@ class DefinitionMessageData():
         MessageType.ant_channel_id : {},
         MessageType.length : {},
         MessageType.monitoring_info : {
-            0 : fields.TimestampField('local_timestamp', False),
+            0 : fields.TimestampField('local_timestamp', utc=False),
             1 : activity_fields.ActivityTypeField(),
             3 : fields.CyclesDistanceField(),
             4 : fields.CyclesCaloriesField(),
@@ -663,14 +663,14 @@ class DefinitionMessageData():
         MessageType.cadence_zone : {},
         MessageType.hr : {},
         MessageType.unknown_140 : {
-            21 : fields.PosField('position_21'),
-            24 : fields.PosField('position_24'),
+            21 : object_fields.LatiitudeField('position_21'),
+            24 : object_fields.LongitudeField('position_24'),
         },
         MessageType.unknown_141 : {
-            1 : fields.TimestampField('ts_1', False),
-            2 : fields.TimestampField('ts_2', False),
-            4 : fields.PosField('position_4'),
-            5 : fields.PosField('position_5'),
+            1 : fields.TimestampField('ts_1', utc=False),
+            2 : fields.TimestampField('ts_2', utc=False),
+            4 : object_fields.LatiitudeField('position_4'),
+            5 : object_fields.LongitudeField('position_5'),
         },
         MessageType.segment_lap : {},
         MessageType.memo_glob : {},
@@ -743,13 +743,13 @@ class DefinitionMessageData():
         MessageType.set : {},
         MessageType.stress_level : {
             0 : fields.NamedField('stress_level_value'),
-            1 : fields.TimestampField('stress_level_time', False),
+            1 : fields.TimestampField('stress_level_time', utc=False),
         },
         MessageType.unknown_233 : {
             2 : type_fields.BytesField('unknown_2'),
         },
         MessageType.local_time : {
-            0 : fields.TimestampField('local_timestamp', False)
+            0 : fields.TimestampField('local_timestamp', utc=False)
         },
         MessageType.dive_settings : {},
         MessageType.dive_gas : {},
@@ -758,7 +758,7 @@ class DefinitionMessageData():
         MessageType.dive_summary : {},
         # Names and types for this message are guesses
         MessageType.start : {
-            2 : fields.TimestampField('local_timestamp', False),
+            2 : fields.TimestampField('local_timestamp', utc=False),
         },
         # Names and types for this message are guesses
         MessageType.data : {
@@ -767,14 +767,14 @@ class DefinitionMessageData():
         # Names and types for this message are guesses
         MessageType.end : {},
         MessageType.unknown_284 : {
-            1 : fields.TimestampField('ts_1', True),
+            1 : fields.TimestampField('ts_1', utc=True),
         },
         MessageType.mfg_range_min : {},
         MessageType.mfg_range_max : {},
     }
     reserved_field_indexes = {
         250 : type_fields.IntegerField('part_index'),
-        253 : fields.TimestampField('timestamp'),
+        253 : fields.TimestampField('timestamp', utc=True),
         254 : fields.MessageIndexField('message_index')
     }
 

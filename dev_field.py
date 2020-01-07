@@ -17,7 +17,7 @@ class DevField(NamedField):
         """Return a DevField instance."""
         args = {
             'name'  : name,
-            'units' : [units, units]
+            'units' : units
         }
         if scale is not None:
             args['scale'] = scale

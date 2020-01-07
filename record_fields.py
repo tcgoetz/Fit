@@ -1,4 +1,4 @@
-"""Objects that represent FIT file object message fields."""
+"""Objects that represent FIT file personal record message fields."""
 
 __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
