@@ -49,8 +49,8 @@ class ActivityBasedCyclesField(NamedField):
     """A cycles field that gnerates dependant fields based on the activity type."""
 
     _name = 'cycles'
-    _units = ['cycles', 'cycles']
-    _conversion_factor = [2.0, 2.0]
+    _units = 'cycles'
+    _scale = 2.0
     _dependant_field_control_fields = ['activity_type']
 
     def dependant_field(self, control_value_list):
@@ -123,8 +123,7 @@ class ActivityTypeIntensityField(NamedField):
 class SportBasedCyclesField(NamedField):
     """A cycles field that generates dependant fields based on the sport type."""
 
-    _units = ['cycles', 'cycles']
-    _conversion_factor = [1.0, 1.0]
+    _units = 'cycles'
     _dependant_field_control_fields = ['sport', 'sub_sport']
     _scale_map = {
         'cycles'    : 1.0,

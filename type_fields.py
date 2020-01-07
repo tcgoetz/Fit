@@ -35,8 +35,8 @@ class IntegerField(TypeField):
 class FloatField(TypeField):
     """A FIT file message field with a float value."""
 
-    def __init__(self, name, scale=1.0, **kwargs):
-        super().__init__(name, float, conversion_factor=[scale, scale], **kwargs)
+    def __init__(self, name, **kwargs):
+        super().__init__(name, float, **kwargs)
 
 
 class BoolField(TypeField):
@@ -90,4 +90,4 @@ class BytesField(NamedField):
 
 class HeartRateField(FloatField):
 
-    _units = ['bpm', 'bpm']
+    _units = 'bpm'

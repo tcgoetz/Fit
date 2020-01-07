@@ -678,7 +678,7 @@ class DefinitionMessageData():
             0 : fields.NamedField('sensor_id'),
             2 : type_fields.StringField('name'),
             10 : object_fields.DistanceMillimetersToMetersField('manual_wheelsize'),
-            11 : type_fields.FloatField('calibration_factor', 10.0),
+            11 : type_fields.FloatField('calibration_factor', scale=10.0),
             21 : object_fields.DistanceMillimetersToMetersField('auto_wheelsize'),
             32 : mp_fields.ProductField(),
             33 : mp_fields.ManufacturerField(),

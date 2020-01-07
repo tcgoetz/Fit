@@ -16,13 +16,9 @@ from Fit.field_definition import FieldDefinition
 class Field(object):
     """The base object for all FIT file message fields."""
 
-    _units = [None, None]
-    # for measurment system independant conversion
+    _units = None
     _scale = 1.0
     _offset = 0.0
-    # for measurement system dependant conversion
-    _conversion_factor = [1, 1]
-    _conversion_constant = [0, 0]
 
     def __init__(self, **kwargs):
         """Return a new instance of the Field class."""
@@ -39,7 +35,7 @@ class Field(object):
 
     def units(self, value):
         """Return the units of the field."""
-        if self._units[self.measurement_system.value]:
+        if self._units:
             return self._convert_many_units(value, None)
 
     def _invalid_single(self, value, invalid):
@@ -59,7 +55,7 @@ class Field(object):
 
     def _convert_single(self, value, invalid):
         if value != invalid:
-            return (value / self._conversion_factor[self.measurement_system.value]) + self._conversion_constant[self.measurement_system.value]
+            return (value / self._scale) + self._offset
 
     def __convert_many(self, _convert_single, value, invalid):
         if isinstance(value, list):
@@ -70,24 +66,22 @@ class Field(object):
         return self.__convert_many(self._convert_single, value, invalid)
 
     def _convert_single_units(self, value, invalid):
-        return self._units[self.measurement_system.value]
+        return self._units
 
     def _convert_many_units(self, value, invalid):
         return self.__convert_many(self._convert_single_units, value, invalid)
 
     def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Return a FieldValue as intepretted by the field's rules."""
-        self.measurement_system = measurement_system
         return FieldValue(self, invalid=invalid, value=self._convert_many(value, invalid), orig=value)
 
     def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Return the field's value as intepretted by the field's rules."""
-        self.measurement_system = measurement_system
         return (self._convert_many(value, invalid), value)
 
     def __repr__(self):
         """Return a string representation of a Field instance."""
-        return f'{self.__class__.__name__} ({self.name})'
+        return f'{self.__class__.__name__} ({self._name})'
 
 
 class NamedField(Field):
@@ -127,16 +121,16 @@ class LeftRightBalanceField(NamedField):
 
 class PercentField(Field):
 
-    _units = ['%', '%']
+    _units = '%'
 
     def __init__(self, name, scale=1.0, **kwargs):
-        super().__init__(name=name, conversion_factor=[100.0 * scale, 100.0 * scale], **kwargs)
+        super().__init__(name=name, scale=100.0 * scale, **kwargs)
 
 
 class BytePercentField(NamedField):
 
-    _units = ['%', '%']
-    _conversion_factor = [2.0, 2.0]
+    _units = '%'
+    _scale = 2.0
 
 
 class FitBaseTypeField(NamedField):
@@ -161,7 +155,7 @@ class MessageIndexField(NamedField):
 class CaloriesField(NamedField):
 
     _name = 'calories'
-    _units = ['kcal', 'kcal']
+    _units = 'kcal'
 
 
 class ActiveCaloriesField(CaloriesField):
@@ -171,21 +165,21 @@ class ActiveCaloriesField(CaloriesField):
 
 class CaloriesDayField(NamedField):
 
-    _units = ['kcal/day', 'kcal/day']
+    _units = 'kcal/day'
 
 
 class CyclesCaloriesField(Field):
 
     _name = 'cycles_to_calories'
-    _units = ['kcal/cycle', 'kcal/cycle']
-    _conversion_factor = [5019.6, 5019.6]
+    _units = 'kcal/cycle'
+    _scale = 5019.6
 
 
 class CyclesDistanceField(Field):
 
     _name = 'cycles_to_distance'
-    _units = ['m/cycle', 'm/cycle']
-    _conversion_factor = [5000.0, 5000.0]
+    _units = 'm/cycle'
+    _scale = 5000.0
 
 
 #
@@ -224,7 +218,7 @@ class TimeMsField(NamedField):
 class TimeSField(NamedField):
 
     _name = 'time'
-    _units = ['s', 's']
+    _units = 's'
 
     # invalid is not allowed, 65535 is a valid value
     def _convert_single(self, value, invalid):
@@ -262,36 +256,32 @@ class TimeOfDayField(NamedField):
 class CyclesField(Field):
 
     _name = 'cycles'
-    _units = ['cycles', 'cycles']
+    _units = 'cycles'
 
     def __init__(self, scale=2.0, *args, **kwargs):
-        super().__init__(conversion_factor=[scale, scale], *args, **kwargs)
+        super().__init__(scale=scale, *args, **kwargs)
 
 
 class FractionalCyclesField(Field):
 
     _name = 'total_fractional_cycles'
-    _units = ['cycles', 'cycles']
-    _conversion_factor = [128.0, 128.0]
+    _units = 'cycles'
+    _scale = 128.0
 
 
 class StepsField(Field):
 
     _name = 'steps'
-    _units = ['steps', 'steps']
-
-    def __init__(self, scale=1.0, **kwargs):
-        self._conversion_factor = [scale, scale]
-        super().__init__(**kwargs)
+    _units = 'steps'
 
 
 class StrokesField(Field):
 
     _name = 'strokes'
-    _units = ['strokes', 'strokes']
+    _units = 'strokes'
 
     def __init__(self, scale=2.0, **kwargs):
-        super().__init__(conversion_factor=[scale, scale], **kwargs)
+        super().__init__(scale=scale, **kwargs)
 
 
 class VersionField(NamedField):
@@ -321,35 +311,35 @@ class EventDataField(Field):
 
 class PosField(NamedField):
 
-    _units = ['degrees', 'degrees']
-    _conversion_factor = [11930326.891, 11930326.891]
+    _units = 'degrees'
+    _scale = 11930326.891
 
 
 class CadenceField(NamedField):
 
     _name = 'cadence'
-    _units = ['rpm', 'rpm']
+    _units = 'rpm'
 
 
 class FractionalCadenceField(NamedField):
 
     _name = 'fractional_cadence'
-    _units = ['rpm', 'rpm']
-    _conversion_factor = [128.0, 128.0]
+    _units = 'rpm'
+    _scale = 128.0
 
 
 class PowerField(NamedField):
 
     _name = 'power'
-    _units = ['watts', 'watts']
+    _units = 'watts'
 
 
 class WorkField(Field):
 
     _name = 'total_work'
-    _units = ['J', 'J']
+    _units = 'J'
 
 
 class TrainingEffectField(NamedField):
 
-    _conversion_factor = [10.0, 10.0]
+    _scale = 10.0

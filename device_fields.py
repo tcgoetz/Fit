@@ -14,8 +14,8 @@ import Fit.field_enums as fe
 class BatteryVoltageField(Field):
 
     _name = 'battery_voltage'
-    _units = ['v', 'v']
-    _conversion_factor = [256.0, 256.0]
+    _units = 'v'
+    _scale = 256.0
 
 
 class AutoActivityDetectField(BitField):

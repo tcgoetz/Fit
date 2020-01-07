@@ -20,9 +20,9 @@ class DevField(NamedField):
             'units' : [units, units]
         }
         if scale is not None:
-            args['conversion_factor'] = [scale, scale]
+            args['scale'] = scale
         if offset is not None:
-            args['conversion_constant'] = [offset, offset]
+            args['offset'] = offset
         args.update(kwargs)
         super().__init__(**args)
 
