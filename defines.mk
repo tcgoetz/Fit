@@ -28,6 +28,20 @@ PYTHON3=$(shell which python3)
 endif
 
 
+#
+# Install pip packages as user for devs and to system for pipeline runner
+#
+ifeq ($(USER), runner)
+
+PIP_INSTALL_OPT ?=
+
+else
+
+PIP_INSTALL_OPT ?= --user
+
+endif
+
+
 #PYTHON ?= ${PYTHON2}
 PYTHON ?= $(PYTHON3)
 PIP ?= $(PIP3)
@@ -41,4 +55,4 @@ $(error pip not found)
 endif
 
 
-export PYTHON PIP
+export PLATFORM PYTHON PIP PIP_INSTALL_OPT

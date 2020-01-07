@@ -7,8 +7,8 @@ include defines.mk
 all: deps
 
 deps:
-	$(PIP) install --user --upgrade --requirement requirements.txt
-	$(PIP) install --user --upgrade --requirement dev-requirements.txt
+	$(PIP) install $(PIP_INSTALL_OPT) --upgrade --requirement requirements.txt
+	$(PIP) install $(PIP_INSTALL_OPT) --upgrade --requirement dev-requirements.txt
 
 remove_deps:
 	# $(PIP) uninstall -y --requirement requirements.txt
