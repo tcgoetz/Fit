@@ -5,22 +5,26 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 
-from Fit.fields import Field
+from Fit.fields import NamedField
 from Fit.object_fields import ObjectField
 import Fit.measurement as measurement
 
 
-class DevField(Field):
+class DevField(NamedField):
     """Class that handles a developer fields."""
 
-    def __init__(self, name, units, scale=None, offset=None, *args, **kwargs):
+    def __init__(self, name, units, scale=None, offset=None, **kwargs):
         """Return a DevField instance."""
-        self._units = [units, units]
+        args = {
+            'name'  : name,
+            'units' : [units, units]
+        }
         if scale is not None:
-            self._conversion_factor = [scale, scale]
+            args['conversion_factor'] = [scale, scale]
         if offset is not None:
-            self._conversion_constant = [offset, offset]
-        super().__init__(name=name, *args, **kwargs)
+            args['conversion_constant'] = [offset, offset]
+        args.update(kwargs)
+        super().__init__(**args)
 
 
 class DevObjectField(ObjectField):
@@ -28,11 +32,14 @@ class DevObjectField(ObjectField):
 
     def __init__(self, name, scale, offset, obj_func, output_func):
         """Return a new instance of DevSpeedField."""
-        if scale is None:
-            scale = 1.0
-        if offset is None:
-            offset = 1.0
-        super().__init__(name, obj_func, output_func, scale, offset)
+        args = {
+            'name'  : name,
+        }
+        if scale is not None:
+            scale['scale'] = 1.0
+        if offset is not None:
+            offset['offset'] = 0.0
+        super().__init__(obj_func, output_func, **args)
 
 
 class DevDistanceField(DevObjectField):

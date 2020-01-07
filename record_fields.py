@@ -14,17 +14,15 @@ import Fit.field_enums as fe
 class PersonalRecordTypeField(EnumField):
     """Field that indicates what type of personal record the matching PersonalRecordField field holds."""
 
-    enum = fe.PersonalRecordType
-
-    def __init__(self):
-        """Return a PersonalRecordTypeField instance."""
-        super().__init__('pr_type')
+    _name = 'pr_type'
+    _enum = fe.PersonalRecordType
 
 
 class PersonalRecordField(Field):
     """Field that holds a personal record."""
 
-    dependant_field_control_fields = ['pr_type']
+    _name = 'personal_record'
+    _dependant_field_control_fields = ['pr_type']
 
     _type_to_fields = {
         fe.PersonalRecordType.time         : TimeMsField,
@@ -32,10 +30,6 @@ class PersonalRecordField(Field):
         fe.PersonalRecordType.elevation    : AltitudeField,
         fe.PersonalRecordType.power        : PowerField
     }
-
-    def __init__(self, *args, **kwargs):
-        """Return a PersonalRecordField instance."""
-        super().__init__(name='personal_record', *args, **kwargs)
 
     def dependant_field(self, control_value_list):
         """Return a field class that should be used to handle a dependant field."""
@@ -55,25 +49,29 @@ class PersonalRecordField(Field):
 class GoalTypeField(EnumField):
     """Field that indicates what type of goal the matching GoalValueField field holds."""
 
-    enum = fe.GoalType
+    _name = 'goal_type'
+    _enum = fe.GoalType
 
 
 class GoalRecurrenceField(EnumField):
     """Field that indicates how frequently the matching goal happens."""
 
-    enum = fe.GoalRecurrence
+    _name = 'goal_recurrence'
+    _enum = fe.GoalRecurrence
 
 
 class GoalSourceField(EnumField):
     """A class that holds a field indicating what the source of a goal is as a enumeration."""
 
-    enum = fe.GoalSource
+    _name = 'goal_source'
+    _enum = fe.GoalSource
 
 
 class GoalValueField(Field):
     """Field that holds a goal value."""
 
-    dependant_field_control_fields = ['type']
+    _name = 'target_value'
+    _dependant_field_control_fields = ['type']
 
     _type_to_fields = {
         fe.GoalType.time              : TimeMsField,
@@ -84,10 +82,6 @@ class GoalValueField(Field):
         fe.GoalType.ascent            : EnhancedAltitudeField,
         fe.GoalType.active_minutes    : TimeMinField
     }
-
-    def __init__(self, *args, **kwargs):
-        """Return a GoalValueField instance."""
-        super().__init__(name='target_value', *args, **kwargs)
 
     def dependant_field(self, control_value_list):
         """Return the dependant field class for this instance."""

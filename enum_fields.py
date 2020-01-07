@@ -5,96 +5,101 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 
-from Fit.fields import Field
+from Fit.fields import NamedField
 import Fit.field_enums as fe
 
 
-class EnumField(Field):
+class EnumField(NamedField):
     """Base class for a field that can be represented by an enum value."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def _convert_single(self, value, invalid):
-        return self.enum.from_string(value)
+        return self._enum.from_string(value)
 
 
 class SwitchField(EnumField):
-    enum = fe.Switch
+    """A field whose value can be represented by a Switch enum."""
+
+    _enum = fe.Switch
 
 
 class FitBaseUnitField(EnumField):
-    enum = fe.FitBaseUnit
+
+    _enum = fe.FitBaseUnit
 
 
 class DisplayMeasureField(EnumField):
-    enum = fe.DisplayMeasure
+
+    _enum = fe.DisplayMeasure
 
 
 class DisplayHeartField(EnumField):
-    enum = fe.DisplayHeart
+
+    _enum = fe.DisplayHeart
 
 
 class DisplayPositionField(EnumField):
-    enum = fe.DisplayPosition
+
+    _name = 'position_setting'
+    _enum = fe.DisplayPosition
 
 
 #
 # Hardware related fields
 #
 class HeartRateZoneCalcField(EnumField):
-    enum = fe.HeartRateZoneCalc
 
-    def __init__(self):
-        super().__init__('hr_calc_type')
+    _name = 'hr_calc_type'
+    _enum = fe.HeartRateZoneCalc
 
 
 class PowerCalcField(EnumField):
-    enum = fe.PowerCalc
 
-    def __init__(self):
-        super().__init__('pwr_calc_type')
+    _name = 'pwr_calc_type'
+    _enum = fe.PowerCalc
 
 
 class DateModeField(EnumField):
-    enum = fe.DateMode
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='date_mode', *args, **kwargs)
+    _name = 'date_mode'
+    _enum = fe.DateMode
 
 
 class TimeModeField(EnumField):
-    enum = fe.TimeMode
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='time_mode', *args, **kwargs)
+    _name = 'time_mode'
+    _enum = fe.TimeMode
 
 
 class FileTypeField(EnumField):
     """A field that indicates the FIT file type."""
 
-    enum = fe.FileType
+    _name = 'file_type'
+    _enum = fe.FileType
 
 
 class EventField(EnumField):
     """A field that contains an event."""
 
-    enum = fe.Event
+    _name = 'event'
+    _enum = fe.Event
 
 
 class EventTypeField(EnumField):
     """A field that contains the type of an event."""
 
-    enum = fe.EventType
+    _name = 'event_type'
+    _enum = fe.EventType
 
 
 class LapTriggerField(EnumField):
     """A field that indicates why a lap was started."""
 
-    enum = fe.LapTrigger
+    _name = 'lap_trigger'
+    _enum = fe.LapTrigger
 
 
 class SessionTriggerField(EnumField):
     """A field that indicates why a session was started."""
 
-    enum = fe.SessionTrigger
+    _name = 'session_trigger'
+    _enum = fe.SessionTrigger

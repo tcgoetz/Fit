@@ -5,7 +5,7 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 
-from Fit.fields import Field, CyclesField, StepsField, StrokesField
+from Fit.fields import Field, NamedField, CyclesField, StepsField, StrokesField
 from Fit.enum_fields import EnumField
 import Fit.field_enums as fe
 from Fit.field_value import FieldValue
@@ -45,15 +45,13 @@ def _cycles_activity_to_units(activity):
         return _units['generic']
 
 
-class ActivityBasedCyclesField(Field):
+class ActivityBasedCyclesField(NamedField):
     """A cycles field that gnerates dependant fields based on the activity type."""
 
+    _name = 'cycles'
     _units = ['cycles', 'cycles']
     _conversion_factor = [2.0, 2.0]
-    dependant_field_control_fields = ['activity_type']
-
-    def __init__(self, name='cycles', *args, **kwargs):
-        super().__init__(name, *args, **kwargs)
+    _dependant_field_control_fields = ['activity_type']
 
     def dependant_field(self, control_value_list):
         """Return a dependant field instance given the control field values."""
@@ -66,14 +64,14 @@ class ActivityBasedCyclesField(Field):
 class ActivityField(EnumField):
     """A field holding an activity as a integer enum value."""
 
-    enum = fe.Activity
+    _name = 'activity'
+    _enum = fe.Activity
 
 
 class ActivityTypeField(Field):
     """A field holding an activity type as a integer enum value."""
 
-    def __init__(self):
-        super().__init__('activity_type')
+    _name = 'activity_type'
 
     def _convert_single(self, value, invalid):
         return fe.ActivityType(value)
@@ -84,6 +82,8 @@ class ActivityTypeField(Field):
 
 class ActivityClassField(Field):
     """A field holding an activity class as a integer enum value."""
+
+    _name = 'activity_class'
 
     def _convert_single(self, value, invalid):
         if value & 0x80:
@@ -97,22 +97,21 @@ class ActivityClassField(Field):
 class IntensityField(Field):
     """A field that indicates how active the user was."""
 
+    _name = 'intensity'
     _max_intensity = 8
 
-    def __init__(self, *args, **kwargs):
-        super().__init__("intensity", *args, **kwargs)
 
-
-class ActivityTypeIntensityField(Field):
+class ActivityTypeIntensityField(NamedField):
     """A field that generates sub fields fields for activity and intensity."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, name, **kwargs):
+        super().__init__(name, **kwargs)
         self._subfield['activity_type'] = ActivityTypeField()
         self._subfield['intensity'] = IntensityField()
 
     def convert(self, value, invalid, measurement_system):
         """Convert the value to sub fields."""
+        self.measurement_system = measurement_system
         activity_type = value & 0x1f
         intensity = value >> 5
         return FieldValue(self, ['activity_type', 'intensity'],
@@ -121,13 +120,13 @@ class ActivityTypeIntensityField(Field):
                           intensity=self._subfield['intensity'].convert(intensity, 0xff, measurement_system))
 
 
-class SportBasedCyclesField(Field):
+class SportBasedCyclesField(NamedField):
     """A cycles field that generates dependant fields based on the sport type."""
 
     _units = ['cycles', 'cycles']
     _conversion_factor = [1.0, 1.0]
-    dependant_field_control_fields = ['sport', 'sub_sport']
-    _scale = {
+    _dependant_field_control_fields = ['sport', 'sub_sport']
+    _scale_map = {
         'cycles'    : 1.0,
         'steps'     : 0.5,
         'strokes'   : 1.0
@@ -141,13 +140,14 @@ class SportBasedCyclesField(Field):
             sub_sport = control_value_list[1]
             dependant_field_name_base = _cycles_activity_to_units(sub_sport)
         dependant_field_name = self.name.replace('cycles', dependant_field_name_base)
-        return _cycles_units_to_field(dependant_field_name_base)(dependant_field_name, self._scale[dependant_field_name_base])
+        return _cycles_units_to_field(dependant_field_name_base)(name=dependant_field_name, scale=self._scale_map[dependant_field_name_base])
 
 
 class SportField(EnumField):
     """A field representing a sport via an ineger enum value."""
 
-    enum = fe.Sport
+    _name = 'sport'
+    _enum = fe.Sport
     _units = {
         0 : 'cycles',
         1 : 'steps',
@@ -159,9 +159,6 @@ class SportField(EnumField):
         19 : 'strokes',
         37 : 'strokes',
     }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='sport', *args, **kwargs)
 
     @classmethod
     def units(cls, sport_index):
@@ -175,7 +172,5 @@ class SportField(EnumField):
 class SubSportField(EnumField):
     """A field representing a sub-sport via an ineger enum value."""
 
-    enum = fe.SubSport
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='sub_sport', *args, **kwargs)
+    _name = 'sub_sport'
+    _enum = fe.SubSport

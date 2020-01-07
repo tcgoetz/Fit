@@ -14,13 +14,10 @@ import Fit.measurement as measurement
 class ObjectField(Field):
     """Class that handles a field that translates into a Python object."""
 
-    def __init__(self, name, obj_func, output_func, scale=1.0, offset=0.0):
-        """Return a ObjectField instance."""
-        super().__init__(name)
+    def __init__(self, obj_func, output_func, **kwargs):
         self.obj_func = obj_func
         self.output_func = output_func
-        self.scale = scale
-        self.offset = offset
+        super().__init__(**kwargs)
 
     def _invalid_single(self, value, invalid):
         return value.is_invalid()
@@ -31,30 +28,32 @@ class ObjectField(Field):
     def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Returna FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
-        value_obj = self.obj_func((value / self.scale) - self.offset, invalid)
+        value_obj = self.obj_func((value / self._scale) - self._offset, invalid)
         return FieldValue(self, invalid=invalid, value=self._convert_many(value_obj, invalid), orig=value_obj)
 
     def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Return a FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
-        value_obj = self.obj_func((value / self.scale) - self.offset, invalid)
+        value_obj = self.obj_func((value / self._scale) - self._offset, invalid)
         return (self._convert_many(value_obj, invalid), value_obj)
 
 
 class HeightField(ObjectField):
     """Class that handles a user height measurement from a FIT message field."""
 
-    def __init__(self, name='height'):
+    _name = 'height'
+
+    def __init__(self):
         """Return a HeightField instance."""
-        super().__init__(name, measurement.Distance.from_cm, measurement.Distance.feet_or_meters)
+        super().__init__(measurement.Distance.from_cm, measurement.Distance.feet_or_meters)
 
 
 class WeightField(ObjectField):
     """Class that handles a user weight measurement from a FIT message field."""
 
-    def __init__(self, name='weight'):
+    def __init__(self, name):
         """Return a WeightField instance."""
-        super().__init__(name, measurement.Weight.from_cgs, measurement.Weight.lbs_or_kgs)
+        super().__init__(measurement.Weight.from_cgs, measurement.Weight.lbs_or_kgs, name=name)
 
 
 class SpeedMpsField(ObjectField):
@@ -62,7 +61,7 @@ class SpeedMpsField(ObjectField):
 
     def __init__(self, name):
         """Return a SpeedMpsField instance."""
-        super().__init__(name, measurement.Speed.from_mmps, measurement.Speed.mph_or_kph)
+        super().__init__(measurement.Speed.from_mmps, measurement.Speed.mph_or_kph, name=name)
 
 
 class LongitudeField(ObjectField):
@@ -70,7 +69,7 @@ class LongitudeField(ObjectField):
 
     def __init__(self, name):
         """Return a LongitudeField instance."""
-        super().__init__(name, measurement.Longitude.from_semicircles, measurement.Longitude.to_degrees)
+        super().__init__(measurement.Longitude.from_semicircles, measurement.Longitude.to_degrees, name=name)
 
 
 class LatiitudeField(ObjectField):
@@ -78,7 +77,7 @@ class LatiitudeField(ObjectField):
 
     def __init__(self, name):
         """Return a LatiitudeField instance."""
-        super().__init__(name, measurement.Latitude.from_semicircles, measurement.Latitude.to_degrees)
+        super().__init__(measurement.Latitude.from_semicircles, measurement.Latitude.to_degrees, name=name)
 
 
 class TemperatureField(ObjectField):
@@ -86,15 +85,15 @@ class TemperatureField(ObjectField):
 
     def __init__(self, name):
         """Return a ObjectField instance."""
-        super().__init__(name, measurement.Temperature.from_celsius, measurement.Temperature.f_or_c)
+        super().__init__(measurement.Temperature.from_celsius, measurement.Temperature.f_or_c, name=name)
 
 
 class DistanceMetersField(ObjectField):
     """Field holding a distance measurement in meters."""
 
-    def __init__(self, name, obj_func=measurement.Distance.from_meters, output_func=measurement.Distance.feet_or_meters, scale=1.0, offset=1.0):
+    def __init__(self, name, obj_func=measurement.Distance.from_meters, output_func=measurement.Distance.feet_or_meters, **kwargs):
         """Return a new instance of DistanceMetersField."""
-        super().__init__(name, obj_func, output_func, scale, offset)
+        super().__init__(obj_func, output_func, name=name, **kwargs)
 
 
 class EnhancedDistanceMetersField(DistanceMetersField):
@@ -108,7 +107,7 @@ class EnhancedDistanceMetersField(DistanceMetersField):
 class DistanceCentimetersToKmsField(DistanceMetersField):
     """Field holding a distance measure in meters."""
 
-    def __init__(self, name='distance'):
+    def __init__(self, name):
         """Return a DistanceCentimetersToKmsField instance."""
         super().__init__(name, measurement.Distance.from_cm, measurement.Distance.kms_or_miles)
 
@@ -116,7 +115,7 @@ class DistanceCentimetersToKmsField(DistanceMetersField):
 class DistanceCentimetersToMetersField(DistanceMetersField):
     """Field holding a distance measure in meters."""
 
-    def __init__(self, name='distance'):
+    def __init__(self, name):
         """Return a DistanceCentimetersToMetersField instance."""
         super().__init__(name, measurement.Distance.from_cm, measurement.Distance.feet_or_meters)
 
@@ -124,7 +123,7 @@ class DistanceCentimetersToMetersField(DistanceMetersField):
 class DistanceMillimetersToMetersField(DistanceMetersField):
     """Field holding a distance measure in meters."""
 
-    def __init__(self, name='distance'):
+    def __init__(self, name):
         """Return a DistanceMillimetersToMetersField instance."""
         super().__init__(name, measurement.Distance.from_mm, measurement.Distance.feet_or_meters)
 
@@ -132,22 +131,24 @@ class DistanceMillimetersToMetersField(DistanceMetersField):
 class DistanceMillimetersField(DistanceMetersField):
     """Field holding a distance measure in meters."""
 
-    def __init__(self, name='distance'):
+    def __init__(self, name):
         """Return a DistanceMillimetersField instance."""
-        super().__init__(name, measurement.Distance.from_mm, measurement.Distance.inches_or_mm, 10.0)
+        super().__init__(name, measurement.Distance.from_mm, measurement.Distance.inches_or_mm, scale=10.0)
 
 
 class AltitudeField(DistanceMetersField):
     """A field containing a altitude reading."""
 
-    def __init__(self, name='altitude'):
+    def __init__(self):
         """Return an instance of AltitudeField."""
-        super().__init__(name, measurement.Distance.from_cm, measurement.Distance.feet_or_meters, 5.0)
+        super().__init__('altitude', measurement.Distance.from_cm, measurement.Distance.feet_or_meters, scale=5.0)
 
 
 class EnhancedAltitudeField(DistanceMetersField):
     """A field containing a altitude reading with greater range."""
 
-    def __init__(self, name='enhanced_altitude'):
+    _name = 'enhanced_altitude'
+
+    def __init__(self, name):
         """Return an instance of EnhancedAltitudeField."""
-        super().__init__(name, measurement.Distance.from_meters, measurement.Distance.feet_or_meters, 5.0, 500.0)
+        super().__init__(name, measurement.Distance.from_meters, measurement.Distance.feet_or_meters, scale=5.0, offset=500.0)

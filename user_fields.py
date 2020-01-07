@@ -12,10 +12,12 @@ import Fit.field_enums as fe
 class GenderField(EnumField):
     """A FIT file message field containing the user's gender."""
 
-    enum = fe.Gender
+    _name = 'gender'
+    _enum = fe.Gender
 
 
 class LanguageField(EnumField):
     """A FIT file message field containing the user's language."""
 
-    enum = fe.Language
+    _name = 'language'
+    _enum = fe.Language

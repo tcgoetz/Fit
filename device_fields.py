@@ -12,12 +12,16 @@ import Fit.field_enums as fe
 
 
 class BatteryVoltageField(Field):
+
+    _name = 'battery_voltage'
     _units = ['v', 'v']
     _conversion_factor = [256.0, 256.0]
 
 
 class AutoActivityDetectField(BitField):
-    bits = {
+
+    _name = 'auto_activity_detect'
+    _bits = {
         0x00000000 : 'none',
         0x00000001 : 'running',
         0x00000002 : 'cycling',
@@ -28,72 +32,71 @@ class AutoActivityDetectField(BitField):
         0xffffffff : 'invalid'
     }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='auto_activity_detect', *args, **kwargs)
-
 
 class DisplayOrientationField(EnumField):
-    enum = fe.DisplayOrientation
+
+    _name = 'display_orientation'
+    _enum = fe.DisplayOrientation
 
 
 class SideField(EnumField):
-    enum = fe.Side
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='side', *args, **kwargs)
+    _name = 'side'
+    _enum = fe.Side
 
 
 class BacklightModeField(EnumField):
-    enum = fe.BacklightMode
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='backlight_mode', *args, **kwargs)
+    _name = 'backlight_mode'
+    _enum = fe.BacklightMode
 
 
 class AntNetworkField(EnumField):
-    enum = fe.AntNetwork
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='ant_network', *args, **kwargs)
+    _name = 'ant_network'
+    _enum = fe.AntNetwork
 
 
 class SourceTypeField(EnumField):
-    enum = fe.SourceType
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='source_type', *args, **kwargs)
+    _name = 'source_type'
+    _enum = fe.SourceType
 
 
 class AntplusDeviceTypeField(EnumField):
-    enum = fe.AntplusDeviceType
+
+    _name = 'antplus_device_yype'
+    _enum = fe.AntplusDeviceType
 
 
 class LocalDeviceTypeField(EnumField):
-    enum = fe.LocalDeviceType
+
+    _name = 'local_device_type'
+    _enum = fe.LocalDeviceType
 
 
 class UnknownDeviceTypeField(EnumField):
-    enum = fe.UnknownDeviceType
+
+    _name = 'unknown_device_type'
+    _enum = fe.UnknownDeviceType
 
 
 class BatteryStatusField(EnumField):
-    enum = fe.BatteryStatus
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='battery_status', *args, **kwargs)
+    _name = 'battery_status'
+    _enum = fe.BatteryStatus
 
 
 class DeviceType(Field):
-    dependant_field_control_fields = ['source_type']
+
+    _name = 'device_type'
+    _dependant_field_control_fields = ['source_type']
 
     _source_to_device_type_fields = {
-        fe.SourceType.ant          : Field('ant_device_type'),
+        fe.SourceType.ant          : Field(name='ant_device_type'),
         fe.SourceType.antplus      : AntplusDeviceTypeField,
         fe.SourceType.local        : LocalDeviceTypeField,
     }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='device_type', *args, **kwargs)
 
     def dependant_field(self, control_value_list):
         """Return a field class that should be used to handle a dependant field."""
@@ -109,15 +112,18 @@ class DeviceType(Field):
 
 
 class AutoSyncFrequencyField(EnumField):
-    enum = fe.AutoSyncFrequency
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='auto_sync_frequency', *args, **kwargs)
+    _name = 'auto_sync_frequency'
+    _enum = fe.AutoSyncFrequency
 
 
 class BodyLocationField(EnumField):
-    enum = fe.BodyLocation
+
+    _name = 'body_location'
+    _enum = fe.BodyLocation
 
 
 class WatchFaceModeField(EnumField):
-    enum = fe.WatchFaceMode
+
+    _name = 'watch_face_mode'
+    _enum = fe.WatchFaceMode

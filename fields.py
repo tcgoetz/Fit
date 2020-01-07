@@ -17,21 +17,22 @@ class Field(object):
     """The base object for all FIT file message fields."""
 
     _units = [None, None]
+    # for measurment system independant conversion
+    _scale = 1.0
+    _offset = 0.0
+    # for measurement system dependant conversion
     _conversion_factor = [1, 1]
     _conversion_constant = [0, 0]
 
-    def __init__(self, name=''):
+    def __init__(self, **kwargs):
         """Return a new instance of the Field class."""
-        self.name = name
-        if self.__class__.__name__ == 'Field':
-            self.type = 'number'
-        else:
-            self.type = (self.__class__.__name__)[:-len('Field')]
-        if not name:
-            self.name = self.type
+        for key, value in kwargs.items():
+            self.__dict__['_' + key] = value
+        if not hasattr(self, '_name'):
+            raise ValueError(f'Unamed instance of {self.__class__.__name__}')
         self._subfield = {}
-        self.measurement_system = fe.DisplayMeasure.metric
 
+    @property
     def name(self):
         """Return the name of the field."""
         return self._name
@@ -89,6 +90,15 @@ class Field(object):
         return f'{self.__class__.__name__} ({self.name})'
 
 
+class NamedField(Field):
+
+    def __init__(self, *args, **kwargs):
+        if len(args) > 0:
+            super().__init__(name=args[0], **kwargs)
+        else:
+            super().__init__(**kwargs)
+
+
 #
 # Special fields
 #
@@ -97,13 +107,14 @@ class UnknownField(Field):
 
     def __init__(self, index):
         """Return a new instance of the UnknownField class."""
-        super().__init__(f"unknown_{index}")
+        super().__init__(name=f"unknown_{index}")
 
 
 #
 # Basic field types
 #
-class LeftRightBalanceField(Field):
+class LeftRightBalanceField(NamedField):
+
     def _convert_single(self, value, invalid):
         if value != invalid:
             if value & 0x8000:
@@ -115,19 +126,21 @@ class LeftRightBalanceField(Field):
 
 
 class PercentField(Field):
+
     _units = ['%', '%']
 
-    def __init__(self, name, scale=1.0, *args, **kwargs):
-        self._conversion_factor = [100.0 * scale, 100.0 * scale]
-        super().__init__(name, *args, **kwargs)
+    def __init__(self, name, scale=1.0, **kwargs):
+        super().__init__(name=name, conversion_factor=[100.0 * scale, 100.0 * scale], **kwargs)
 
 
-class BytePercentField(Field):
+class BytePercentField(NamedField):
+
     _units = ['%', '%']
     _conversion_factor = [2.0, 2.0]
 
 
-class FitBaseTypeField(Field):
+class FitBaseTypeField(NamedField):
+
     def _convert_single(self, value, invalid):
         if value != invalid:
             try:
@@ -136,13 +149,8 @@ class FitBaseTypeField(Field):
                 return value
 
 
-class MessageNumberField(Field):
-    def _convert_single(self, value, invalid):
-        if value != invalid:
-            return value
+class MessageIndexField(NamedField):
 
-
-class MessageIndexField(Field):
     def _convert_single(self, value, invalid):
         converted_value = {}
         converted_value['selected'] = ((value & 0x8000) == 0x8000)
@@ -150,52 +158,44 @@ class MessageIndexField(Field):
         return converted_value
 
 
-class CaloriesField(Field):
+class CaloriesField(NamedField):
+
+    _name = 'calories'
     _units = ['kcal', 'kcal']
 
 
 class ActiveCaloriesField(CaloriesField):
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='active_calories', *args, **kwargs)
+
+    _name = 'active_calories'
 
 
-class CaloriesDayField(Field):
+class CaloriesDayField(NamedField):
+
     _units = ['kcal/day', 'kcal/day']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
 
 class CyclesCaloriesField(Field):
+
+    _name = 'cycles_to_calories'
     _units = ['kcal/cycle', 'kcal/cycle']
     _conversion_factor = [5019.6, 5019.6]
 
-    def __init__(self):
-        super().__init__('cycles_to_calories')
-
 
 class CyclesDistanceField(Field):
+
+    _name = 'cycles_to_distance'
     _units = ['m/cycle', 'm/cycle']
     _conversion_factor = [5000.0, 5000.0]
-
-    def __init__(self):
-        super().__init__('cycles_to_distance')
-
-
-class HeartRateField(Field):
-    _units = ['bpm', 'bpm']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
 
 #
 # Time related fields
 #
-class TimestampField(Field):
-    def __init__(self, name='timestamp', utc=True):
+class TimestampField(NamedField):
+
+    def __init__(self, name, utc=True, **kwargs):
         self.utc = utc
-        super().__init__(name)
+        super().__init__(name, **kwargs)
 
     def _convert_single(self, value, invalid):
         if self.utc:
@@ -209,17 +209,21 @@ class TimestampField(Field):
         return datetime.datetime(1989, 12, 31, 0, 0, 0) + datetime.timedelta(0, value)
 
 
-class TimeMsField(Field):
-    def __init__(self, name='time', scale=1.0):
-        self._conversion_factor = scale
-        super().__init__(name)
+class TimeMsField(NamedField):
+
+    _name = 'time'
+
+    def __init__(self, name, **kwargs):
+        super().__init__(name, **kwargs)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
-            return conversions.ms_to_dt_time(value / self._conversion_factor)
+            return conversions.ms_to_dt_time(value / self._scale)
 
 
-class TimeSField(Field):
+class TimeSField(NamedField):
+
+    _name = 'time'
     _units = ['s', 's']
 
     # invalid is not allowed, 65535 is a valid value
@@ -228,111 +232,124 @@ class TimeSField(Field):
 
 
 class TimeHourField(TimeMsField):
-    def __init__(self, name='time', scale=1.0):
-        super().__init__(name, scale)
+
+    def __init__(self, name, **kwargs):
+        super().__init__(name, **kwargs)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
-            return conversions.hours_to_dt_time(value / self._conversion_factor)
+            return conversions.hours_to_dt_time(value / self._scale)
 
 
 class TimeMinField(TimeMsField):
-    def __init__(self, name='time', scale=1.0):
-        super().__init__(name, scale)
+    def __init__(self, name, **kwargs):
+        super().__init__(name, **kwargs)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
-            return conversions.min_to_dt_time(value / self._conversion_factor)
+            return conversions.min_to_dt_time(value / self._scale)
 
 
-class TimeOfDayField(Field):
+class TimeOfDayField(NamedField):
+
+    _name = 'time'
+
     def _convert_single(self, value, invalid):
         if value != invalid:
             return conversions.secs_to_dt_time(value)
 
 
 class CyclesField(Field):
+
+    _name = 'cycles'
     _units = ['cycles', 'cycles']
 
-    def __init__(self, name, scale=2.0, *args, **kwargs):
-        self. _conversion_factor = [scale, scale]
-        super().__init__(name)
+    def __init__(self, scale=2.0, *args, **kwargs):
+        super().__init__(conversion_factor=[scale, scale], *args, **kwargs)
 
 
 class FractionalCyclesField(Field):
+
+    _name = 'total_fractional_cycles'
     _units = ['cycles', 'cycles']
     _conversion_factor = [128.0, 128.0]
 
 
 class StepsField(Field):
+
+    _name = 'steps'
     _units = ['steps', 'steps']
 
-    def __init__(self, name, scale=1.0, *args, **kwargs):
-        self. _conversion_factor = [scale, scale]
-        super().__init__(name)
+    def __init__(self, scale=1.0, **kwargs):
+        self._conversion_factor = [scale, scale]
+        super().__init__(**kwargs)
 
 
 class StrokesField(Field):
+
+    _name = 'strokes'
     _units = ['strokes', 'strokes']
 
-    def __init__(self, name, scale=2.0, *args, **kwargs):
-        self. _conversion_factor = [scale, scale]
-        super().__init__(name)
+    def __init__(self, scale=2.0, **kwargs):
+        super().__init__(conversion_factor=[scale, scale], **kwargs)
 
 
-class VersionField(Field):
+class VersionField(NamedField):
     """A field that contains a software or hardware version."""
 
-    _conversion_factor = 100.0
-
-    def __init__(self, *args, **kwargs):
-        """Return an instance of VersionField."""
-        super().__init__(*args, **kwargs)
+    _name = 'version'
+    _scale = 100.0
 
     def _convert_single(self, value, invalid):
         if value != invalid:
-            return '{0:2.2f}'.format(value / self._conversion_factor)
+            return '{0:2.2f}'.format(value / self._scale)
 
 
 class EventDataField(Field):
-    _dependant_field = {
-        'timer' : Field('timer_trigger'),
-        245 : CyclesField
-    }
-    dependant_field_control_fields = ['event']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(name='event_data', *args, **kwargs)
+    _name = 'event_data'
+    _dependant_field = {
+        'timer' : Field(name='timer_trigger'),
+        245     : CyclesField
+    }
+    _dependant_field_control_fields = ['event']
 
     def dependant_field(self, control_value_list):
         event = control_value_list[0]
         return EventDataField._dependant_field[event]
 
 
-class PosField(Field):
+class PosField(NamedField):
+
     _units = ['degrees', 'degrees']
     _conversion_factor = [11930326.891, 11930326.891]
 
 
-class CadenceField(Field):
+class CadenceField(NamedField):
+
+    _name = 'cadence'
     _units = ['rpm', 'rpm']
 
 
-class FractionalCadenceField(Field):
+class FractionalCadenceField(NamedField):
+
+    _name = 'fractional_cadence'
     _units = ['rpm', 'rpm']
     _conversion_factor = [128.0, 128.0]
 
 
-class PowerField(Field):
-    _units = ['watts', 'watts']
+class PowerField(NamedField):
 
-    def __init__(self, name='power'):
-        super().__init__(name)
+    _name = 'power'
+    _units = ['watts', 'watts']
 
 
 class WorkField(Field):
+
+    _name = 'total_work'
     _units = ['J', 'J']
 
 
-class TrainingeffectField(Field):
+class TrainingEffectField(NamedField):
+
     _conversion_factor = [10.0, 10.0]
