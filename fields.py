@@ -187,15 +187,15 @@ class CyclesDistanceField(Field):
 #
 class TimestampField(NamedField):
 
+    __timestamp = time.time()
+    __utc_offset_secs = (datetime.datetime.fromtimestamp(__timestamp) - datetime.datetime.utcfromtimestamp(__timestamp)).total_seconds()
+
     def _convert_single(self, value, invalid):
         if self._utc:
-            timestamp = time.time()
-            time_now = datetime.datetime.fromtimestamp(timestamp)
-            time_utc = datetime.datetime.utcfromtimestamp(timestamp)
-            utc_offset_secs = (time_now - time_utc).total_seconds()
             # hack - summary of the day messages appear at midnight and we want them to appear in the current day,
             # reimplement properly
-            value += (utc_offset_secs - 1)
+            value += (self.__utc_offset_secs - 1)
+            return datetime.datetime(1989, 12, 31, 0, 0, 0, tzinfo=datetime.timezone.utc) + datetime.timedelta(0, value)
         return datetime.datetime(1989, 12, 31, 0, 0, 0) + datetime.timedelta(0, value)
 
 
