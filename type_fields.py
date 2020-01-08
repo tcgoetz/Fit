@@ -89,5 +89,6 @@ class BytesField(NamedField):
 
 
 class HeartRateField(FloatField):
+    """A FIT file message field holding a heart rate measurement."""
 
     _units = 'bpm'
