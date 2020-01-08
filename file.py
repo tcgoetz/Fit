@@ -6,6 +6,7 @@ __license__ = "GPL"
 
 
 import logging
+import datetime
 
 from Fit.file_header import FileHeader
 from Fit.record_header import RecordHeader, MessageClass
@@ -42,6 +43,7 @@ class File(object):
 
         self.file = open(filename, 'rb')
         self.__parse()
+        self.__sumarize()
 
     def __del__(self):
         """Delete the File instance."""
@@ -102,33 +104,29 @@ class File(object):
             logger.debug("Record %d: consumed %d of %s %r", self.record_count, data_consumed, self.data_size, self.measurement_system)
         logger.debug("File %s: %s -> %s", self.filename, self.time_created_timestamp, self.last_message_timestamp)
 
-    def file_id(self):
-        """Return the file_id message for the file."""
-        return self[MessageType.file_id][0]
-
-    def type(self):
-        """Return the file type for the file."""
-        return self.file_id()['type'].value
-
-    def product(self):
-        """Return the product type from the file."""
-        return self.file_id()['product'].value
-
-    def serial_number(self):
-        """Return the device serial number from the file."""
-        return self.file_id()[0]['serial_number'].value
-
-    def device(self):
-        """Return the device from the file."""
-        return self.product() + "_" + str(self.serial_number())
-
-    def time_created(self):
-        """Return the the time the file was created."""
-        return self.file_id()['time_created'].value
+    def __sumarize(self):
+        self.file_id = self[MessageType.file_id][0]
+        self.type = self.file_id['type'].value
+        self.product = self.file_id['product'].value
+        self.serial_number = self.file_id['serial_number'].value
+        self.device = f'{self.product}_{self.serial_number}'
+        self.device_settings_list = self[MessageType.device_settings]
+        if len(self.device_settings_list) > 0:
+            self.device_settings = self.device_settings_list[0]
+            self.utc_offset = self.device_settings['time_offset'].value
+            self.local_tz = datetime.timezone(datetime.timedelta(seconds=self.utc_offset))
+        else:
+            self.local_tz = None
+        self.time_created = self.utc_datetime_to_local(self.file_id['time_created'].value)
 
     def date_span(self):
         """Return a tuple of the start and end dates of the file."""
         return (self.time_created(), self.last_message_timestamp)
+
+    def utc_datetime_to_local(self, utc_dt):
+        if self.local_tz is not None:
+            return utc_dt.astimezone(self.local_tz).replace(tzinfo=None)
+        return utc_dt.replace(tzinfo=None)
 
     def message_types(self):
         """Return a list of the message types present in the file."""

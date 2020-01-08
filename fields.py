@@ -187,16 +187,12 @@ class CyclesDistanceField(Field):
 #
 class TimestampField(NamedField):
 
-    __timestamp = time.time()
-    __utc_offset_secs = (datetime.datetime.fromtimestamp(__timestamp) - datetime.datetime.utcfromtimestamp(__timestamp)).total_seconds()
-
     def _convert_single(self, value, invalid):
         if self._utc:
             # hack - summary of the day messages appear at midnight and we want them to appear in the current day,
             # reimplement properly
-            value += (self.__utc_offset_secs - 1)
-            return datetime.datetime(1989, 12, 31, 0, 0, 0, tzinfo=datetime.timezone.utc) + datetime.timedelta(0, value)
-        return datetime.datetime(1989, 12, 31, 0, 0, 0) + datetime.timedelta(0, value)
+            return datetime.datetime(1989, 12, 31, 0, 0, 0, tzinfo=datetime.timezone.utc) + datetime.timedelta(0, value - 1)
+        return datetime.datetime(1989, 12, 31, 0, 0, 0) + datetime.timedelta(0, value - 1)
 
 
 class TimeMsField(NamedField):
@@ -212,6 +208,18 @@ class TimeSField(NamedField):
 
     # invalid is not allowed, 65535 is a valid value
     def _convert_single(self, value, invalid):
+        return value
+
+
+class TimeOffsetField(Field):
+
+    _name = 'time_offset'
+    _units = 's'
+
+    def _convert_single(self, value, invalid):
+        # if the offset is greater than 24 hours, than it's negative
+        if value > 86400:
+            return -(0xFFFFFFFF - value + 1)
         return value
 
 

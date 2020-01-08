@@ -40,10 +40,10 @@ class TestFitFields(unittest.TestCase):
 
     def test_utc_timestamp_field_valid_conversion(self):
         test_values = [
-            (936189712, datetime.datetime(2019, 8, 31, 7, 41, 51, tzinfo=datetime.timezone.utc)),
-            (936188666, datetime.datetime(2019, 8, 31, 7, 24, 25, tzinfo=datetime.timezone.utc)),
-            (943190700, datetime.datetime(2019, 11, 20, 8, 24, 59, tzinfo=datetime.timezone.utc)),
-            (857947331, datetime.datetime(2017, 3, 8, 17, 42, 10, tzinfo=datetime.timezone.utc))
+            (936189712, datetime.datetime(2019, 8, 31, 12, 41, 51, tzinfo=datetime.timezone.utc)),
+            (936188666, datetime.datetime(2019, 8, 31, 12, 24, 25, tzinfo=datetime.timezone.utc)),
+            (943190700, datetime.datetime(2019, 11, 20, 13, 24, 59, tzinfo=datetime.timezone.utc)),
+            (857947331, datetime.datetime(2017, 3, 8, 22, 42, 10, tzinfo=datetime.timezone.utc))
         ]
         for value, expected_dt in test_values:
             self.__utc_timestamp_field_valid_conversion(value, expected_dt)
@@ -51,7 +51,7 @@ class TestFitFields(unittest.TestCase):
     def test_local_timestamp_field_valid_conversion(self):
         time = fields.TimestampField('timestamp', utc=False)
         field_value = time.convert(936189712, 4294967295)
-        self.assertEqual(field_value.value, datetime.datetime(2019, 8, 31, 12, 41, 52))
+        self.assertEqual(field_value.value, datetime.datetime(2019, 8, 31, 12, 41, 51))
 
 
 if __name__ == '__main__':

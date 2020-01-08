@@ -33,7 +33,7 @@ class DefinitionMessageData():
         MessageType.device_settings : {
             0 : fields.NamedField('active_time_zone'),
             1 : type_fields.FloatField('utc_offset'),
-            2 : fields.TimeSField('time_offset'),
+            2 : fields.TimeOffsetField(),
             4 : enum_fields.TimeModeField(),
             5 : fields.TimeHourField('time_zone_offset'),
             12 : device_fields.BacklightModeField(),
