@@ -32,11 +32,11 @@ class TestFitDependantField(unittest.TestCase):
         manufacturer = mp_fields.ManufacturerField()
         field_value = manufacturer.convert(field_enums.Manufacturer.Garmin.value, field_enums.Manufacturer.invalid.value)
         product = mp_fields.ProductField()
-        field_value = product.convert(field_enums.GarminProduct.Fenix5_Sapphire.value, field_enums.GarminProduct.invalid.value)
+        field_value = product.convert(field_enums.GarminProduct.Fenix_5_Sapphire.value, field_enums.GarminProduct.invalid.value)
         self.assertIsInstance(field_value.field, mp_fields.ProductField)
         field_value.field = mp_fields.GarminProductField()
         field_value.reconvert(field_enums.DisplayMeasure.metric)
-        self.assertEqual(field_value.value, field_enums.GarminProduct.Fenix5_Sapphire)
+        self.assertEqual(field_value.value, field_enums.GarminProduct.Fenix_5_Sapphire)
 
 
 if __name__ == '__main__':
