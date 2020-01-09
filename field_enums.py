@@ -341,6 +341,8 @@ class Manufacturer(FuzzyFieldEnum):
     velosense                       = 296
     cycligentinc                    = 297
     trailforks                      = 298
+    mahle_ebikemotion               = 299
+    nurvv                           = 300
     actigraphcorp                   = 5759
     #
     # Privates values
@@ -499,7 +501,7 @@ class GarminProduct(FuzzyFieldEnum):
     Forerunner35                    = 2503
     Edge_820                        = 2530
     Edge_Explore_820                = 2531
-    Fenix5s                         = 2544
+    Fenix_5S                        = 2544
     D2_Bravo_Titanium               = 2547
     Varia_UT800                     = 2567
     Running_Dynamics_Pod            = 2593
@@ -507,7 +509,7 @@ class GarminProduct(FuzzyFieldEnum):
     VivoFit_Jr                      = 2606
     VivoSport                       = 2623
     Forerunner935                   = 2691
-    Fenix5_Sapphire                 = 2697
+    Fenix_5_Sapphire                = 2697
     VivoActive_3                    = 2700
     Edge_1030                       = 2713
     VivoMove_HR                     = 2772
@@ -517,7 +519,7 @@ class GarminProduct(FuzzyFieldEnum):
     Descent                         = 2859
     fr645                           = 2886
     fr645m                          = 2888
-    Fenix5s_Plus                    = 2900
+    Fenix_5S_Plus                   = 2900
     Edge_130                        = 2909
     Vivosmart_4                     = 2927
     GPS_2957                        = 2957
@@ -529,11 +531,12 @@ class GarminProduct(FuzzyFieldEnum):
     VivoActive_3M_l                 = 3066
     Approach_G80                    = 3085
     GPS_3107                        = 3107
-    Fenix5_plus                     = 3110
-    Fenix5x_plus                    = 3111
-    Edge_520_plus                   = 3112
+    Fenix_5_Plus                    = 3110
+    Fenix_5x_Plus                   = 3111
+    Edge_520_Plus                   = 3112
     Instinct                        = 3126
-    Fenix6                          = 3289
+    Fenix_6S_Pro                    = 3288
+    Fenix_6                         = 3289
     HRM_Dual                        = 3299
     Approach_S40                    = 3314
     FootPod_SDM4                    = 10007
@@ -1100,7 +1103,15 @@ class GoalSource(FieldEnum):
 
 
 class WatchFaceMode(FieldEnum):
+    """A enum that describes a mode of the watch face."""
     digital         = 0
     analog          = 1
     connect_iq      = 2
     disabled        = 3
+
+
+class ClimbProEvent(FieldEnum):
+    """A enum that contains an event from a climbing program."""
+    approach        = 0
+    start           = 1
+    complete        = 2

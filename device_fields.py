@@ -6,12 +6,12 @@ __license__ = "GPL"
 
 
 from Fit.fields import Field
-from Fit.type_fields import BitField
+from Fit.type_fields import BitField, FloatField
 from Fit.enum_fields import EnumField
 import Fit.field_enums as fe
 
 
-class BatteryVoltageField(Field):
+class BatteryVoltageField(FloatField):
     """A Field that holds a battery voltage reading for the device."""
 
     _name = 'battery_voltage'

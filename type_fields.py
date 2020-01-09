@@ -8,42 +8,53 @@ __license__ = "GPL"
 from Fit.fields import Field, NamedField
 
 
-class TypeField(Field):
+class TypeField(NamedField):
     """A base class for fields based on python types."""
 
-    def __init__(self, name, type_func, **kwargs):
+    def __init__(self, type_func, *args, **kwargs):
         """Return a field instance that holds an type. Convert to the type using type_func."""
         self.type_func = type_func
-        super().__init__(name=name, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _convert_single(self, value, invalid):
         if value != invalid:
             try:
-                return self.type_func(value)
+                return self.type_func(value / self._scale)
             except Exception:
                 return value
 
 
-class IntegerField(TypeField):
+class ScaledTypeField(TypeField):
+    """A base class for fields based on python types."""
+
+    def _convert_single(self, value, invalid):
+        if value != invalid:
+            try:
+                return self.type_func(value / self._scale)
+            except Exception:
+                return value
+
+
+class IntegerField(ScaledTypeField):
     """A FIT file message field with a integer value."""
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, *args, **kwargs):
         """Return a field instance that holds an integer."""
-        super().__init__(name, int, **kwargs)
+        super().__init__(int, *args, **kwargs)
 
 
-class FloatField(TypeField):
+class FloatField(ScaledTypeField):
     """A FIT file message field with a float value."""
 
-    def __init__(self, name, **kwargs):
-        super().__init__(name, float, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(float, *args, **kwargs)
 
 
 class BoolField(TypeField):
     """A FIT file message field with a boolean value."""
 
-    def __init__(self, name, **kwargs):
-        super().__init__(name, bool, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(bool, *args, **kwargs)
 
 
 class BitField(Field):
@@ -54,11 +65,8 @@ class BitField(Field):
             return self._bits.get(value, [self._bits[bit] for bit in self._bits if ((bit & value) == bit)])
 
 
-class StringField(Field):
+class StringField(NamedField):
     """A FIT file message field with a string value."""
-
-    def __init__(self, name, **kwargs):
-        super().__init__(name=name, **kwargs)
 
     def _invalid_single(self, value, invalid):
         return (value < 0) or (value > 127)
@@ -92,3 +100,10 @@ class HeartRateField(FloatField):
     """A FIT file message field holding a heart rate measurement."""
 
     _units = 'bpm'
+
+
+class AbsolutePressureField(IntegerField):
+    """Absolute pressure measure for diving?."""
+
+    _name = 'absolute_pressure'
+    _units = 'Pa'

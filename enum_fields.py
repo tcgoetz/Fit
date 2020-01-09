@@ -103,3 +103,10 @@ class SessionTriggerField(EnumField):
 
     _name = 'session_trigger'
     _enum = fe.SessionTrigger
+
+
+class ClimbProEventField(EnumField):
+    """A field that contains an event from a climbing program."""
+
+    _name = 'climb_pro_event'
+    _enum = fe.ClimbProEvent

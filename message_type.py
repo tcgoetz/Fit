@@ -45,8 +45,8 @@ class MessageType(enum.Enum):
     zones_target                    = 7
     hr_zone                         = 8
     power_zone                      = 9
-    # 11 is unknown
     met_zone                        = 10
+    # 11 is unknown
     sport                           = 12
     # 13,14 are unknown
     unknown_13                      = 13
@@ -57,6 +57,7 @@ class MessageType(enum.Enum):
     lap                             = 19
     record                          = 20
     event                           = 21
+    # 22 is unknown
     source                          = 22
     device_info                     = 23
     # 24,25 are unknown
@@ -171,6 +172,8 @@ class MessageType(enum.Enum):
     data                            = 274   # this is a guess
     end                             = 276   # this is a guess
     unknown_284                     = 284
+    jump                            = 285
+    climb_pro                       = 317
     #
     #
     #
