@@ -168,11 +168,13 @@ class MessageType(enum.Enum):
     exercise_title                  = 264
     # 265-267 not known
     dive_summary                    = 268
+    pulse_ox                        = 269
     start                           = 273   # this is a guess
     data                            = 274   # this is a guess
     end                             = 276   # this is a guess
     unknown_284                     = 284
     jump                            = 285
+    respiration                     = 297
     climb_pro                       = 317
     #
     #

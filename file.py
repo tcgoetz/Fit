@@ -106,18 +106,25 @@ class File(object):
 
     def __sumarize(self):
         self.file_id = self[MessageType.file_id][0]
+        self.time_created = self.file_id['time_created'].value
         self.type = self.file_id['type'].value
         self.product = self.file_id['product'].value
         self.serial_number = self.file_id['serial_number'].value
         self.device = f'{self.product}_{self.serial_number}'
         self.device_settings_list = self[MessageType.device_settings]
+        self.monitoring_info_list = self[MessageType.monitoring_info]
         if len(self.device_settings_list) > 0:
             self.device_settings = self.device_settings_list[0]
             self.utc_offset = self.device_settings['time_offset'].value
-            self.local_tz = datetime.timezone(datetime.timedelta(seconds=self.utc_offset))
+        elif len(self.monitoring_info_list) > 0:
+            self.monitoring_info = self.monitoring_info_list[0]
+            monitoring_info_time_utc = self.monitoring_info['timestamp'].value
+            monitoring_info_time_local = self.monitoring_info['local_timestamp'].value
+            self.utc_offset = (monitoring_info_time_utc.replace(tzinfo=None) - monitoring_info_time_local).total_seconds()
         else:
-            self.local_tz = None
-        self.time_created = self.utc_datetime_to_local(self.file_id['time_created'].value)
+            self.utc_offset = 0
+        self.local_tz = datetime.timezone(datetime.timedelta(seconds=self.utc_offset))
+        self.local_time_created = self.utc_datetime_to_local(self.time_created)
 
     def date_span(self):
         """Return a tuple of the start and end dates of the file."""

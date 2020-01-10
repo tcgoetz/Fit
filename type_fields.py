@@ -107,3 +107,11 @@ class AbsolutePressureField(IntegerField):
 
     _name = 'absolute_pressure'
     _units = 'Pa'
+
+
+class RespirationRateField(FloatField):
+    """A respiration rate measurment in breaths per minute."""
+
+    _name = 'respiration_rate'
+    _units = 'brpm'
+    _scale = 100.0

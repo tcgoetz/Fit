@@ -319,10 +319,11 @@ class DefinitionMessageData():
             134 : object_fields.DistanceMillimetersField('avg_step_length'),
             137 : fields.TrainingEffectField('total_anaerobic_training_effect'),
             139 : object_fields.SpeedMpsField('avg_vam'),
-            169 : type_fields.FloatField('avg_respiration_rate', scale=100.0),
-            170 : type_fields.FloatField('max_respiration_rate', scale=100.0),
+            150 : object_fields.TemperatureField('min_temperature'),
+            169 : type_fields.RespirationRateField('avg_respiration_rate'),
+            170 : type_fields.RespirationRateField('max_respiration_rate'),
             178: type_fields.FloatField('fluid_consumed'),
-            180 : type_fields.FloatField('min_respiration_rate', scale=100.0),
+            180 : type_fields.RespirationRateField('min_respiration_rate'),
         },
         MessageType.lap : {
             0 : enum_fields.EventField(),
@@ -435,8 +436,8 @@ class DefinitionMessageData():
             119 : fields.PercentField('avg_stance_time_balance'),
             120 : object_fields.DistanceMillimetersField('avg_step_length'),
             121 : object_fields.SpeedMpsField('avg_vam'),
-            136 : type_fields.FloatField('avg_respiration_rate', scale=100.0),
-            137 : type_fields.FloatField('max_respiration_rate', scale=100.0),
+            136 : type_fields.RespirationRateField('avg_respiration_rate'),
+            137 : type_fields.RespirationRateField('max_respiration_rate'),
         },
         MessageType.record : {
             0 : object_fields.LatiitudeField('position_lat'),
@@ -503,7 +504,7 @@ class DefinitionMessageData():
             96 : fields.TimeSField('ndl_time'),
             97 : fields.PercentField('cns_load'),
             98 : fields.PercentField('n2_load'),
-            108 : type_fields.FloatField('respiration_rate', scale=100.0),
+            108 : type_fields.RespirationRateField(),
             114 : type_fields.FloatField('grit'),
             115 : type_fields.FloatField('flow'),
         },
@@ -760,8 +761,8 @@ class DefinitionMessageData():
         MessageType.one_d_sensor_calibration : {},
         MessageType.set : {},
         MessageType.stress_level : {
-            0 : fields.NamedField('stress_level_value'),
-            1 : fields.TimestampField('stress_level_time', utc=False),
+            0 : fields.NamedField('stress_level'),
+            1 : fields.TimestampField('local_timestamp', utc=False),
         },
         MessageType.unknown_233 : {
             2 : type_fields.BytesField('unknown_2'),
@@ -774,6 +775,9 @@ class DefinitionMessageData():
         MessageType.dive_alarm : {},
         MessageType.exercise_title : {},
         MessageType.dive_summary : {},
+        MessageType.pulse_ox : {
+            0 : type_fields.FloatField('pulse_ox'),
+        },
         # Names and types for this message are guesses
         MessageType.start : {
             2 : fields.TimestampField('local_timestamp', utc=False),
@@ -797,6 +801,9 @@ class DefinitionMessageData():
             6 : object_fields.LongitudeField('position_long'),
             7 : object_fields.SpeedMpsField('speed'),
             8 : object_fields.SpeedMpsField('enhanced_speed'),
+        },
+        MessageType.respiration : {
+            0 : type_fields.RespirationRateField(),
         },
         MessageType.climb_pro : {
             0 : object_fields.LatiitudeField('position_lat'),
