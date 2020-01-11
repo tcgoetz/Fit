@@ -26,8 +26,11 @@ class Measurement(object):
     def to_units(self, scale=1.0, rounded=False):
         """Return a measurement value given the current value and a scale."""
         if self.value is not None:
-            value = self.value * scale
-            return round(value) if rounded else value
+            try:
+                value = self.value * scale
+                return round(value) if rounded else value
+            except Exception as e:
+                raise Exception(f'value {self.value} scale {scale}: {e}')
 
     def is_invalid(self):
         """Return if the measurement is valid."""

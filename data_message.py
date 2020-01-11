@@ -46,12 +46,12 @@ class DataMessage(object):
                 message_fields[data_field._field_name()] = data_field._field_value()
         self.__convert_fields(message_fields, measurement_system)
         self.__convert_dev_fields(fit_file, definition_message, measurement_system)
-        time_created_timestamp_field = self._fields.get('time_created')
-        if time_created_timestamp_field:
-            self.time_created_timestamp = time_created_timestamp_field.value
-            self.__track_dates(self.time_created_timestamp)
-        else:
-            self.time_created_timestamp = None
+        # time_created_timestamp_field = self._fields.get('time_created')
+        # if time_created_timestamp_field:
+        #     self.time_created_timestamp = time_created_timestamp_field.value
+        #     self.__track_dates(self.time_created_timestamp)
+        # else:
+        #     self.time_created_timestamp = None
         timestamp_field = self._fields.get('timestamp')
         if timestamp_field:
             self.__track_dates(timestamp_field.value)
@@ -108,7 +108,7 @@ class DataMessage(object):
         else:
             DataMessage.matched_timestamp_16 = timestamp_16
             delta = 0
-        return DataMessage.last_absolute_timestamp + datetime.timedelta(0, delta)
+        return DataMessage.last_absolute_timestamp + datetime.timedelta(seconds=delta)
 
     def type(self):
         """Return the message type."""

@@ -26,7 +26,7 @@ class ObjectField(Field):
         return self.output_func(value, self.measurement_system)
 
     def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
-        """Returna FieldValue containing the field value as a Python object."""
+        """Return a FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
         value_obj = self.obj_func((value / self._scale) - self._offset, invalid)
         return FieldValue(self, invalid=invalid, value=self._convert_many(value_obj, invalid), orig=value_obj)

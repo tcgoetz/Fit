@@ -84,8 +84,8 @@ class File(object):
 
                 data_message_type = data_message.type()
 
-                if data_message.time_created_timestamp:
-                    self.time_created_timestamp = data_message.time_created_timestamp
+                # if data_message.time_created_timestamp:
+                #     self.time_created_timestamp = data_message.time_created_timestamp
                 # if self.last_message_timestamp is not None and data_message.timestamp < self.last_message_timestamp:
                 #     raise FitOutOfOrderMessage('Message time stamp %s before previous %s' % (data_message.timestamp, self.last_message_timestamp))
                 self.last_message_timestamp = data_message.timestamp
@@ -102,7 +102,6 @@ class File(object):
                     self._data_message_types.append(data_message_type)
 
             logger.debug("Record %d: consumed %d of %s %r", self.record_count, data_consumed, self.data_size, self.measurement_system)
-        logger.debug("File %s: %s -> %s", self.filename, self.time_created_timestamp, self.last_message_timestamp)
 
     def __sumarize(self):
         self.file_id = self[MessageType.file_id][0]
@@ -125,6 +124,7 @@ class File(object):
             self.utc_offset = 0
         self.local_tz = datetime.timezone(datetime.timedelta(seconds=self.utc_offset))
         self.local_time_created = self.utc_datetime_to_local(self.time_created)
+        logger.debug("File %s: %s -> %s", self.filename, self.time_created, self.last_message_timestamp)
 
     def date_span(self):
         """Return a tuple of the start and end dates of the file."""
