@@ -188,10 +188,8 @@ class TimestampField(NamedField):
 
     def _convert_single(self, value, invalid):
         if self._utc:
-            # hack - summary of the day messages appear at midnight and we want them to appear in the current day,
-            # reimplement properly
-            return datetime.datetime(1989, 12, 31, 0, 0, 0, tzinfo=datetime.timezone.utc) + datetime.timedelta(0, value - 1)
-        return datetime.datetime(1989, 12, 31, 0, 0, 0) + datetime.timedelta(0, value - 1)
+            return datetime.datetime(1989, 12, 31, 0, 0, 0, tzinfo=datetime.timezone.utc) + datetime.timedelta(seconds=value)
+        return datetime.datetime(1989, 12, 31, 0, 0, 0) + datetime.timedelta(seconds=value)
 
 
 class TimeMsField(NamedField):

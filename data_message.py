@@ -167,4 +167,4 @@ class DataMessage(object):
 
     def __repr__(self):
         """Return a string representation of a DataMessage instance."""
-        return f'{self.__class__.__name__}: {repr(self.type())}: {repr(self._fields)}'
+        return f'{self.__class__.__name__}({repr(self.type())}, {repr(self.timestamp)}: {repr(self._fields)})'

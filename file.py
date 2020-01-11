@@ -119,21 +119,21 @@ class File(object):
             self.monitoring_info = self.monitoring_info_list[0]
             monitoring_info_time_utc = self.monitoring_info['timestamp'].value
             monitoring_info_time_local = self.monitoring_info['local_timestamp'].value
-            self.utc_offset = (monitoring_info_time_utc.replace(tzinfo=None) - monitoring_info_time_local).total_seconds()
+            self.utc_offset = (monitoring_info_time_local - monitoring_info_time_utc.replace(tzinfo=None)).total_seconds()
         else:
             self.utc_offset = 0
         self.local_tz = datetime.timezone(datetime.timedelta(seconds=self.utc_offset))
-        self.local_time_created = self.utc_datetime_to_local(self.time_created)
-        logger.debug("File %s: %s -> %s", self.filename, self.time_created, self.last_message_timestamp)
+        self.time_created_local = self.utc_datetime_to_local(self.time_created)
+        logger.info("File %s: %s (%s) -> %s", self.filename, self.time_created, self.local_tz, self.last_message_timestamp)
 
     def date_span(self):
         """Return a tuple of the start and end dates of the file."""
         return (self.time_created(), self.last_message_timestamp)
 
-    def utc_datetime_to_local(self, utc_dt):
-        if self.local_tz is not None:
-            return utc_dt.astimezone(self.local_tz).replace(tzinfo=None)
-        return utc_dt.replace(tzinfo=None)
+    def utc_datetime_to_local(self, dt):
+        if self.local_tz is not None and dt.tzinfo is datetime.timezone.utc:
+            return dt.astimezone(self.local_tz).replace(tzinfo=None)
+        return dt.replace(tzinfo=None)
 
     def message_types(self):
         """Return a list of the message types present in the file."""
