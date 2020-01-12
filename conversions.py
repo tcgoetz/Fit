@@ -115,8 +115,15 @@ def printable(string_in):
         return filter(lambda x: x in string.printable, string_in)
 
 
-def speed_to_pace(speed):
-    """Convert a per second speed to a perdistance pace."""
+def persec_speed_to_pace(speed):
+    """Convert a per second speed to a per distance pace."""
     if speed:
         # secs_per_hour / speed_per_hour = speed_per
-        return (datetime.datetime.min + datetime.timedelta(0, 3600 / speed)).time()
+        return (datetime.datetime.min + datetime.timedelta(seconds=3600/speed)).time()
+
+
+def perhour_speed_to_pace(speed):
+    """Convert a per second speed to a per distance pace."""
+    if speed:
+        # secs_per_hour / speed_per_hour = speed_per
+        return (datetime.datetime.min + datetime.timedelta(seconds=60/speed)).time()
