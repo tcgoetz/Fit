@@ -10,7 +10,24 @@ from Fit.data import Data, Schema
 from Fit.base_type import BaseType
 
 
-class FieldDefinition(Data, BaseType):
+class FieldDefinitionBase(Data, BaseType):
+    """Base object that defines the structure of a FIT file message field."""
+
+    def invalid(self):
+        """Return the invalid value for the field."""
+        return self._invalid(self.base_type)
+
+    def type_string(self):
+        """Return the type string for the field."""
+        return self._type_string(self.base_type)
+
+    def type_count(self):
+        """Return the number of values for the field."""
+        type_size = Schema.type_to_size(self.type_string())
+        return int(self.size / type_size)
+
+
+class FieldDefinition(FieldDefinitionBase):
     """Object that defines the structure of a FIT file message field."""
 
     fd_schema = Schema(
@@ -32,31 +49,6 @@ class FieldDefinition(Data, BaseType):
             file (File):  a FIT File instance.
         """
         super().__init__(file, FieldDefinition.fd_schema)
-
-    def base_type(self):
-        """Return the base type for the field."""
-        return self._base_type(self.base_type)
-
-    def type_endian(self):
-        """Return the endian value for the field."""
-        return self._type_endian(self.base_type)
-
-    def type_name(self):
-        """Return the type name for the field."""
-        return self._type_name(self.base_type)
-
-    def invalid(self):
-        """Return the invalid value for the field."""
-        return self._invalid(self.base_type)
-
-    def type_string(self):
-        """Return the type string for the field."""
-        return self._type_string(self.base_type)
-
-    def type_count(self):
-        """Return the number of values for the field."""
-        type_size = Schema.type_to_size(self.type_string())
-        return int(self.size / type_size)
 
     def __str__(self):
         """Return a string representation for the FieldDefinition instance."""

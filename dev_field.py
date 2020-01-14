@@ -47,7 +47,7 @@ class DevDistanceField(DevObjectField):
 
     units_to_obj_func = {
         'm'     : measurement.Distance.from_meters,
-        'ft'     : measurement.Distance.from_feet,
+        'ft'    : measurement.Distance.from_feet,
         'km'    : measurement.Distance.from_kilometers,
         'mi'    : measurement.Distance.from_miles
     }

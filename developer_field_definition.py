@@ -7,8 +7,8 @@ __license__ = "GPL"
 import collections
 import logging
 
-from Fit.data import Data, Schema
-from Fit.base_type import BaseType
+from Fit.data import Schema
+from Fit.field_definition import FieldDefinitionBase
 from Fit.message_type import MessageType
 from Fit.definition_message_data import DefinitionMessageData
 from Fit.object_fields import DistanceMetersField, SpeedMpsField
@@ -19,7 +19,7 @@ from Fit.exceptions import FitUndefDevMessageType
 logger = logging.getLogger(__name__)
 
 
-class DeveloperFieldDefinition(Data, BaseType):
+class DeveloperFieldDefinition(FieldDefinitionBase):
     """Developer filed definitions decoded from a FIT file."""
 
     dfd_schema = Schema(
@@ -45,12 +45,15 @@ class DeveloperFieldDefinition(Data, BaseType):
         self.dev_field = dev_field_dict.get(self.field_number)
         if self.dev_field is None:
             raise FitUndefDevMessageType('Dev field %d undefined in %r' % (self.field_number, dev_field_dict))
+        # Parse values from dev_field
         self.field_name = self.dev_field['field_name'].value
         self.native_message_type = MessageType(self.dev_field['native_message_num'].value)
         self.native_field_num = self.dev_field['native_field_num'].value
         self.units = self.dev_field['units'].value
         self.offset = self.dev_field['offset'].value
         self.scale = self.dev_field['scale'].value
+        self.base_type = self.dev_field['fit_base_type_id'].orig
+        # If the dev field shadows a native field, then take the field name from the native field.
         if self.native_message_type and self.native_field_num:
             field_dict = DefinitionMessageData.get_message_definition(self.native_message_type)
             field = field_dict[self.native_field_num]
@@ -60,9 +63,6 @@ class DeveloperFieldDefinition(Data, BaseType):
             self.display_field_name = 'dev_' + self.field_name
             self._field = self.map_field(self.display_field_name, self.units, self.scale, self.offset)
         logger.info('%s for %r field %s', self, self.native_message_type, self.native_field_num)
-
-    def __base_type_value(self):
-        return self.dev_field['fit_base_type_id'].orig
 
     @classmethod
     def derive_field(cls, field_name, units, scale, offset, field_obj):
@@ -86,31 +86,6 @@ class DeveloperFieldDefinition(Data, BaseType):
     def field(self):
         """Return a field instance representing the field for this DeveloperFieldDefinition instance."""
         return self._field
-
-    def base_type(self):
-        """Return the base type for the field."""
-        return self._base_type(self.__base_type_value())
-
-    def type_endian(self):
-        """Return the endian value for the field."""
-        return self._type_endian(self.__base_type_value())
-
-    def type_name(self):
-        """Return the type name for the field."""
-        return self._type_name(self.__base_type_value())
-
-    def invalid(self):
-        """Return the invalid value for the field."""
-        return self._invalid(self.__base_type_value())
-
-    def type_string(self):
-        """Return the type string for the field."""
-        return self._type_string(self.__base_type_value())
-
-    def type_count(self):
-        """Return the number of values for the field."""
-        type_size = Schema.type_to_size(self.type_string())
-        return int(self.size / type_size)
 
     def __str__(self):
         """Return a string representation for the DeveloperFieldDefinition instance."""
