@@ -79,20 +79,11 @@ class File(object):
                 definition_message = self._definition_messages[local_message_num]
                 data_message = DataMessage(definition_message, self.file, self.measurement_system)
                 logger.debug("  Data [%d]: %s", local_message_num, data_message)
-
                 data_consumed += data_message.file_size
-
                 data_message_type = data_message.type()
-
-                # if data_message.time_created_timestamp:
-                #     self.time_created_timestamp = data_message.time_created_timestamp
-                # if self.last_message_timestamp is not None and data_message.timestamp < self.last_message_timestamp:
-                #     raise FitOutOfOrderMessage('Message time stamp %s before previous %s' % (data_message.timestamp, self.last_message_timestamp))
                 self.last_message_timestamp = data_message.timestamp
-
                 if data_message_type == MessageType.field_description:
                     self.__dev_fields[data_message['field_definition_number'].value] = data_message
-
                 logger.debug("Parsed %r", data_message_type)
 
                 try:
@@ -100,7 +91,6 @@ class File(object):
                 except Exception:
                     self.__dict__[data_message_type] = [data_message]
                     self._data_message_types.append(data_message_type)
-
             logger.debug("Record %d: consumed %d of %s %r", self.record_count, data_consumed, self.data_size, self.measurement_system)
 
     def __sumarize(self):
@@ -124,7 +114,11 @@ class File(object):
             self.utc_offset = 0
         self.local_tz = datetime.timezone(datetime.timedelta(seconds=self.utc_offset))
         self.time_created_local = self.utc_datetime_to_local(self.time_created)
-        logger.info("File %s: %s (%s) -> %s", self.filename, self.time_created, self.local_tz, self.last_message_timestamp)
+        if self.last_message_timestamp is not None:
+            self.time_ended_local = self.utc_datetime_to_local(self.last_message_timestamp)
+        else:
+            self.time_ended_local = self.time_created_local
+        logger.info("File %s: %s (%s) -> %s", self.filename, self.time_created_local, self.local_tz, self.time_ended_local)
 
     def date_span(self):
         """Return a tuple of the start and end dates of the file."""

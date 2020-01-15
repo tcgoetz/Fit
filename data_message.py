@@ -46,12 +46,6 @@ class DataMessage(object):
                 message_fields[data_field._field_name()] = data_field._field_value()
         self.__convert_fields(message_fields, measurement_system)
         self.__convert_dev_fields(fit_file, definition_message, measurement_system)
-        # time_created_timestamp_field = self._fields.get('time_created')
-        # if time_created_timestamp_field:
-        #     self.time_created_timestamp = time_created_timestamp_field.value
-        #     self.__track_dates(self.time_created_timestamp)
-        # else:
-        #     self.time_created_timestamp = None
         timestamp_field = self._fields.get('timestamp')
         if timestamp_field:
             self.__track_dates(timestamp_field.value)
