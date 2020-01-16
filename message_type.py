@@ -170,7 +170,8 @@ class MessageType(enum.Enum):
     dive_summary                    = 268
     pulse_ox                        = 269
     start                           = 273   # this is a guess
-    data                            = 274   # this is a guess
+    sleep_data                      = 274   # this is a guess
+    sleep_level                     = 275   # this is a guess
     end                             = 276   # this is a guess
     unknown_284                     = 284
     jump                            = 285

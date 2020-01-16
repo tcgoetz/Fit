@@ -68,18 +68,21 @@ class SourceTypeField(EnumField):
 
 
 class AntplusDeviceTypeField(EnumField):
+    """Device types for devices connected to the main device via ANT+. Like a external heart rate monitor."""
 
     _name = 'antplus_device_yype'
     _enum = fe.AntplusDeviceType
 
 
 class LocalDeviceTypeField(EnumField):
+    """Device types for sub-devices resident on the main device. Like sensors embedded on a watch."""
 
     _name = 'local_device_type'
     _enum = fe.LocalDeviceType
 
 
 class UnknownDeviceTypeField(EnumField):
+    """Device type enums for device types that we don't know how to interpret."""
 
     _name = 'unknown_device_type'
     _enum = fe.UnknownDeviceType
@@ -91,7 +94,7 @@ class BatteryStatusField(EnumField):
     _enum = fe.BatteryStatus
 
 
-class DeviceType(Field):
+class DeviceTypeField(Field):
 
     _name = 'device_type'
     _dependant_field_control_fields = ['source_type']

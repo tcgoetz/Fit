@@ -118,7 +118,7 @@ class File(object):
             self.time_ended_local = self.utc_datetime_to_local(self.last_message_timestamp)
         else:
             self.time_ended_local = self.time_created_local
-        logger.info("File %s: %s (%s) -> %s", self.filename, self.time_created_local, self.local_tz, self.time_ended_local)
+        logger.info("File %s (%s): %s (%s) -> %s", self.filename, self.type, self.time_created_local, self.local_tz, self.time_ended_local)
 
     def date_span(self):
         """Return a tuple of the start and end dates of the file."""

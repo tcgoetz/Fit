@@ -8,6 +8,7 @@ __license__ = "GPL"
 from Fit.fields import Field, NamedField, CyclesField, StepsField, StrokesField
 from Fit.enum_fields import EnumField
 import Fit.field_enums as fe
+from Fit.sport import Sport, SubSport
 from Fit.field_value import FieldValue
 
 
@@ -146,7 +147,7 @@ class SportField(EnumField):
     """A field representing a sport via an ineger enum value."""
 
     _name = 'sport'
-    _enum = fe.Sport
+    _enum = Sport
     _units = {
         0 : 'cycles',
         1 : 'steps',
@@ -172,4 +173,4 @@ class SubSportField(EnumField):
     """A field representing a sub-sport via an ineger enum value."""
 
     _name = 'sub_sport'
-    _enum = fe.SubSport
+    _enum = SubSport

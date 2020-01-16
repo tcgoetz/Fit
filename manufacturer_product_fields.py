@@ -7,21 +7,22 @@ __license__ = "GPL"
 
 from Fit.fields import Field
 from Fit.enum_fields import EnumField
-import Fit.field_enums as fe
+from Fit.manufacturer import Manufacturer
+from Fit.product import GarminProduct, GarminLocalProduct, ScoscheProduct, WahooFitnessProduct, UnknownProduct
 
 
 class ManufacturerField(EnumField):
     """A field indicating the manufacturer of the device used to create the FIT file."""
 
     _name = 'manufacturer'
-    _enum = fe.Manufacturer
+    _enum = Manufacturer
 
     def _convert_single(self, value, invalid):
         try:
             return self._enum(value)
         except Exception:
-            if value >= fe.Manufacturer.Garmin_local_start.value:
-                return fe.Manufacturer.Garmin_local
+            if value >= Manufacturer.Garmin_local_start.value:
+                return Manufacturer.Garmin_local
             return value
 
 
@@ -34,31 +35,31 @@ class BaseProductField(EnumField):
 class GarminProductField(BaseProductField):
     """A field indicating the Garmin product id of the device used to create the FIT file."""
 
-    _enum = fe.GarminProduct
+    _enum = GarminProduct
 
 
 class GarminLocalProductField(BaseProductField):
     """A field indicating the Garmin local product id of the device used to create the FIT file."""
 
-    _enum = fe.GarminLocalProduct
+    _enum = GarminLocalProduct
 
 
 class ScoscheProductField(BaseProductField):
     """A field indicating the Scosche product id of the device used to create the FIT file."""
 
-    _enum = fe.ScoscheProduct
+    _enum = ScoscheProduct
 
 
 class WahooFitnessProductField(BaseProductField):
     """A field indicating the Wahoo product id of the device used to create the FIT file."""
 
-    _enum = fe.WahooFitnessProduct
+    _enum = WahooFitnessProduct
 
 
 class UnknownProductField(BaseProductField):
     """A field indicating the undocumented product id of the device used to create the FIT file."""
 
-    _enum = fe.UnknownProduct
+    _enum = UnknownProduct
 
 
 class ProductField(Field):
@@ -68,13 +69,13 @@ class ProductField(Field):
     _dependant_field_control_fields = ['manufacturer']
 
     _manufacturer_to_product_fields = {
-        fe.Manufacturer.Garmin                 : GarminProductField,
-        fe.Manufacturer.Dynastream             : GarminProductField,
-        fe.Manufacturer.Dynastream_OEM         : GarminProductField,
-        fe.Manufacturer.Scosche                : ScoscheProductField,
-        fe.Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
-        fe.Manufacturer.Garmin_local           : GarminLocalProductField,
-        fe.Manufacturer.invalid                : GarminProductField,
+        Manufacturer.Garmin                 : GarminProductField,
+        Manufacturer.Dynastream             : GarminProductField,
+        Manufacturer.Dynastream_OEM         : GarminProductField,
+        Manufacturer.Scosche                : ScoscheProductField,
+        Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
+        Manufacturer.Garmin_local           : GarminLocalProductField,
+        Manufacturer.invalid                : GarminProductField,
     }
 
     def dependant_field(self, control_value_list):

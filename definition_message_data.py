@@ -526,7 +526,7 @@ class DefinitionMessageData():
         MessageType.source : {},
         MessageType.device_info : {
             0 : type_fields.IntegerField('device_index'),
-            1 : device_fields.DeviceType(),
+            1 : device_fields.DeviceTypeField(),
             2 : mp_fields.ManufacturerField(),
             3 : type_fields.IntegerField('serial_number'),
             4 : mp_fields.ProductField(),
@@ -783,8 +783,12 @@ class DefinitionMessageData():
             2 : fields.TimestampField('local_timestamp', utc=False),
         },
         # Names and types for this message are guesses
-        MessageType.data : {
+        MessageType.sleep_data : {
             0 : type_fields.BytesField('data'),
+        },
+        # Names and types for this message are guesses
+        MessageType.sleep_level : {
+            0 : type_fields.FloatField('sleep_level'),
         },
         # Names and types for this message are guesses
         MessageType.end : {},
