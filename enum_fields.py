@@ -17,13 +17,6 @@ class EnumField(NamedField):
         return self._enum.from_string(value)
 
 
-class EnumField(NamedField):
-    """Base class for a field that can be represented by an enum value."""
-
-    def _convert_single(self, value, invalid):
-        return self._enum.from_string(value)
-
-
 class SwitchField(EnumField):
     """A field whose value can be represented by a Switch enum."""
 
