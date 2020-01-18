@@ -37,29 +37,30 @@ class DataField(Data):
         return self.__populate_schema_cache(schema_sig, field_name, type, count)
 
     def _convert(self):
-        self.value_obj = self.field.convert(vars(self)[self.field.name], self.field_definition.invalid(), self.measurement_system)
+        self.value = self.field.convert(vars(self)[self.field.name], self.field_definition.invalid(), self.measurement_system)
 
-    def _field_name(self):
-        return self.value_obj.field.name
+    @property
+    def name(self):
+        return self.value.field.name
 
-    def _field_value(self):
-        return self.value_obj
+    # def _field_value(self):
+    #     return self.value_obj
 
-    def __iter__(self):
-        """Iterate over the data field's data."""
-        return iter(self.value_obj)
-
-    def keys(self):
-        """Return the keys to the value object dictionary."""
-        return self.value_obj.keys()
-
-    def items(self):
-        """Return the key-value pairs for the value object dictionary."""
-        return self.value_obj.items()
-
-    def values(self):
-        """Return the values to the value object dictionary."""
-        return self.value_obj.values()
+    # def __iter__(self):
+    #     """Iterate over the data field's data."""
+    #     return iter(self.value_obj)
+    #
+    # def keys(self):
+    #     """Return the keys to the value object dictionary."""
+    #     return self.value_obj.keys()
+    #
+    # def items(self):
+    #     """Return the key-value pairs for the value object dictionary."""
+    #     return self.value_obj.items()
+    #
+    # def values(self):
+    #     """Return the values to the value object dictionary."""
+    #     return self.value_obj.values()
 
     def __str__(self):
         """Return a string reprsentation of the DataField instance."""

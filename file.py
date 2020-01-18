@@ -69,9 +69,9 @@ class File(object):
                 data_message = DataMessage(definition_message, file, self.measurement_system, data_message_context)
                 logger.debug("  Data [%d]: %s", local_message_num, data_message)
                 data_consumed += data_message.file_size
-                data_message_type = data_message.type()
+                data_message_type = data_message.type
                 if data_message_type == MessageType.field_description:
-                    self.__dev_fields[data_message['field_definition_number'].value] = data_message
+                    self.__dev_fields[data_message.fields.field_definition_number] = data_message
                 logger.debug("Parsed %r", data_message_type)
                 # Store the parsed message accessible as an file attribute or though file[message_type]
                 if data_message_type.name in vars(self):
@@ -85,18 +85,18 @@ class File(object):
         self.last_message_timestamp = data_message_context.last_timestamp
 
     def __sumarize(self):
-        self.first_file_id = self.file_id[0]
-        self.time_created = self.first_file_id['time_created'].value
-        self.type = self.first_file_id['type'].value
-        self.product = self.first_file_id['product'].value
-        self.serial_number = self.first_file_id['serial_number'].value
+        first_file_id = self.file_id[0]
+        self.time_created = first_file_id.fields.time_created
+        self.type = first_file_id.fields.type
+        self.product = first_file_id.fields.product
+        self.serial_number = first_file_id.fields.serial_number
         self.device = f'{self.product}_{self.serial_number}'
         if MessageType.device_settings in self.message_types:
-            self.utc_offset = self.device_settings[0]['time_offset'].value
+            self.utc_offset = self.device_settings[0].fields.time_offset
         elif MessageType.monitoring_info in self.message_types:
-            self.first_monitoring_info = self.monitoring_info[0]
-            monitoring_info_time_utc = self.first_monitoring_info['timestamp'].value
-            monitoring_info_time_local = self.first_monitoring_info['local_timestamp'].value
+            first_monitoring_info = self.monitoring_info[0]
+            monitoring_info_time_utc = first_monitoring_info.fields.timestamp
+            monitoring_info_time_local = first_monitoring_info.fields.local_timestamp
             self.utc_offset = (monitoring_info_time_local - monitoring_info_time_utc.replace(tzinfo=None)).total_seconds()
         else:
             self.utc_offset = 0

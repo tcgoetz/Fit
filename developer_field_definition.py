@@ -42,17 +42,17 @@ class DeveloperFieldDefinition(FieldDefinitionBase):
             file (File):  a FIT File instance.
         """
         super().__init__(file, DeveloperFieldDefinition.dfd_schema)
-        self.dev_field = dev_field_dict.get(self.field_number)
-        if self.dev_field is None:
+        self.dev_field_message = dev_field_dict.get(self.field_number)
+        if self.dev_field_message is None:
             raise FitUndefDevMessageType('Dev field %d undefined in %r' % (self.field_number, dev_field_dict))
-        # Parse values from dev_field
-        self.field_name = self.dev_field['field_name'].value
-        self.native_message_type = MessageType(self.dev_field['native_message_num'].value)
-        self.native_field_num = self.dev_field['native_field_num'].value
-        self.units = self.dev_field['units'].value
-        self.offset = self.dev_field['offset'].value
-        self.scale = self.dev_field['scale'].value
-        self.base_type = self.dev_field['fit_base_type_id'].orig
+        # Parse values from dev_field_message
+        self.field_name = self.dev_field_message.fields.field_name
+        self.native_message_type = MessageType(self.dev_field_message.fields.native_message_num)
+        self.native_field_num = self.dev_field_message.fields.native_field_num
+        self.units = self.dev_field_message.fields.units
+        self.offset = self.dev_field_message.fields.offset
+        self.scale = self.dev_field_message.fields.scale
+        self.base_type = self.dev_field_message.field_values.fit_base_type_id.orig
         # If the dev field shadows a native field, then take the field name from the native field.
         if self.native_message_type and self.native_field_num:
             field_dict = DefinitionMessageData.get_message_definition(self.native_message_type)

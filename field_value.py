@@ -11,16 +11,12 @@ class FieldValue(object):
     def __init__(self, field, subfield_names=None, **kwargs):
         """Return a FieldValue instance given the field."""
         self.field = field
-        self._subfield_names = subfield_names
+        self.subfield_names = subfield_names
         vars(self).update(kwargs)
 
     def is_invalid(self):
         """Return if the field value is valid."""
         return self.field.is_invalid(self.orig, self.invalid)
-
-    def subfield_names(self):
-        """Return a list of the names of sub-fields."""
-        return self._subfield_names
 
     def type(self):
         """Return the type of the field."""
