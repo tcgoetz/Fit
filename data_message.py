@@ -45,8 +45,8 @@ class DataMessage():
         for index in range(definition_message.fields):
             data_field = DataField(fit_file, definition_message, definition_message.field_definitions[index], measurement_system)
             self.file_size += data_field.file_size
-            # expand subfields?
             field_value = data_field.value
+            # expand subfields?
             if field_value.subfield_names is not None:
                 for subfield_name in field_value.subfield_names:
                     subfield_value = field_value[subfield_name]

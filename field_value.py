@@ -18,17 +18,9 @@ class FieldValue(object):
         """Return if the field value is valid."""
         return self.field.is_invalid(self.orig, self.invalid)
 
-    def type(self):
-        """Return the type of the field."""
-        return self.field.type
-
     def reconvert(self, measurement_system):
         """Redo field conversion based on new information."""
         (self.value, self.orig) = self.field.reconvert(self.orig, self.invalid, measurement_system)
-
-    def units(self):
-        """Return the units of the field."""
-        return self.field.units(self.orig)
 
     def __getitem__(self, key):
         return vars(self)[key]
@@ -40,8 +32,8 @@ class FieldValue(object):
             field_string += "[invalid]"
         else:
             field_string += repr(self.value)
-        if self.units():
-            field_string += " %s" % self.units()
+        if self.field.units:
+            field_string += " %s" % self.field.units
         if self.value != self.orig:
             field_string += " (%r)" % self.orig
         field_string += ")"

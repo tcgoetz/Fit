@@ -32,10 +32,10 @@ class Field(object):
         """Return the name of the field."""
         return self._name
 
-    def units(self, value):
+    @property
+    def units(self):
         """Return the units of the field."""
-        if self._units:
-            return self._convert_many_units(value, None)
+        return self._units
 
     def _invalid_single(self, value, invalid):
         return (value == invalid)
@@ -63,12 +63,6 @@ class Field(object):
 
     def _convert_many(self, value, invalid):
         return self.__convert_many(self._convert_single, value, invalid)
-
-    def _convert_single_units(self, value, invalid):
-        return self._units
-
-    def _convert_many_units(self, value, invalid):
-        return self.__convert_many(self._convert_single_units, value, invalid)
 
     def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Return a FieldValue as intepretted by the field's rules."""
