@@ -22,7 +22,7 @@ class Field(object):
     def __init__(self, **kwargs):
         """Return a new instance of the Field class."""
         for key, value in kwargs.items():
-            self.__dict__['_' + key] = value
+            vars(self)['_' + key] = value
         if not hasattr(self, '_name'):
             raise ValueError(f'Unamed instance of {self.__class__.__name__}')
         self._subfield = {}

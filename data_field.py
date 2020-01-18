@@ -37,7 +37,7 @@ class DataField(Data):
         return self.__populate_schema_cache(schema_sig, field_name, type, count)
 
     def _convert(self):
-        self.value_obj = self.field.convert(self.__dict__[self.field.name], self.field_definition.invalid(), self.measurement_system)
+        self.value_obj = self.field.convert(vars(self)[self.field.name], self.field_definition.invalid(), self.measurement_system)
 
     def _field_name(self):
         return self.value_obj.field.name

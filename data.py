@@ -106,7 +106,7 @@ class Data(object):
         (unpack_format, file_size) = schema.get_unpack(self.endian)
         self.file_size += file_size
         bytes = struct.unpack(unpack_format, self.file.read(file_size))
-        self.__dict__.update(schema._decode(bytes))
+        vars(self).update(schema._decode(bytes))
 
     def decode_all(self):
         """Decode file data using all of the data objects schemas."""

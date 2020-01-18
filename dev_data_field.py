@@ -23,7 +23,7 @@ class DevDataField(Data):
         super().__init__(file, schema, None, definition_message.endian)
 
     def _convert(self):
-        self.value_obj = self.field.convert(self.__dict__[self.field.name], self.dev_field_definition.invalid(), self.measurement_system)
+        self.value_obj = self.field.convert(vars(self)[self.field.name], self.dev_field_definition.invalid(), self.measurement_system)
 
     def name(self):
         """Return the name of the field."""

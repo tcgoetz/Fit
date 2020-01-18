@@ -10,21 +10,28 @@ import datetime
 
 from Fit.data_field import DataField
 from Fit.dev_data_field import DevDataField
+from Fit.message_type import MessageType
 
 
 logger = logging.getLogger(__name__)
 
 
-class DataMessage(object):
+class DataMessageDecodeContext():
+    """Class that holds data used across decoding of all DataMessages."""
+
+    def __init__(self):
+        self.matched_timestamp_16 = None
+        self.last_timestamp = None
+        self.last_absolute_timestamp = None
+
+
+class DataMessage():
     """Class decodes and holds a FIT file data message."""
 
-    matched_timestamp_16 = None
-    last_timestamp = None
-    last_absolute_timestamp = None
-
-    def __init__(self, definition_message, fit_file, measurement_system):
+    def __init__(self, definition_message, fit_file, measurement_system, context):
         """Return a DataMessage instance decoded from the supplied FIT file using the supplied definition message."""
         self.definition_message = definition_message
+        self.context = context
         self._fields = {}
         self.file_size = 0
         message_fields = {}
@@ -46,23 +53,7 @@ class DataMessage(object):
                 message_fields[data_field._field_name()] = data_field._field_value()
         self.__convert_fields(message_fields, measurement_system)
         self.__convert_dev_fields(fit_file, definition_message, measurement_system)
-        timestamp_field = self._fields.get('timestamp')
-        if timestamp_field:
-            self.__track_dates(timestamp_field.value)
-            self.timestamp = timestamp_field.value
-        else:
-            timestamp_16_field = self._fields.get('timestamp_16')
-            if timestamp_16_field is not None:
-                if timestamp_16_field.value is not None:
-                    self.timestamp = self.__timestamp16_to_timestamp(timestamp_16_field.value)
-                else:
-                    # This should not happen, if the timestamp16 field exists, it should not be None
-                    # Issue #21: seen on Ubuntu on Windows
-                    logger.error('timestamp16 with value None: %r', self._fields)
-                    self.timestamp = DataMessage.last_timestamp
-            else:
-                self.timestamp = DataMessage.last_timestamp
-        DataMessage.last_timestamp = self.timestamp
+        self.__track_time()
 
     def __control_field_value(self, field, message_fields, control_field_name):
         control_field = message_fields.get(control_field_name)
@@ -88,44 +79,49 @@ class DataMessage(object):
                 field_value = data_field._field_value()
                 self._fields[field_value.field.name] = field_value
 
-    def __track_dates(self, timestamp):
-        logger.debug('Setting last time stamp %r', timestamp)
-        DataMessage.last_absolute_timestamp = timestamp
-        DataMessage.matched_timestamp_16 = None
+    def __track_time(self):
+        if 'timestamp' in self._fields:
+            timestamp = self._fields['timestamp'].value
+            self.context.last_absolute_timestamp = timestamp
+            self.context.matched_timestamp_16 = None
+            self.timestamp = timestamp
+        else:
+            timestamp_16_field = self._fields.get('timestamp_16')
+            if timestamp_16_field is not None:
+                if timestamp_16_field.value is not None:
+                    self.timestamp = self.__timestamp16_to_timestamp(timestamp_16_field.value)
+                else:
+                    # This should not happen, if the timestamp16 field exists, it should not be None
+                    # Issue #21: seen on Ubuntu on Windows
+                    logger.error('timestamp16 with value None: %r', self._fields)
+                    self.timestamp = self.context.last_timestamp
+            else:
+                self.timestamp = self.context.last_timestamp
+        self.context.last_timestamp = self.timestamp
 
     def __timestamp16_to_timestamp(self, timestamp_16):
-        if DataMessage.matched_timestamp_16:
-            if timestamp_16 >= self.matched_timestamp_16:
-                delta = timestamp_16 - DataMessage.matched_timestamp_16
+        if self.context.matched_timestamp_16:
+            if timestamp_16 >= self.context.matched_timestamp_16:
+                delta = timestamp_16 - self.context.matched_timestamp_16
             else:
-                delta = (DataMessage.matched_timestamp_16 - 65535) + timestamp_16
+                delta = (self.context.matched_timestamp_16 - 65535) + timestamp_16
         else:
-            DataMessage.matched_timestamp_16 = timestamp_16
+            self.context.matched_timestamp_16 = timestamp_16
             delta = 0
-        return DataMessage.last_absolute_timestamp + datetime.timedelta(seconds=delta)
+        return self.context.last_absolute_timestamp + datetime.timedelta(seconds=delta)
 
     def type(self):
         """Return the message type."""
         return self.definition_message.message_type
 
-    def to_dict(self, ignore_none_values=False):
+    def to_dict(self, ignore_none_values=False, lower_case=True):
         """Return the message as dictionary of field name-value entries."""
         fields = {}
         for field_name, field_value in self._fields.items():
             if field_name == 'timestamp_16':
                 fields['timestamp'] = self.timestamp
             elif not ignore_none_values or field_value.value is not None:
-                fields[field_name] = field_value.value
-        return fields
-
-    def to_lower_dict(self, ignore_none_values=False):
-        """Return the message as dictionary of field name-value entries with field names converted to lower case."""
-        fields = {}
-        for field_name, field_value in self._fields.items():
-            if field_name == 'timestamp_16':
-                fields['timestamp'] = self.timestamp
-            elif not ignore_none_values or field_value.value is not None:
-                fields[field_name.lower()] = field_value.value
+                fields[field_name.lower() if lower_case else field_name] = field_value.value
         return fields
 
     def __getitem__(self, name):

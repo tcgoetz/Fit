@@ -12,7 +12,7 @@ class FieldValue(object):
         """Return a FieldValue instance given the field."""
         self.field = field
         self._subfield_names = subfield_names
-        self.__dict__.update(kwargs)
+        vars(self).update(kwargs)
 
     def is_invalid(self):
         """Return if the field value is valid."""
@@ -35,7 +35,7 @@ class FieldValue(object):
         return self.field.units(self.orig)
 
     def __getitem__(self, key):
-        return self.__dict__[key]
+        return vars(self)[key]
 
     def __str__(self):
         """Return a string representation of a FieldValue instance."""

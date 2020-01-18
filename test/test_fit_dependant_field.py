@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Test FIT file parsing."""
 
 __author__ = "Tom Goetz"
