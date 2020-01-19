@@ -136,20 +136,10 @@ class DistanceMillimetersField(DistanceMetersField):
 
 
 class AltitudeField(DistanceMetersField):
-    """A field containing a altitude reading."""
-
-    def __init__(self):
-        """Return an instance of AltitudeField."""
-        super().__init__('altitude', measurement.Distance.from_cm, measurement.Distance.feet_or_meters, scale=5.0)
-
-
-class EnhancedAltitudeField(DistanceMetersField):
     """A field containing a altitude reading with greater range."""
 
-    _name = 'enhanced_altitude'
-
     def __init__(self, name):
-        """Return an instance of EnhancedAltitudeField."""
+        """Return an instance of AltitudeField."""
         super().__init__(name, measurement.Distance.from_meters, measurement.Distance.feet_or_meters, scale=5.0, offset=500.0)
 
 

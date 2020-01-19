@@ -8,7 +8,7 @@ __license__ = "GPL"
 from Fit.fields import Field
 from Fit.enum_fields import EnumField
 from Fit.manufacturer import Manufacturer
-from Fit.product import GarminProduct, GarminLocalProduct, ScoscheProduct, WahooFitnessProduct, UnknownProduct
+from Fit.product import GarminProduct, GarminLocalProduct, ScoscheProduct, WahooFitnessProduct, HealthAndLifeProduct, Unknown680Product, UnknownProduct
 
 
 class ManufacturerField(EnumField):
@@ -44,16 +44,28 @@ class GarminLocalProductField(BaseProductField):
     _enum = GarminLocalProduct
 
 
+class WahooFitnessProductField(BaseProductField):
+    """A field indicating the Wahoo product id of the device used to create the FIT file."""
+
+    _enum = WahooFitnessProduct
+
+
 class ScoscheProductField(BaseProductField):
     """A field indicating the Scosche product id of the device used to create the FIT file."""
 
     _enum = ScoscheProduct
 
 
-class WahooFitnessProductField(BaseProductField):
+class HealthAndLifeProductField(BaseProductField):
+    """A field indicating the Scosche product id of the device used to create the FIT file."""
+
+    _enum = HealthAndLifeProduct
+
+
+class Unknown680ProductField(BaseProductField):
     """A field indicating the Wahoo product id of the device used to create the FIT file."""
 
-    _enum = WahooFitnessProduct
+    _enum = Unknown680Product
 
 
 class UnknownProductField(BaseProductField):
@@ -72,8 +84,10 @@ class ProductField(Field):
         Manufacturer.Garmin                 : GarminProductField,
         Manufacturer.Dynastream             : GarminProductField,
         Manufacturer.Dynastream_OEM         : GarminProductField,
-        Manufacturer.Scosche                : ScoscheProductField,
         Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
+        Manufacturer.Scosche                : ScoscheProductField,
+        Manufacturer.Health_and_Life        : HealthAndLifeProductField,
+        Manufacturer.Unknown_680            : Unknown680ProductField,
         Manufacturer.Garmin_local           : GarminLocalProductField,
         Manufacturer.invalid                : GarminProductField,
     }

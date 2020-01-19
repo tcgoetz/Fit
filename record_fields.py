@@ -7,7 +7,7 @@ __license__ = "GPL"
 
 from Fit.fields import Field, TimeMsField, PowerField, UnknownField, CaloriesField, TimeMinField
 from Fit.enum_fields import EnumField
-from Fit.object_fields import DistanceCentimetersToMetersField, AltitudeField, EnhancedAltitudeField
+from Fit.object_fields import DistanceCentimetersToMetersField, AltitudeField, AltitudeField
 import Fit.field_enums as fe
 
 
@@ -79,7 +79,7 @@ class GoalValueField(Field):
         fe.GoalType.calories          : CaloriesField,
         fe.GoalType.frequency         : Field,
         fe.GoalType.steps             : Field,
-        fe.GoalType.ascent            : EnhancedAltitudeField,
+        fe.GoalType.ascent            : AltitudeField,
         fe.GoalType.active_minutes    : TimeMinField
     }
 

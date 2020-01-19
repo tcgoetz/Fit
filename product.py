@@ -234,13 +234,25 @@ class GarminLocalProduct(FuzzyFieldEnum):
 class WahooFitnessProduct(FuzzyFieldEnum):
     """Wahoo Fitness product codes used in FIT files."""
 
-    RPM_Sensor                      = 6
+    RPM_Sensor = 6
 
 
 class ScoscheProduct(FuzzyFieldEnum):
     """Scosche product codes used in FIT files."""
 
-    Rhythm_Plus_Armband_HRM         = 2
+    Rhythm_Plus_Armband_HRM = 2
+
+
+class HealthAndLifeProduct(FuzzyFieldEnum):
+    """Scosche product codes used in FIT files."""
+
+    Accelerometer_515 = 515
+
+
+class Unknown680Product(FuzzyFieldEnum):
+    """Product codes used in FIT files."""
+
+    Accelerometer_8191 = 8191
 
 
 class UnknownProduct(UnknownEnumValue):
@@ -257,8 +269,10 @@ def product_enum(manufacturer, product_str):
         Manufacturer.Garmin_local           : GarminLocalProduct,
         Manufacturer.Dynastream             : GarminProduct,
         Manufacturer.Dynastream_OEM         : GarminProduct,
-        Manufacturer.Scosche                : ScoscheProduct,
         Manufacturer.Wahoo_Fitness          : WahooFitnessProduct,
+        Manufacturer.Scosche                : ScoscheProduct,
+        Manufacturer.Health_and_Life        : HealthAndLifeProduct,
+        Manufacturer.Unknown_680            : Unknown680Product,
         Manufacturer.invalid                : GarminProduct,
     }
     return _manufacturer_to_product_enum[manufacturer].from_string(product_str)

@@ -135,7 +135,7 @@ class Manufacturer(FuzzyFieldEnum):
     Polar_Electro                   = 123
     Seesense                        = 124
     development                     = 255
-    healthandlife                   = 257
+    Health_and_Life                 = 257
     lezyne                          = 258
     scribe_labs                     = 259
     zwift                           = 260
@@ -179,6 +179,7 @@ class Manufacturer(FuzzyFieldEnum):
     trailforks                      = 298
     mahle_ebikemotion               = 299
     nurvv                           = 300
+    Unknown_680                     = 680
     actigraphcorp                   = 5759
     #
     # Privates values
