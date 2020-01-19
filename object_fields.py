@@ -161,9 +161,6 @@ class CompressedSpeedDistanceField(Field):
     speed_field = SpeedMpsField('speed')
     distance_field = DistanceCentimetersToKmsField('distance')
 
-    def __init__(self, name, **kwargs):
-        super().__init__(name, **kwargs)
-
     def convert(self, value, invalid, measurement_system):
         """Convert the value to sub fields."""
         self.measurement_system = measurement_system
