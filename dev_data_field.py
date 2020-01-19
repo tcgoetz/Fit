@@ -19,35 +19,12 @@ class DevDataField(Data):
         self.field = dev_field_definition.field()
         type = dev_field_definition.type_string()
         count = dev_field_definition.type_count()
-        schema = Schema(self.field.name, collections.OrderedDict([(self.field.name, [type, count, '%d'])]))
+        schema = Schema('DevDataField', collections.OrderedDict([('field_value', [type, count, '%d'])]))
         super().__init__(file, schema, None, definition_message.endian)
 
     def _convert(self):
-        self.value_obj = self.field.convert(vars(self)[self.field.name], self.dev_field_definition.invalid(), self.measurement_system)
-
-    def name(self):
-        """Return the name of the field."""
-        return self.value_obj.name()
-
-    def _field_value(self):
-        return self.value_obj
-
-    def __iter__(self):
-        """Iterate over the field's values."""
-        return iter(self.value_obj)
-
-    def keys(self):
-        """Return the field's value keys."""
-        return self.value_obj.keys()
-
-    def items(self):
-        """Return the field's name-value pairs."""
-        return self.value_obj.items()
-
-    def values(self):
-        """Return the field's value values."""
-        return self.value_obj.values()
+        self.value = self.field.convert(self.field_value, self.dev_field_definition.invalid(), self.measurement_system)[0]
 
     def __str__(self):
         """Return a string representation of the DevDataField instance."""
-        return str(self.value_obj)
+        return str(self.value)

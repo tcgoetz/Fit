@@ -25,7 +25,6 @@ class Field(object):
             vars(self)['_' + key] = value
         if not hasattr(self, '_name'):
             raise ValueError(f'Unamed instance of {self.__class__.__name__}')
-        self._subfield = {}
 
     @property
     def name(self):
@@ -66,11 +65,11 @@ class Field(object):
 
     def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Return a FieldValue as intepretted by the field's rules."""
-        return FieldValue(self, invalid=invalid, value=self._convert_many(value, invalid), orig=value)
+        return [FieldValue(self, value, invalid, **{self._name: self._convert_many(value, invalid)})]
 
     def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Return the field's value as intepretted by the field's rules."""
-        return (self._convert_many(value, invalid), value)
+        return {self._name: self._convert_many(value, invalid)}
 
     def __repr__(self):
         """Return a string representation of a Field instance."""

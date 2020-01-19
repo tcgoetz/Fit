@@ -36,11 +36,7 @@ class DataField(Data):
         return self.__populate_schema_cache(schema_sig, type, count)
 
     def _convert(self):
-        self.value = self.field.convert(self.field_value, self.field_definition.invalid(), self.measurement_system)
-
-    @property
-    def name(self):
-        return self.value.field.name
+        self.values = self.field.convert(self.field_value, self.field_definition.invalid(), self.measurement_system)
 
     def __str__(self):
         """Return a string reprsentation of the DataField instance."""

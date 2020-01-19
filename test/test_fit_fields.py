@@ -28,13 +28,13 @@ class TestFitFields(unittest.TestCase):
 
     def test_time_ms_field_valid_conversion(self):
         time = fields.TimeMsField('time')
-        field_value = time.convert(508324, 4294967295)
-        self.assertEqual(field_value.value, datetime.time(0, 8, 28, 324000))
+        field_value_list = time.convert(508324, 4294967295)
+        self.assertEqual(field_value_list[0]['time'], datetime.time(0, 8, 28, 324000))
 
     def __utc_timestamp_field_valid_conversion(self, value, expected_dt):
         time = fields.TimestampField('timestamp', utc=True)
-        field_value = time.convert(value, 4294967295)
-        self.assertEqual(field_value.value, expected_dt)
+        field_value_list = time.convert(value, 4294967295)
+        self.assertEqual(field_value_list[0]['timestamp'], expected_dt)
 
     def test_utc_timestamp_field_valid_conversion(self):
         test_values = [
@@ -48,8 +48,8 @@ class TestFitFields(unittest.TestCase):
 
     def test_local_timestamp_field_valid_conversion(self):
         time = fields.TimestampField('timestamp', utc=False)
-        field_value = time.convert(936189712, 4294967295)
-        self.assertEqual(field_value.value, datetime.datetime(2019, 8, 31, 12, 41, 52))
+        field_value_list = time.convert(936189712, 4294967295)
+        self.assertEqual(field_value_list[0]['timestamp'], datetime.datetime(2019, 8, 31, 12, 41, 52))
 
 
 if __name__ == '__main__':

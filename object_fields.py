@@ -29,13 +29,12 @@ class ObjectField(Field):
         """Return a FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
         value_obj = self.obj_func((value / self._scale) - self._offset, invalid)
-        return FieldValue(self, invalid=invalid, value=self._convert_many(value_obj, invalid), orig=value_obj)
+        return [FieldValue(self, value_obj, invalid, **{self._name: self._convert_many(value_obj, invalid)})]
 
-    def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
+    def reconvert(self, value_obj, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Return a FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
-        value_obj = self.obj_func((value / self._scale) - self._offset, invalid)
-        return (self._convert_many(value_obj, invalid), value_obj)
+        return {self._name: self._convert_many(value_obj, invalid)}
 
 
 class HeightField(ObjectField):

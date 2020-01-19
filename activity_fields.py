@@ -9,7 +9,6 @@ from Fit.fields import Field, NamedField, CyclesField, StepsField, StrokesField
 from Fit.enum_fields import EnumField
 import Fit.field_enums as fe
 from Fit.sport import Sport, SubSport
-from Fit.field_value import FieldValue
 
 
 def _cycles_units_to_field(name):
@@ -105,20 +104,18 @@ class IntensityField(Field):
 class ActivityTypeIntensityField(NamedField):
     """A field that generates sub fields fields for activity and intensity."""
 
+    activity_type_field = ActivityTypeField()
+    intensity_field = IntensityField()
+
     def __init__(self, name, **kwargs):
         super().__init__(name, **kwargs)
-        self._subfield['activity_type'] = ActivityTypeField()
-        self._subfield['intensity'] = IntensityField()
 
     def convert(self, value, invalid, measurement_system):
         """Convert the value to sub fields."""
         self.measurement_system = measurement_system
         activity_type = value & 0x1f
         intensity = value >> 5
-        return FieldValue(self, ['activity_type', 'intensity'],
-                          invalid=invalid, value=self._convert_many(value, invalid), orig=value,
-                          activity_type=self._subfield['activity_type'].convert(activity_type, 0xff, measurement_system),
-                          intensity=self._subfield['intensity'].convert(intensity, 0xff, measurement_system))
+        return self.activity_type_field.convert(activity_type, 0xff, measurement_system) + self.intensity_field.convert(intensity, 0xff, measurement_system)
 
 
 class SportBasedCyclesField(NamedField):
