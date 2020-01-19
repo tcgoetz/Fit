@@ -7,7 +7,7 @@ __license__ = "GPL"
 
 from Fit.fields import Field, TimeMsField, PowerField, UnknownField, CaloriesField, TimeMinField
 from Fit.enum_fields import EnumField
-from Fit.object_fields import DistanceCentimetersToMetersField, AltitudeField, AltitudeField
+from Fit.object_fields import DistanceCentimetersToMetersField, AltitudeField
 import Fit.field_enums as fe
 
 
