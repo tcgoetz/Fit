@@ -78,9 +78,8 @@ class DeveloperFieldDefinition(FieldDefinitionBase):
             'dev_distance'  : DevDistanceField,
             'dev_speed'     : DevSpeedField
         }
-        field = field_map.get(field_name)
-        if field is not None:
-            return field(field_name, units, scale, offset)
+        if field_name in field_map:
+            return field_map[field_name](field_name, units, scale, offset)
         return DevField(field_name, units, scale, offset)
 
     def field(self):

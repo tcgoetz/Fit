@@ -18,6 +18,7 @@ class Field(object):
     _units = None
     _scale = 1.0
     _offset = 0.0
+    _dependant_field_control_fields = None
 
     def __init__(self, **kwargs):
         """Return a new instance of the Field class."""

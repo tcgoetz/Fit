@@ -30,6 +30,23 @@ class DataMessageDecodeContext():
         self.last_timestamp = None
         self.last_absolute_timestamp = None
 
+    def absolute_timestamp(self, absolute_timestamp):
+        self.last_timestamp = absolute_timestamp
+        self.last_absolute_timestamp = absolute_timestamp
+        self.matched_timestamp_16 = None
+
+    def timestamp16_to_timestamp(self, timestamp_16):
+        if self.matched_timestamp_16:
+            if timestamp_16 >= self.matched_timestamp_16:
+                delta = timestamp_16 - self.matched_timestamp_16
+            else:
+                delta = (self.matched_timestamp_16 - 65535) + timestamp_16
+        else:
+            self.matched_timestamp_16 = timestamp_16
+            delta = 0
+        self.last_timestamp = self.last_absolute_timestamp + datetime.timedelta(seconds=delta)
+        return self.last_timestamp
+
 
 class DataMessage():
     """Class decodes and holds a FIT file data message."""
@@ -63,10 +80,9 @@ class DataMessage():
     def __convert_fields(self, message_fields, measurement_system):
         for field_value in message_fields.values():
             field = field_value.field
-            dependant_field_func = getattr(field, 'dependant_field', None)
-            if dependant_field_func:
+            if field._dependant_field_control_fields:
                 control_values = [self.__control_field_value(field, message_fields, control_field) for control_field in field._dependant_field_control_fields]
-                field_value.field = dependant_field_func(control_values)
+                field_value.field = field.dependant_field(control_values)
                 field_value.reconvert(measurement_system)
             self.__add_field(field_value)
 
@@ -79,30 +95,16 @@ class DataMessage():
 
     def __track_time(self):
         if 'timestamp' in self.fields:
-            self.__context.last_timestamp = self.fields.timestamp
-            self.__context.last_absolute_timestamp = self.fields.timestamp
-            self.__context.matched_timestamp_16 = None
+            self.__context.absolute_timestamp(self.fields.timestamp)
         elif 'timestamp_16' in self.fields:
             timestamp_16 = self.fields.timestamp_16
             if timestamp_16 is not None:
-                self.__context.last_timestamp = self.__timestamp16_to_timestamp(timestamp_16)
-                self.fields['timestamp'] = self.__context.last_timestamp
+                self.fields['timestamp'] = self.__context.timestamp16_to_timestamp(timestamp_16)
             else:
                 # This should not happen, if the timestamp16 field exists, it should not be None
                 # Issue #21: seen on Ubuntu on Windows
-                logger.error('timestamp16 with value None: %r', self.__fields)
+                logger.error('timestamp16 with value None: %r', self.fields)
                 self.fields.add('timestamp', self.__context.last_timestamp)
-
-    def __timestamp16_to_timestamp(self, timestamp_16):
-        if self.__context.matched_timestamp_16:
-            if timestamp_16 >= self.__context.matched_timestamp_16:
-                delta = timestamp_16 - self.__context.matched_timestamp_16
-            else:
-                delta = (self.__context.matched_timestamp_16 - 65535) + timestamp_16
-        else:
-            self.__context.matched_timestamp_16 = timestamp_16
-            delta = 0
-        return self.__context.last_absolute_timestamp + datetime.timedelta(seconds=delta)
 
     @property
     def type(self):

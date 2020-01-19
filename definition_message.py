@@ -49,7 +49,7 @@ class DefinitionMessage(Data):
         super().__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.__decode_secondary)])
 
         self.message_type = MessageType.get_type(self.global_message_number)
-        self.message_data = DefinitionMessageData.get_message_definition(self.message_type)
+        self.__message_data = DefinitionMessageData.get_message_definition(self.message_type)
 
         self.field_definitions = []
         for index in range(self.fields):
@@ -72,8 +72,8 @@ class DefinitionMessage(Data):
 
     def field(self, field_number):
         """Return an instance of the proper Field subclass for the given field definition."""
-        return DefinitionMessageData.reserved_field_indexes.get(field_number, self.message_data.get(field_number, fields.UnknownField(field_number)))
+        return DefinitionMessageData.reserved_field_indexes.get(field_number, self.__message_data.get(field_number, fields.UnknownField(field_number)))
 
     def __str__(self):
         """Return a string representation of a DefinitionMessage instance."""
-        return ("DefinitionMessage: %r %d %s fields" % (self.message_type, self.fields, self.endian.name))
+        return (f"DefinitionMessage: {repr(self.message_type)} {self.fields} {self.endian.name} fields")
