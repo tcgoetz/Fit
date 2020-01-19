@@ -37,6 +37,8 @@ class File(object):
         self.measurement_system = measurement_system
         self.message_types = []
         self.messages = []
+        for message_type in MessageType:
+            vars(self)[message_type.name] = []
         with open(filename, 'rb') as file:
             self.__parse(file)
         self.__sumarize()
@@ -47,8 +49,6 @@ class File(object):
         self.data_size = self.file_header.data_size
         self._definition_messages = {}
         self.__dev_fields = {}
-        for message_type in MessageType:
-            vars(self)[message_type.name] = []
         data_consumed = 0
         self.record_count = 0
         data_message_context = DataMessageDecodeContext()
@@ -58,7 +58,6 @@ class File(object):
             data_consumed += record_header.file_size
             self.record_count += 1
             logger.debug("Parsed record %r", record_header)
-
             if record_header.message_class is MessageClass.definition:
                 definition_message = DefinitionMessage(record_header, self.__dev_fields, file)
                 logger.debug("  Definition [%d]: %s", local_message_num, definition_message)
@@ -73,16 +72,18 @@ class File(object):
                 if data_message_type == MessageType.field_description:
                     self.__dev_fields[data_message.fields.field_definition_number] = data_message
                 logger.debug("Parsed %r", data_message_type)
-                # Store the parsed message accessible as an file attribute or though file[message_type]
-                if data_message_type.name in vars(self):
-                    vars(self)[data_message_type.name].append(data_message)
-                else:
-                    vars(self)[data_message_type.name] = [data_message]
-                self.messages.append(data_message)
-                if data_message_type not in self.message_types:
-                    self.message_types.append(data_message_type)
+                self.__save_message(data_message_type, data_message)
             logger.debug("Record %d: consumed %d of %s %r", self.record_count, data_consumed, self.data_size, self.measurement_system)
         self.last_message_timestamp = data_message_context.last_timestamp
+
+    def __save_message(self, data_message_type, data_message):
+        if data_message_type.name in vars(self):
+            vars(self)[data_message_type.name].append(data_message)
+        else:
+            vars(self)[data_message_type.name] = [data_message]
+        self.messages.append(data_message)
+        if data_message_type not in self.message_types:
+            self.message_types.append(data_message_type)
 
     def __sumarize(self):
         first_file_id = self.file_id[0]

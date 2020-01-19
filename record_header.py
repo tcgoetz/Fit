@@ -24,7 +24,7 @@ class RecordHeader(Data):
     message_type_string = ['data', 'definition']
 
     def __init__(self, file):
-        """Return a RecordHeader instance created by reading the record geader data from a FIT file."""
+        """Return a RecordHeader instance created by reading the record header data from a FIT file."""
         super().__init__(file, self.rh_schema)
         self.message_class = MessageClass(self.message_type())
 
