@@ -448,7 +448,7 @@ class DefinitionMessageData():
             5 : object_fields.DistanceCentimetersToKmsField('distance'),
             6 : object_fields.SpeedMpsField('speed'),
             7 : fields.PowerField(),
-            8 : fields.NamedField('compressed_speed_distance'),
+            8 : object_fields.CompressedSpeedDistanceField(),
             9 : fields.PercentField('grade'),
             10 : fields.NamedField('resistance'),
             11 : fields.TimeMsField('time_from_course'),
@@ -457,8 +457,8 @@ class DefinitionMessageData():
             17 : object_fields.SpeedMpsField('speed_1s'),
             18 : activity_fields.ActivityBasedCyclesField(),
             19 : activity_fields.ActivityBasedCyclesField('total_cycles'),
-            28 : fields.NamedField('compressed_accumulated_power'),
-            29 : fields.NamedField('accumulated_power'),
+            28 : fields.NamedField('accumulated_power'),  # 16 bit version
+            29 : fields.NamedField('accumulated_power'),  # 32 bit version
             30 : fields.LeftRightBalanceField('left_right_balance'),
             31 : object_fields.DistanceMetersField('gps_accuracy'),
             32 : object_fields.SpeedMpsField('vertical_speed'),

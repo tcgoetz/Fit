@@ -151,3 +151,22 @@ class EnhancedAltitudeField(DistanceMetersField):
     def __init__(self, name):
         """Return an instance of EnhancedAltitudeField."""
         super().__init__(name, measurement.Distance.from_meters, measurement.Distance.feet_or_meters, scale=5.0, offset=500.0)
+
+
+class CompressedSpeedDistanceField(Field):
+    """A field that generates sub fields fields for activity and intensity."""
+
+    _name = 'compressed_speed_distance'
+
+    speed_field = SpeedMpsField('speed')
+    distance_field = DistanceCentimetersToKmsField('distance')
+
+    def __init__(self, name, **kwargs):
+        super().__init__(name, **kwargs)
+
+    def convert(self, value, invalid, measurement_system):
+        """Convert the value to sub fields."""
+        self.measurement_system = measurement_system
+        speed = value & 0x3f
+        distance = value >> 12
+        return self.speed_field.convert(speed, 0xff, measurement_system) + self.distance_field.convert(distance, 0xff, measurement_system)
