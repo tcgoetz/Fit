@@ -111,12 +111,12 @@ class DeviceTypeField(Field):
         source_type = control_value_list[0]
         if source_type is not None:
             try:
-                dependant_field_name = self._source_to_device_type_fields[source_type]
+                dependant_field = self._source_to_device_type_fields[source_type]
             except Exception:
-                dependant_field_name = UnknownDeviceTypeField
+                dependant_field = UnknownDeviceTypeField
         else:
-            dependant_field_name = Field
-        return dependant_field_name(name='device_type')
+            dependant_field = Field
+        return dependant_field(name='device_type')
 
 
 class AutoSyncFrequencyField(EnumField):

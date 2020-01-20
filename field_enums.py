@@ -258,6 +258,7 @@ class LocalDeviceType(FieldEnum):
     bluetooth_low_energy_chipset    = 8
     wrist_heart_rate                = 10
     sensor_hub                      = 12
+    invalid                         = 255
 
 
 class UnknownDeviceType(UnknownEnumValue):
