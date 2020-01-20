@@ -236,6 +236,7 @@ class TimeOfDayField(NamedField):
 
 
 class CyclesField(Field):
+    """Field that holds cycles measurement for sports activity."""
 
     _name = 'cycles'
     _units = 'cycles'
@@ -244,26 +245,28 @@ class CyclesField(Field):
         super().__init__(scale=scale, *args, **kwargs)
 
 
-class FractionalCyclesField(Field):
-
-    _name = 'total_fractional_cycles'
-    _units = 'cycles'
-    _scale = 128.0
-
-
 class StepsField(Field):
+    """Field that holds steps measurement for sports activity."""
 
     _name = 'steps'
     _units = 'steps'
 
 
 class StrokesField(Field):
+    """Field that holds strokes measurement for sports activity."""
 
     _name = 'strokes'
     _units = 'strokes'
 
     def __init__(self, scale=2.0, **kwargs):
         super().__init__(scale=scale, **kwargs)
+
+
+class FractionalCyclesField(Field):
+
+    _name = 'total_fractional_cycles'
+    _units = 'cycles'
+    _scale = 128.0
 
 
 class VersionField(NamedField):
@@ -289,12 +292,6 @@ class EventDataField(Field):
     def dependant_field(self, control_value_list):
         event = control_value_list[0]
         return EventDataField._dependant_field[event]
-
-
-class CadenceField(NamedField):
-
-    _name = 'cadence'
-    _units = 'rpm'
 
 
 class FractionalCadenceField(NamedField):

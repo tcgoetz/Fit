@@ -212,8 +212,8 @@ class DefinitionMessageData():
             15 : object_fields.SpeedMpsField('max_speed'),  # 16 bit version
             16 : type_fields.HeartRateField('avg_heart_rate'),
             17 : type_fields.HeartRateField('max_heart_rate'),
-            18 : fields.CadenceField('avg_cadence'),
-            19 : fields.CadenceField('max_cadence'),
+            18 : activity_fields.SportBasedCadenceField('avg_cadence'),
+            19 : activity_fields.SportBasedCadenceField('max_cadence'),
             20 : fields.PowerField('avg_power'),
             21 : fields.PowerField('max_power'),
             22 : object_fields.DistanceMetersField('total_ascent'),
@@ -304,8 +304,8 @@ class DefinitionMessageData():
             119 : fields.NamedField('avg_right_power_phase_peak'),
             120 : fields.PowerField('avg_power_position'),
             121 : fields.PowerField('max_power_position'),
-            122 : fields.CadenceField('avg_cadence_position'),
-            123 : fields.CadenceField('max_cadence_position'),
+            122 : activity_fields.CadenceField('avg_cadence_position'),
+            123 : activity_fields.CadenceField('max_cadence_position'),
             124 : object_fields.SpeedMpsField('avg_speed'),  # 32 bit version
             125 : object_fields.SpeedMpsField('max_speed'),  # 32 bit version
             126 : object_fields.AltitudeField('avg_altitude'),  # 32 bit version
@@ -343,8 +343,8 @@ class DefinitionMessageData():
             14 : object_fields.SpeedMpsField('max_speed'),  # 16 bit version
             15 : type_fields.HeartRateField('avg_heart_rate'),
             16 : type_fields.HeartRateField('max_heart_rate'),
-            17 : fields.CadenceField('avg_cadence'),
-            18 : fields.CadenceField('max_cadence'),
+            17 : activity_fields.SportBasedCadenceField('avg_cadence'),
+            18 : activity_fields.SportBasedCadenceField('max_cadence'),
             19 : fields.PowerField('avg_power'),
             20 : fields.PowerField('max_power'),
             21 : object_fields.DistanceMetersField('total_ascent'),
@@ -385,7 +385,7 @@ class DefinitionMessageData():
             59 : fields.TimeMsField('time_in_cadence_zone'),
             60 : fields.TimeMsField('time_in_power_zone'),
             61 : type_fields.IntegerField('repetition_num'),
-            62 : object_fields.AltitudeField('min_altitude'),
+            62 : object_fields.AltitudeField('min_altitude'),  # 16 bit version
             63 : type_fields.HeartRateField('min_heart_rate'),
             70 : fields.NamedField('swim_time'),
             71 : fields.MessageIndexField('wkt_step_index'),
@@ -422,8 +422,8 @@ class DefinitionMessageData():
             105 : fields.NamedField('avg_right_power_phase_peak'),
             106 : fields.PowerField('avg_power_position'),
             107 : fields.PowerField('max_power_position'),
-            108 : fields.CadenceField('avg_cadence_position'),
-            109 : fields.CadenceField('max_cadence_position'),
+            108 : activity_fields.CadenceField('avg_cadence_position'),
+            109 : activity_fields.CadenceField('max_cadence_position'),
             110 : object_fields.SpeedMpsField('avg_speed'),  # 32 bit version
             111 : object_fields.SpeedMpsField('max_speed'),  # 32 bit version
             112 : object_fields.AltitudeField('avg_altitude'),  # 32 bit version
@@ -444,7 +444,7 @@ class DefinitionMessageData():
             1 : object_fields.LongitudeField('position_long'),
             2 : object_fields.AltitudeField('altitude'),  # 16 bit version
             3 : type_fields.HeartRateField('heart_rate'),
-            4 : fields.CadenceField(),
+            4 : activity_fields.CadenceField(),
             5 : object_fields.DistanceCentimetersToKmsField('distance'),
             6 : object_fields.SpeedMpsField('speed'),  # 16 bit version
             7 : fields.PowerField(),
@@ -476,7 +476,7 @@ class DefinitionMessageData():
             49 : fields.NamedField('stroke_type'),
             50 : fields.NamedField('zone'),
             51 : fields.NamedField('ball_speed'),
-            52 : fields.CadenceField('cadence256'),
+            52 : activity_fields.CadenceField('cadence256'),
             53 : fields.FractionalCadenceField(),
             54 : fields.NamedField('total_hemoglobin_conc'),
             55 : fields.NamedField('total_hemoglobin_conc_min'),

@@ -179,11 +179,10 @@ class Manufacturer(FuzzyFieldEnum):
     trailforks                      = 298
     mahle_ebikemotion               = 299
     nurvv                           = 300
-    Unknown_680                     = 680
     actigraphcorp                   = 5759
     #
     # Privates values
     #
     Garmin_local                    = 0
-    Garmin_local_start              = 1000
+    Garmin_local_start              = 500
     invalid                         = 65535

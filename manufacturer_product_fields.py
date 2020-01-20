@@ -8,7 +8,7 @@ __license__ = "GPL"
 from Fit.fields import Field
 from Fit.enum_fields import EnumField
 from Fit.manufacturer import Manufacturer
-from Fit.product import GarminProduct, GarminLocalProduct, ScoscheProduct, WahooFitnessProduct, HealthAndLifeProduct, Unknown680Product, UnknownProduct
+from Fit.product import GarminProduct, GarminLocalProduct, ScoscheProduct, WahooFitnessProduct, HealthAndLifeProduct, UnknownProduct
 
 
 class ManufacturerField(EnumField):
@@ -62,12 +62,6 @@ class HealthAndLifeProductField(BaseProductField):
     _enum = HealthAndLifeProduct
 
 
-class Unknown680ProductField(BaseProductField):
-    """A field indicating the Wahoo product id of the device used to create the FIT file."""
-
-    _enum = Unknown680Product
-
-
 class UnknownProductField(BaseProductField):
     """A field indicating the undocumented product id of the device used to create the FIT file."""
 
@@ -87,7 +81,6 @@ class ProductField(Field):
         Manufacturer.Wahoo_Fitness          : WahooFitnessProductField,
         Manufacturer.Scosche                : ScoscheProductField,
         Manufacturer.Health_and_Life        : HealthAndLifeProductField,
-        Manufacturer.Unknown_680            : Unknown680ProductField,
         Manufacturer.Garmin_local           : GarminLocalProductField,
         Manufacturer.invalid                : GarminProductField,
     }
