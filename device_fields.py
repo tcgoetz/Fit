@@ -19,6 +19,13 @@ class BatteryVoltageField(FloatField):
     _scale = 256.0
 
 
+class BatteryStatusField(EnumField):
+    """A Field that holds a battery status reading of the device."""
+
+    _name = 'battery_status'
+    _enum = fe.BatteryStatus
+
+
 class AutoActivityDetectField(BitField):
 
     _name = 'auto_activity_detect'
@@ -86,12 +93,6 @@ class UnknownDeviceTypeField(EnumField):
 
     _name = 'unknown_device_type'
     _enum = fe.UnknownDeviceType
-
-
-class BatteryStatusField(EnumField):
-
-    _name = 'battery_status'
-    _enum = fe.BatteryStatus
 
 
 class DeviceTypeField(Field):

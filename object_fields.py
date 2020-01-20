@@ -28,7 +28,8 @@ class ObjectField(Field):
     def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Return a FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
-        value_obj = self.obj_func((value / self._scale) - self._offset, invalid)
+        # apply scle and offset to invalid to or tests for invalid will fail!!
+        value_obj = self.obj_func((value / self._scale) - self._offset, (invalid / self._scale) - self._offset)
         return [FieldValue(self, value_obj, invalid, **{self._name: self._convert_many(value_obj, invalid)})]
 
     def reconvert(self, value_obj, invalid, measurement_system=fe.DisplayMeasure.metric):

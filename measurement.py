@@ -7,7 +7,7 @@ __license__ = "GPL"
 import Fit.field_enums as fe
 
 
-class Measurement(object):
+class Measurement():
     """Object that represents measurement."""
 
     def __init__(self, value, raw_value, invalid_value, default_output_func=None, default_output_units=None):
@@ -25,7 +25,7 @@ class Measurement(object):
 
     def to_units(self, scale=1.0, rounded=False):
         """Return a measurement value given the current value and a scale."""
-        if self.value is not None:
+        if not self.is_invalid():
             try:
                 value = self.value * scale
                 return round(value) if rounded else value
@@ -34,7 +34,7 @@ class Measurement(object):
 
     def is_invalid(self):
         """Return if the measurement is valid."""
-        return (self.raw_value == self.invalid_value)
+        return (self.raw_value is None) or (self.raw_value == self.invalid_value)
 
     def __eq__(self, other):
         if not isinstance(other, Measurement):
@@ -46,8 +46,8 @@ class Measurement(object):
         if self.is_invalid():
             value = 'invalid'
         else:
-            value = '%s %s [%s]' % (self.default_output_func(), self.default_output_units, self.raw_value)
-        return self.__class__.__name__ + '(' + value + ')'
+            value = f'{self.default_output_func()} {self.default_output_units} [{self.raw_value}, {self.invalid_value}]'
+        return f'{self.__class__.__name__ }({value})'
 
     def __str__(self):
         """Return a string representation of a Measurement instance."""
