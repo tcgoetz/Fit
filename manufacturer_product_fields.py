@@ -83,6 +83,7 @@ class ProductField(Field):
         Manufacturer.Health_and_Life        : HealthAndLifeProductField,
         Manufacturer.Garmin_local           : GarminLocalProductField,
         Manufacturer.Garmin_local_154       : GarminLocalProductField,
+        Manufacturer.Garmin_local_218       : GarminLocalProductField,
         Manufacturer.unknown                : UnknownProductField,
         Manufacturer.invalid                : GarminProductField,
     }

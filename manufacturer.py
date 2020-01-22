@@ -135,6 +135,7 @@ class Manufacturer(FuzzyFieldEnum):
     Polar_Electro                   = 123
     Seesense                        = 124
     Garmin_local_154                = 154
+    Garmin_local_218                = 218
     development                     = 255
     Health_and_Life                 = 257
     lezyne                          = 258
