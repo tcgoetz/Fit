@@ -134,6 +134,7 @@ class Manufacturer(FuzzyFieldEnum):
     Johnson_Health_Tech             = 122
     Polar_Electro                   = 123
     Seesense                        = 124
+    Garmin_local_154                = 154
     development                     = 255
     Health_and_Life                 = 257
     lezyne                          = 258
@@ -185,4 +186,5 @@ class Manufacturer(FuzzyFieldEnum):
     #
     Garmin_local                    = 0
     Garmin_local_start              = 500
+    unknown                         = 65534
     invalid                         = 65535

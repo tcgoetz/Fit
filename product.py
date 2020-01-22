@@ -212,6 +212,7 @@ class GarminLocalProduct(FuzzyFieldEnum):
     Accelerometer_12                = 12
     Accelerometer_16                = 16
     Accelerometer_18                = 18
+    Accelerometer_901               = 901
     GPS_1619                        = 1619
     GPS_1620                        = 1620
     GPS_1621                        = 1621

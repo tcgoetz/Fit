@@ -211,63 +211,6 @@ class SourceType(FieldEnum):
     invalid = 255
 
 
-class DeviceType(FieldEnum):
-    """Device type for the main device"""
-
-    fitness_tracker = 0
-    bike_gps        = 1
-    standalone_gps  = 2
-    software        = 3
-
-
-class AntplusDeviceType(FieldEnum):
-    """Device types for devices connected to the main device via ANT+. Like a external heart rate monitor."""
-
-    antfs                       = 1
-    bike_power                  = 11
-    environment_sensor_legacy   = 12
-    multi_sport_speed_distance  = 15
-    control                     = 16
-    fitness_equipment           = 17
-    blood_pressure              = 18
-    geocache_node               = 19
-    light_electric_vehicle      = 20
-    env_sensor                  = 25
-    racquet                     = 26
-    control_hub                 = 27
-    run                         = 30
-    muscle_oxygen               = 31
-    bike_light_main             = 35
-    bike_light_shared           = 36
-    exd                         = 38
-    bike_radar                  = 40
-    weight_scale                = 119
-    heart_rate                  = 120
-    bike_speed_cadence          = 121
-    bike_cadence                = 122
-    bike_speed                  = 123
-    stride_speed_distance       = 124
-
-
-class LocalDeviceType(FieldEnum):
-    """Device types for sub-devices resident on the main device. Like sensors embedded on a watch."""
-
-    gps                             = 0
-    accelerometer                   = 3
-    barometer                       = 4
-    bluetooth_low_energy_chipset    = 8
-    wrist_heart_rate                = 10
-    sensor_hub                      = 12
-    invalid                         = 255
-
-
-class UnknownDeviceType(UnknownEnumValue):
-    """Device type enums for device types that we don't know how to interpret."""
-
-    def __init__(self, index):
-        UnknownEnumValue.__init__(self, 'UnknownDeviceType', index)
-
-
 class BatteryStatus(FieldEnum):
     new = 1
     good = 2

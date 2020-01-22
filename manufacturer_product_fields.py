@@ -23,7 +23,7 @@ class ManufacturerField(EnumField):
         except Exception:
             if value >= Manufacturer.Garmin_local_start.value:
                 return Manufacturer.Garmin_local
-            return value
+            return Manufacturer.unknown
 
 
 class BaseProductField(EnumField):
@@ -82,6 +82,8 @@ class ProductField(Field):
         Manufacturer.Scosche                : ScoscheProductField,
         Manufacturer.Health_and_Life        : HealthAndLifeProductField,
         Manufacturer.Garmin_local           : GarminLocalProductField,
+        Manufacturer.Garmin_local_154       : GarminLocalProductField,
+        Manufacturer.unknown                : UnknownProductField,
         Manufacturer.invalid                : GarminProductField,
     }
 
