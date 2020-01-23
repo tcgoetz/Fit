@@ -7,6 +7,7 @@ __license__ = "GPL"
 
 from Fit.fields import NamedField
 import Fit.field_enums as fe
+import Fit.file_type as ft
 
 
 class EnumField(NamedField):
@@ -74,7 +75,7 @@ class FileTypeField(EnumField):
     """A field that indicates the FIT file type."""
 
     _name = 'file_type'
-    _enum = fe.FileType
+    _enum = ft.FileType
 
 
 class EventField(EnumField):

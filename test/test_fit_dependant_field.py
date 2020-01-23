@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Test FIT file parsing."""
 
 __author__ = "Tom Goetz"
@@ -10,6 +8,7 @@ import unittest
 import logging
 
 from Fit import field_enums
+from Fit.product import GarminProduct
 from Fit import manufacturer_product_fields as mp_fields
 
 
@@ -29,14 +28,12 @@ class TestFitDependantField(unittest.TestCase):
         pass
 
     def test_product_field_reconvert(self):
-        manufacturer = mp_fields.ManufacturerField()
-        field_value = manufacturer.convert(field_enums.Manufacturer.Garmin.value, field_enums.Manufacturer.invalid.value)
-        product = mp_fields.ProductField()
-        field_value = product.convert(field_enums.GarminProduct.Fenix_5_Sapphire.value, field_enums.GarminProduct.invalid.value)
-        self.assertIsInstance(field_value.field, mp_fields.ProductField)
+        field_value = mp_fields.ProductField().convert(GarminProduct.Fenix_5_Sapphire.value, GarminProduct.invalid.value)[0]
+        self.assertEqual(field_value['product'], GarminProduct.Fenix_5_Sapphire.value)
         field_value.field = mp_fields.GarminProductField()
         field_value.reconvert(field_enums.DisplayMeasure.metric)
-        self.assertEqual(field_value.value, field_enums.GarminProduct.Fenix_5_Sapphire)
+        self.assertIsInstance(field_value['product'], mp_fields.GarminProduct)
+        self.assertEqual(field_value['product'], GarminProduct.Fenix_5_Sapphire)
 
 
 if __name__ == '__main__':

@@ -11,7 +11,7 @@ import datetime
 from Fit.file_header import FileHeader
 from Fit.record_header import RecordHeader, MessageClass
 from Fit.definition_message import DefinitionMessage
-from Fit.data_message import DataMessage
+from Fit.data_message import DataMessageDecodeContext, DataMessage
 from Fit.message_type import MessageType
 from Fit.field_enums import DisplayMeasure
 
@@ -35,106 +35,92 @@ class File(object):
         """
         self.filename = filename
         self.measurement_system = measurement_system
-
-        self.last_date = None
-        self.last_day = None
-
-        self.matched_timestamp_16 = None
-
-        self.file = open(filename, 'rb')
-        self.__parse()
+        self.message_types = []
+        self.messages = []
+        for message_type in MessageType:
+            vars(self)[message_type.name] = []
+        with open(filename, 'rb') as file:
+            self.__parse(file)
         self.__sumarize()
 
-    def __del__(self):
-        """Delete the File instance."""
-        self.file.close()
-
-    def __parse(self):
+    def __parse(self, file):
         logger.debug("Parsing File %s", self.filename)
-        self.file_header = FileHeader(self.file)
-
+        self.file_header = FileHeader(file)
         self.data_size = self.file_header.data_size
-
         self._definition_messages = {}
         self.__dev_fields = {}
-        self._data_message_types = []
         data_consumed = 0
         self.record_count = 0
-        self.first_message_timestamp = None
-        self.last_message_timestamp = None
-
+        data_message_context = DataMessageDecodeContext()
         while self.data_size > data_consumed:
-            record_header = RecordHeader(self.file)
+            record_header = RecordHeader(file)
             local_message_num = record_header.local_message()
             data_consumed += record_header.file_size
             self.record_count += 1
             logger.debug("Parsed record %r", record_header)
-
             if record_header.message_class is MessageClass.definition:
-                definition_message = DefinitionMessage(record_header, self.__dev_fields, self.file)
+                definition_message = DefinitionMessage(record_header, self.__dev_fields, file)
                 logger.debug("  Definition [%d]: %s", local_message_num, definition_message)
                 data_consumed += definition_message.file_size
                 self._definition_messages[local_message_num] = definition_message
             else:
                 definition_message = self._definition_messages[local_message_num]
-                data_message = DataMessage(definition_message, self.file, self.measurement_system)
+                data_message = DataMessage(definition_message, file, self.measurement_system, data_message_context)
                 logger.debug("  Data [%d]: %s", local_message_num, data_message)
-
                 data_consumed += data_message.file_size
-
-                data_message_type = data_message.type()
-
-                if data_message.time_created_timestamp:
-                    self.time_created_timestamp = data_message.time_created_timestamp
-                # if self.last_message_timestamp is not None and data_message.timestamp < self.last_message_timestamp:
-                #     raise FitOutOfOrderMessage('Message time stamp %s before previous %s' % (data_message.timestamp, self.last_message_timestamp))
-                self.last_message_timestamp = data_message.timestamp
-
+                data_message_type = data_message.type
                 if data_message_type == MessageType.field_description:
-                    self.__dev_fields[data_message['field_definition_number'].value] = data_message
-
+                    self.__dev_fields[data_message.fields.field_definition_number] = data_message
                 logger.debug("Parsed %r", data_message_type)
-
-                try:
-                    self.__dict__[data_message_type].append(data_message)
-                except Exception:
-                    self.__dict__[data_message_type] = [data_message]
-                    self._data_message_types.append(data_message_type)
-
+                self.__save_message(data_message_type, data_message)
             logger.debug("Record %d: consumed %d of %s %r", self.record_count, data_consumed, self.data_size, self.measurement_system)
-        logger.debug("File %s: %s -> %s", self.filename, self.time_created_timestamp, self.last_message_timestamp)
+        self.last_message_timestamp = data_message_context.last_timestamp
+
+    def __save_message(self, data_message_type, data_message):
+        if data_message_type.name in vars(self):
+            vars(self)[data_message_type.name].append(data_message)
+        else:
+            vars(self)[data_message_type.name] = [data_message]
+        self.messages.append(data_message)
+        if data_message_type not in self.message_types:
+            self.message_types.append(data_message_type)
 
     def __sumarize(self):
-        self.file_id = self[MessageType.file_id][0]
-        self.type = self.file_id['type'].value
-        self.product = self.file_id['product'].value
-        self.serial_number = self.file_id['serial_number'].value
+        first_file_id = self.file_id[0]
+        self.time_created = first_file_id.fields.time_created
+        self.type = first_file_id.fields.type
+        self.product = first_file_id.fields.product
+        self.serial_number = first_file_id.fields.serial_number
         self.device = f'{self.product}_{self.serial_number}'
-        self.device_settings_list = self[MessageType.device_settings]
-        if len(self.device_settings_list) > 0:
-            self.device_settings = self.device_settings_list[0]
-            self.utc_offset = self.device_settings['time_offset'].value
-            self.local_tz = datetime.timezone(datetime.timedelta(seconds=self.utc_offset))
+        if MessageType.device_settings in self.message_types:
+            self.utc_offset = self.device_settings[0].fields.time_offset
+        elif MessageType.monitoring_info in self.message_types:
+            first_monitoring_info = self.monitoring_info[0]
+            monitoring_info_time_utc = first_monitoring_info.fields.timestamp
+            monitoring_info_time_local = first_monitoring_info.fields.local_timestamp
+            self.utc_offset = (monitoring_info_time_local - monitoring_info_time_utc.replace(tzinfo=None)).total_seconds()
         else:
-            self.local_tz = None
-        self.time_created = self.utc_datetime_to_local(self.file_id['time_created'].value)
+            self.utc_offset = 0
+        self.local_tz = datetime.timezone(datetime.timedelta(seconds=self.utc_offset))
+        self.time_created_local = self.utc_datetime_to_local(self.time_created)
+        if self.last_message_timestamp is not None:
+            self.time_ended_local = self.utc_datetime_to_local(self.last_message_timestamp)
+        else:
+            self.time_ended_local = self.time_created_local
+        logger.info("File %s (%s): %s (%s) -> %s", self.filename, self.type, self.time_created_local, self.local_tz, self.time_ended_local)
 
     def date_span(self):
         """Return a tuple of the start and end dates of the file."""
-        return (self.time_created(), self.last_message_timestamp)
+        return (self.time_created, self.last_message_timestamp)
 
-    def utc_datetime_to_local(self, utc_dt):
-        if self.local_tz is not None:
-            return utc_dt.astimezone(self.local_tz).replace(tzinfo=None)
-        return utc_dt.replace(tzinfo=None)
+    def utc_datetime_to_local(self, dt):
+        if self.local_tz is not None and dt.tzinfo is datetime.timezone.utc:
+            return dt.astimezone(self.local_tz).replace(tzinfo=None)
+        return dt.replace(tzinfo=None)
 
-    def message_types(self):
-        """Return a list of the message types present in the file."""
-        return self._data_message_types
-
-    def __getitem__(self, name):
+    def __getitem__(self, message_type):
         """Return the attribute named name."""
-        return self.__dict__.get(name, [])
+        return vars(self).get(message_type.name, [])
 
     def __str__(self):
         """Return a string representation of the class instance."""

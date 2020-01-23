@@ -9,6 +9,7 @@ from Fit.fields import Field
 from Fit.type_fields import BitField, FloatField
 from Fit.enum_fields import EnumField
 import Fit.field_enums as fe
+import Fit.device_enums as de
 
 
 class BatteryVoltageField(FloatField):
@@ -17,6 +18,13 @@ class BatteryVoltageField(FloatField):
     _name = 'battery_voltage'
     _units = 'v'
     _scale = 256.0
+
+
+class BatteryStatusField(EnumField):
+    """A Field that holds a battery status reading of the device."""
+
+    _name = 'battery_status'
+    _enum = fe.BatteryStatus
 
 
 class AutoActivityDetectField(BitField):
@@ -67,34 +75,47 @@ class SourceTypeField(EnumField):
     _enum = fe.SourceType
 
 
-class AntplusDeviceTypeField(EnumField):
+class MainDeviceTypeField(EnumField):
+    """Device types for devices connected to the main device via ANT+. Like a external heart rate monitor."""
 
-    _name = 'antplus_device_yype'
-    _enum = fe.AntplusDeviceType
+    _name = 'main_device_type'
+    _enum = de.MainDeviceType
+
+    def is_invalid(self, value, invalid):
+        """Return if the field's value is valid."""
+        return False
+
+    def _convert_single(self, value, invalid):
+        """Return a device type for the device inferred from its manufactuer and product information."""
+        return de.MainDeviceType.derive_device_type(self._manufacturer, self._product)
+
+
+class AntplusDeviceTypeField(EnumField):
+    """Device types for devices connected to the main device via ANT+. Like a external heart rate monitor."""
+
+    _name = 'antplus_device_type'
+    _enum = de.AntplusDeviceType
 
 
 class LocalDeviceTypeField(EnumField):
+    """Device types for sub-devices resident on the main device. Like sensors embedded on a watch."""
 
     _name = 'local_device_type'
-    _enum = fe.LocalDeviceType
+    _enum = de.LocalDeviceType
 
 
 class UnknownDeviceTypeField(EnumField):
+    """Device type enums for device types that we don't know how to interpret."""
 
     _name = 'unknown_device_type'
-    _enum = fe.UnknownDeviceType
+    _enum = de.UnknownDeviceType
 
 
-class BatteryStatusField(EnumField):
-
-    _name = 'battery_status'
-    _enum = fe.BatteryStatus
-
-
-class DeviceType(Field):
+class DeviceTypeField(Field):
+    """Wrapper field for device type dependant fields."""
 
     _name = 'device_type'
-    _dependant_field_control_fields = ['source_type']
+    _dependant_field_control_fields = ['source_type', 'device_type', 'manufacturer', 'product']
 
     _source_to_device_type_fields = {
         fe.SourceType.ant          : Field(name='ant_device_type'),
@@ -105,14 +126,20 @@ class DeviceType(Field):
     def dependant_field(self, control_value_list):
         """Return a field class that should be used to handle a dependant field."""
         source_type = control_value_list[0]
+        device_type = control_value_list[1]
+        manufacturer = control_value_list[2]
+        product = control_value_list[3]
         if source_type is not None:
-            try:
-                dependant_field_name = self._source_to_device_type_fields[source_type]
-            except Exception:
-                dependant_field_name = UnknownDeviceTypeField
+            if source_type is fe.SourceType.local and device_type is None:
+                dependant_field = MainDeviceTypeField(manufacturer=manufacturer, product=product, name='device_type')
+            else:
+                try:
+                    dependant_field = self._source_to_device_type_fields[source_type](name='device_type')
+                except Exception:
+                    dependant_field = UnknownDeviceTypeField(name='device_type')
         else:
-            dependant_field_name = Field
-        return dependant_field_name(name='device_type')
+            dependant_field = Field
+        return dependant_field
 
 
 class AutoSyncFrequencyField(EnumField):

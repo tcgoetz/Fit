@@ -208,12 +208,12 @@ class DefinitionMessageData():
             10 : activity_fields.SportBasedCyclesField('total_cycles'),
             11 : fields.CaloriesField('total_calories'),
             13 : fields.CaloriesField('total_fat_calories'),
-            14 : object_fields.SpeedMpsField('avg_speed'),
-            15 : object_fields.SpeedMpsField('max_speed'),
+            14 : object_fields.SpeedMpsField('avg_speed'),  # 16 bit version
+            15 : object_fields.SpeedMpsField('max_speed'),  # 16 bit version
             16 : type_fields.HeartRateField('avg_heart_rate'),
             17 : type_fields.HeartRateField('max_heart_rate'),
-            18 : fields.CadenceField('avg_cadence'),
-            19 : fields.CadenceField('max_cadence'),
+            18 : activity_fields.SportBasedCadenceField('avg_cadence'),
+            19 : activity_fields.SportBasedCadenceField('max_cadence'),
             20 : fields.PowerField('avg_power'),
             21 : fields.PowerField('max_power'),
             22 : object_fields.DistanceMetersField('total_ascent'),
@@ -242,8 +242,8 @@ class DefinitionMessageData():
             46 : enum_fields.DisplayMeasureField('pool_length_unit'),
             47 : type_fields.IntegerField('num_active_lengths'),
             48 : fields.WorkField(),
-            49 : object_fields.EnhancedAltitudeField('avg_altitude'),
-            50 : object_fields.EnhancedAltitudeField('max_altitude'),
+            49 : object_fields.AltitudeField('avg_altitude'),  # 16 bit version
+            50 : object_fields.AltitudeField('max_altitude'),  # 16 bit version
             51 : object_fields.DistanceMetersField('gps_accuracy'),
             52 : fields.PercentField('avg_grade'),
             53 : fields.PercentField('avg_pos_grade'),
@@ -264,7 +264,7 @@ class DefinitionMessageData():
             68 : fields.TimeMsField('time_in_power_zone'),
             69 : fields.TimeMsField('avg_lap_time'),
             70 : type_fields.IntegerField('best_lap_index'),
-            71 : object_fields.EnhancedAltitudeField('min_altitude'),
+            71 : object_fields.AltitudeField('min_altitude'),  # 16 bit version
             78 : fields.NamedField('total_swim_time'),
             79 : fields.NamedField('average_stroke'),
             80 : fields.NamedField('swolf'),
@@ -304,13 +304,13 @@ class DefinitionMessageData():
             119 : fields.NamedField('avg_right_power_phase_peak'),
             120 : fields.PowerField('avg_power_position'),
             121 : fields.PowerField('max_power_position'),
-            122 : fields.CadenceField('avg_cadence_position'),
-            123 : fields.CadenceField('max_cadence_position'),
-            124 : object_fields.SpeedMpsField('enhanced_avg_speed'),
-            125 : object_fields.SpeedMpsField('enhanced_max_speed'),
-            126 : object_fields.EnhancedAltitudeField('enhanced_avg_altitude'),
-            127 : object_fields.EnhancedAltitudeField('enhanced_min_altitude'),
-            128 : object_fields.EnhancedAltitudeField('enhanced_max_altitude'),
+            122 : activity_fields.CadenceField('avg_cadence_position'),
+            123 : activity_fields.CadenceField('max_cadence_position'),
+            124 : object_fields.SpeedMpsField('avg_speed'),  # 32 bit version
+            125 : object_fields.SpeedMpsField('max_speed'),  # 32 bit version
+            126 : object_fields.AltitudeField('avg_altitude'),  # 32 bit version
+            127 : object_fields.AltitudeField('min_altitude'),  # 32 bit version
+            128 : object_fields.AltitudeField('max_altitude'),  # 32 bit version
             129 : fields.PowerField('avg_lev_motor_power'),
             130 : fields.PowerField('max_lev_motor_power'),
             131 : fields.BytePercentField('lev_battery_consumption'),
@@ -319,10 +319,11 @@ class DefinitionMessageData():
             134 : object_fields.DistanceMillimetersField('avg_step_length'),
             137 : fields.TrainingEffectField('total_anaerobic_training_effect'),
             139 : object_fields.SpeedMpsField('avg_vam'),
-            169 : type_fields.FloatField('avg_respiration_rate', scale=100.0),
-            170 : type_fields.FloatField('max_respiration_rate', scale=100.0),
+            150 : object_fields.TemperatureField('min_temperature'),
+            169 : type_fields.RespirationRateField('avg_respiration_rate'),
+            170 : type_fields.RespirationRateField('max_respiration_rate'),
             178: type_fields.FloatField('fluid_consumed'),
-            180 : type_fields.FloatField('min_respiration_rate', scale=100.0),
+            180 : type_fields.RespirationRateField('min_respiration_rate'),
         },
         MessageType.lap : {
             0 : enum_fields.EventField(),
@@ -338,12 +339,12 @@ class DefinitionMessageData():
             10 : activity_fields.SportBasedCyclesField('total_cycles'),
             11 : fields.CaloriesField('total_calories'),
             12 : fields.CaloriesField('total_fat_calories'),
-            13 : object_fields.SpeedMpsField('avg_speed'),
-            14 : object_fields.SpeedMpsField('max_speed'),
+            13 : object_fields.SpeedMpsField('avg_speed'),  # 16 bit version
+            14 : object_fields.SpeedMpsField('max_speed'),  # 16 bit version
             15 : type_fields.HeartRateField('avg_heart_rate'),
             16 : type_fields.HeartRateField('max_heart_rate'),
-            17 : fields.CadenceField('avg_cadence'),
-            18 : fields.CadenceField('max_cadence'),
+            17 : activity_fields.SportBasedCadenceField('avg_cadence'),
+            18 : activity_fields.SportBasedCadenceField('max_cadence'),
             19 : fields.PowerField('avg_power'),
             20 : fields.PowerField('max_power'),
             21 : object_fields.DistanceMetersField('total_ascent'),
@@ -364,8 +365,8 @@ class DefinitionMessageData():
             39 : activity_fields.SubSportField(),
             40 : type_fields.IntegerField('num_active_lengths'),
             41 : fields.WorkField(),
-            42 : object_fields.EnhancedAltitudeField('avg_altitude'),
-            43 : object_fields.EnhancedAltitudeField('max_altitude'),
+            42 : object_fields.AltitudeField('avg_altitude'),  # 16 bit version
+            43 : object_fields.AltitudeField('max_altitude'),  # 16 bit version
             44 : object_fields.DistanceMetersField('gps_accuracy'),
             45 : fields.PercentField('avg_grade'),
             46 : fields.PercentField('avg_pos_grade'),
@@ -384,7 +385,7 @@ class DefinitionMessageData():
             59 : fields.TimeMsField('time_in_cadence_zone'),
             60 : fields.TimeMsField('time_in_power_zone'),
             61 : type_fields.IntegerField('repetition_num'),
-            62 : object_fields.EnhancedAltitudeField('min_altitude'),
+            62 : object_fields.AltitudeField('min_altitude'),  # 16 bit version
             63 : type_fields.HeartRateField('min_heart_rate'),
             70 : fields.NamedField('swim_time'),
             71 : fields.MessageIndexField('wkt_step_index'),
@@ -421,13 +422,13 @@ class DefinitionMessageData():
             105 : fields.NamedField('avg_right_power_phase_peak'),
             106 : fields.PowerField('avg_power_position'),
             107 : fields.PowerField('max_power_position'),
-            108 : fields.CadenceField('avg_cadence_position'),
-            109 : fields.CadenceField('max_cadence_position'),
-            110 : object_fields.SpeedMpsField('enhanced_avg_speed'),
-            111 : object_fields.SpeedMpsField('enhanced_max_speed'),
-            112 : object_fields.EnhancedAltitudeField('enhanced_avg_altitude'),
-            113 : object_fields.EnhancedAltitudeField('enhanced_min_altitude'),
-            114 : object_fields.EnhancedAltitudeField('enhanced_max_altitude'),
+            108 : activity_fields.CadenceField('avg_cadence_position'),
+            109 : activity_fields.CadenceField('max_cadence_position'),
+            110 : object_fields.SpeedMpsField('avg_speed'),  # 32 bit version
+            111 : object_fields.SpeedMpsField('max_speed'),  # 32 bit version
+            112 : object_fields.AltitudeField('avg_altitude'),  # 32 bit version
+            113 : object_fields.AltitudeField('min_altitude'),  # 32 bit version
+            114 : object_fields.AltitudeField('max_altitude'),  # 32 bit version
             115 : fields.PowerField('avg_lev_motor_power'),
             116 : fields.PowerField('max_lev_motor_power'),
             117 : fields.BytePercentField('lev_battery_consumption'),
@@ -435,19 +436,19 @@ class DefinitionMessageData():
             119 : fields.PercentField('avg_stance_time_balance'),
             120 : object_fields.DistanceMillimetersField('avg_step_length'),
             121 : object_fields.SpeedMpsField('avg_vam'),
-            136 : type_fields.FloatField('avg_respiration_rate', scale=100.0),
-            137 : type_fields.FloatField('max_respiration_rate', scale=100.0),
+            136 : type_fields.RespirationRateField('avg_respiration_rate'),
+            137 : type_fields.RespirationRateField('max_respiration_rate'),
         },
         MessageType.record : {
             0 : object_fields.LatiitudeField('position_lat'),
             1 : object_fields.LongitudeField('position_long'),
-            2 : object_fields.AltitudeField(),
+            2 : object_fields.AltitudeField('altitude'),  # 16 bit version
             3 : type_fields.HeartRateField('heart_rate'),
-            4 : fields.CadenceField(),
+            4 : activity_fields.CadenceField(),
             5 : object_fields.DistanceCentimetersToKmsField('distance'),
-            6 : object_fields.SpeedMpsField('speed'),
+            6 : object_fields.SpeedMpsField('speed'),  # 16 bit version
             7 : fields.PowerField(),
-            8 : fields.NamedField('compressed_speed_distance'),
+            8 : object_fields.CompressedSpeedDistanceField(),
             9 : fields.PercentField('grade'),
             10 : fields.NamedField('resistance'),
             11 : fields.TimeMsField('time_from_course'),
@@ -456,8 +457,8 @@ class DefinitionMessageData():
             17 : object_fields.SpeedMpsField('speed_1s'),
             18 : activity_fields.ActivityBasedCyclesField(),
             19 : activity_fields.ActivityBasedCyclesField('total_cycles'),
-            28 : fields.NamedField('compressed_accumulated_power'),
-            29 : fields.NamedField('accumulated_power'),
+            28 : fields.NamedField('accumulated_power'),  # 16 bit version
+            29 : fields.NamedField('accumulated_power'),  # 32 bit version
             30 : fields.LeftRightBalanceField('left_right_balance'),
             31 : object_fields.DistanceMetersField('gps_accuracy'),
             32 : object_fields.SpeedMpsField('vertical_speed'),
@@ -475,7 +476,7 @@ class DefinitionMessageData():
             49 : fields.NamedField('stroke_type'),
             50 : fields.NamedField('zone'),
             51 : fields.NamedField('ball_speed'),
-            52 : fields.CadenceField('cadence256'),
+            52 : activity_fields.CadenceField('cadence256'),
             53 : fields.FractionalCadenceField(),
             54 : fields.NamedField('total_hemoglobin_conc'),
             55 : fields.NamedField('total_hemoglobin_conc_min'),
@@ -490,8 +491,8 @@ class DefinitionMessageData():
             70 : fields.NamedField('left_power_phase_peak'),
             71 : fields.NamedField('right_power_phase'),
             72 : fields.NamedField('right_power_phase_peak'),
-            73 : object_fields.SpeedMpsField('enhanced_speed'),
-            78 : object_fields.EnhancedAltitudeField('enhanced_altitude'),
+            73 : object_fields.SpeedMpsField('speed'),  # 32 bit version
+            78 : object_fields.AltitudeField('altitude'),  # 32 bit version
             83 : fields.PercentField('vertical_ratio', 100.0),
             84 : fields.PercentField('stance_time_balance'),
             85 : object_fields.DistanceMillimetersField('step_length'),
@@ -503,7 +504,7 @@ class DefinitionMessageData():
             96 : fields.TimeSField('ndl_time'),
             97 : fields.PercentField('cns_load'),
             98 : fields.PercentField('n2_load'),
-            108 : type_fields.FloatField('respiration_rate', scale=100.0),
+            108 : type_fields.RespirationRateField(),
             114 : type_fields.FloatField('grit'),
             115 : type_fields.FloatField('flow'),
         },
@@ -525,7 +526,7 @@ class DefinitionMessageData():
         MessageType.source : {},
         MessageType.device_info : {
             0 : type_fields.IntegerField('device_index'),
-            1 : device_fields.DeviceType(),
+            1 : device_fields.DeviceTypeField(),
             2 : mp_fields.ManufacturerField(),
             3 : type_fields.IntegerField('serial_number'),
             4 : mp_fields.ProductField(),
@@ -760,8 +761,8 @@ class DefinitionMessageData():
         MessageType.one_d_sensor_calibration : {},
         MessageType.set : {},
         MessageType.stress_level : {
-            0 : fields.NamedField('stress_level_value'),
-            1 : fields.TimestampField('stress_level_time', utc=False),
+            0 : fields.NamedField('stress_level'),
+            1 : fields.TimestampField('local_timestamp', utc=False),
         },
         MessageType.unknown_233 : {
             2 : type_fields.BytesField('unknown_2'),
@@ -774,13 +775,20 @@ class DefinitionMessageData():
         MessageType.dive_alarm : {},
         MessageType.exercise_title : {},
         MessageType.dive_summary : {},
+        MessageType.pulse_ox : {
+            0 : type_fields.FloatField('pulse_ox'),
+        },
         # Names and types for this message are guesses
         MessageType.start : {
             2 : fields.TimestampField('local_timestamp', utc=False),
         },
         # Names and types for this message are guesses
-        MessageType.data : {
+        MessageType.sleep_data : {
             0 : type_fields.BytesField('data'),
+        },
+        # Names and types for this message are guesses
+        MessageType.sleep_level : {
+            0 : type_fields.FloatField('sleep_level'),
         },
         # Names and types for this message are guesses
         MessageType.end : {},
@@ -796,7 +804,10 @@ class DefinitionMessageData():
             5 : object_fields.LatiitudeField('position_lat'),
             6 : object_fields.LongitudeField('position_long'),
             7 : object_fields.SpeedMpsField('speed'),
-            8 : object_fields.SpeedMpsField('enhanced_speed'),
+            8 : object_fields.SpeedMpsField('speed'),
+        },
+        MessageType.respiration : {
+            0 : type_fields.RespirationRateField(),
         },
         MessageType.climb_pro : {
             0 : object_fields.LatiitudeField('position_lat'),

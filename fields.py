@@ -18,24 +18,24 @@ class Field(object):
     _units = None
     _scale = 1.0
     _offset = 0.0
+    _dependant_field_control_fields = None
 
     def __init__(self, **kwargs):
         """Return a new instance of the Field class."""
         for key, value in kwargs.items():
-            self.__dict__['_' + key] = value
+            vars(self)['_' + key] = value
         if not hasattr(self, '_name'):
             raise ValueError(f'Unamed instance of {self.__class__.__name__}')
-        self._subfield = {}
 
     @property
     def name(self):
         """Return the name of the field."""
         return self._name
 
-    def units(self, value):
+    @property
+    def units(self):
         """Return the units of the field."""
-        if self._units:
-            return self._convert_many_units(value, None)
+        return self._units
 
     def _invalid_single(self, value, invalid):
         return (value == invalid)
@@ -64,19 +64,13 @@ class Field(object):
     def _convert_many(self, value, invalid):
         return self.__convert_many(self._convert_single, value, invalid)
 
-    def _convert_single_units(self, value, invalid):
-        return self._units
-
-    def _convert_many_units(self, value, invalid):
-        return self.__convert_many(self._convert_single_units, value, invalid)
-
     def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Return a FieldValue as intepretted by the field's rules."""
-        return FieldValue(self, invalid=invalid, value=self._convert_many(value, invalid), orig=value)
+        return [FieldValue(self, value, invalid, **{self._name: self._convert_many(value, invalid)})]
 
     def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Return the field's value as intepretted by the field's rules."""
-        return (self._convert_many(value, invalid), value)
+        return {self._name: self._convert_many(value, invalid)}
 
     def __repr__(self):
         """Return a string representation of a Field instance."""
@@ -188,10 +182,8 @@ class TimestampField(NamedField):
 
     def _convert_single(self, value, invalid):
         if self._utc:
-            # hack - summary of the day messages appear at midnight and we want them to appear in the current day,
-            # reimplement properly
-            return datetime.datetime(1989, 12, 31, 0, 0, 0, tzinfo=datetime.timezone.utc) + datetime.timedelta(0, value - 1)
-        return datetime.datetime(1989, 12, 31, 0, 0, 0) + datetime.timedelta(0, value - 1)
+            return datetime.datetime(1989, 12, 31, 0, 0, 0, tzinfo=datetime.timezone.utc) + datetime.timedelta(seconds=value)
+        return datetime.datetime(1989, 12, 31, 0, 0, 0) + datetime.timedelta(seconds=value)
 
 
 class TimeMsField(NamedField):
@@ -244,6 +236,7 @@ class TimeOfDayField(NamedField):
 
 
 class CyclesField(Field):
+    """Field that holds cycles measurement for sports activity."""
 
     _name = 'cycles'
     _units = 'cycles'
@@ -252,26 +245,28 @@ class CyclesField(Field):
         super().__init__(scale=scale, *args, **kwargs)
 
 
-class FractionalCyclesField(Field):
-
-    _name = 'total_fractional_cycles'
-    _units = 'cycles'
-    _scale = 128.0
-
-
 class StepsField(Field):
+    """Field that holds steps measurement for sports activity."""
 
     _name = 'steps'
     _units = 'steps'
 
 
 class StrokesField(Field):
+    """Field that holds strokes measurement for sports activity."""
 
     _name = 'strokes'
     _units = 'strokes'
 
     def __init__(self, scale=2.0, **kwargs):
         super().__init__(scale=scale, **kwargs)
+
+
+class FractionalCyclesField(Field):
+
+    _name = 'total_fractional_cycles'
+    _units = 'cycles'
+    _scale = 128.0
 
 
 class VersionField(NamedField):
@@ -297,12 +292,6 @@ class EventDataField(Field):
     def dependant_field(self, control_value_list):
         event = control_value_list[0]
         return EventDataField._dependant_field[event]
-
-
-class CadenceField(NamedField):
-
-    _name = 'cadence'
-    _units = 'rpm'
 
 
 class FractionalCadenceField(NamedField):

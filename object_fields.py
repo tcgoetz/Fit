@@ -26,16 +26,16 @@ class ObjectField(Field):
         return self.output_func(value, self.measurement_system)
 
     def convert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
-        """Returna FieldValue containing the field value as a Python object."""
-        self.measurement_system = measurement_system
-        value_obj = self.obj_func((value / self._scale) - self._offset, invalid)
-        return FieldValue(self, invalid=invalid, value=self._convert_many(value_obj, invalid), orig=value_obj)
-
-    def reconvert(self, value, invalid, measurement_system=fe.DisplayMeasure.metric):
         """Return a FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
-        value_obj = self.obj_func((value / self._scale) - self._offset, invalid)
-        return (self._convert_many(value_obj, invalid), value_obj)
+        # apply scle and offset to invalid to or tests for invalid will fail!!
+        value_obj = self.obj_func((value / self._scale) - self._offset, (invalid / self._scale) - self._offset)
+        return [FieldValue(self, value_obj, invalid, **{self._name: self._convert_many(value_obj, invalid)})]
+
+    def reconvert(self, value_obj, invalid, measurement_system=fe.DisplayMeasure.metric):
+        """Return a FieldValue containing the field value as a Python object."""
+        self.measurement_system = measurement_system
+        return {self._name: self._convert_many(value_obj, invalid)}
 
 
 class HeightField(ObjectField):
@@ -137,18 +137,24 @@ class DistanceMillimetersField(DistanceMetersField):
 
 
 class AltitudeField(DistanceMetersField):
-    """A field containing a altitude reading."""
-
-    def __init__(self):
-        """Return an instance of AltitudeField."""
-        super().__init__('altitude', measurement.Distance.from_cm, measurement.Distance.feet_or_meters, scale=5.0)
-
-
-class EnhancedAltitudeField(DistanceMetersField):
     """A field containing a altitude reading with greater range."""
 
-    _name = 'enhanced_altitude'
-
     def __init__(self, name):
-        """Return an instance of EnhancedAltitudeField."""
+        """Return an instance of AltitudeField."""
         super().__init__(name, measurement.Distance.from_meters, measurement.Distance.feet_or_meters, scale=5.0, offset=500.0)
+
+
+class CompressedSpeedDistanceField(Field):
+    """A field that generates sub fields fields for activity and intensity."""
+
+    _name = 'compressed_speed_distance'
+
+    speed_field = SpeedMpsField('speed')
+    distance_field = DistanceCentimetersToKmsField('distance')
+
+    def convert(self, value, invalid, measurement_system):
+        """Convert the value to sub fields."""
+        self.measurement_system = measurement_system
+        speed = value & 0x3f
+        distance = value >> 12
+        return self.speed_field.convert(speed, 0xff, measurement_system) + self.distance_field.convert(distance, 0xff, measurement_system)
