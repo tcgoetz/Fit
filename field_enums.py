@@ -9,8 +9,7 @@ import enum
 
 def name_for_enum(enum_instance):
     """Return the name if variable is enum or UnknownEnumValue."""
-    if enum_instance is not None:
-        return getattr(enum_instance, 'name', enum_instance)
+    return getattr(enum_instance, 'name', enum_instance)
 
 
 class UnknownEnumValue(object):
