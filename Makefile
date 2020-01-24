@@ -25,5 +25,6 @@ flake8:
 clean:
 	$(MAKE) -C test clean
 	rm -f *.pyc
+	rm -rf __pycache__
 
 .PHONY: deps remove_deps test test_commit clean
