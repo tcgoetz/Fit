@@ -118,7 +118,7 @@ class DeviceTypeField(Field):
     _dependant_field_control_fields = ['source_type', 'device_type', 'manufacturer', 'product']
 
     _source_to_device_type_fields = {
-        fe.SourceType.ant          : Field(name='ant_device_type'),
+        fe.SourceType.ant          : Field,
         fe.SourceType.antplus      : AntplusDeviceTypeField,
         fe.SourceType.local        : LocalDeviceTypeField,
     }
@@ -138,7 +138,7 @@ class DeviceTypeField(Field):
                 except Exception:
                     dependant_field = UnknownDeviceTypeField(name='device_type')
         else:
-            dependant_field = Field
+            dependant_field = Field(name='device_type')
         return dependant_field
 
 
