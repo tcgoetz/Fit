@@ -18,6 +18,7 @@ clean:
 	rm -f *.pyc
 	rm -f *.log
 	rm -f *.txt
+	rm -rf __pycache__
 
 #
 # Targets for testing smaller slices of functionality.
