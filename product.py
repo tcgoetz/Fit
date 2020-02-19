@@ -193,7 +193,7 @@ class GarminProduct(FuzzyFieldEnum):
     Instinct                        = 3126
     Fenix_6S_Pro                    = 3288
     Fenix_6                         = 3289
-    sesnor_hub_3294                 = 3294
+    sensor_hub_3294                 = 3294
     HRM_Dual                        = 3299
     Approach_S40                    = 3314
     FootPod_SDM4                    = 10007
