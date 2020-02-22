@@ -46,13 +46,18 @@ class DefinitionMessage(Data):
             dev_field_dict (dict): a dictionary of developer defoined fields in the FIT file.
             file (File): the FIT file instance to read the definition message data from.
         """
+        self.reserved = None
+        self.architecture = None
+        self.global_message_number = None
+        self.fields = None
+        self.dev_fields = None
         super().__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.__decode_secondary)])
 
         self.message_type = MessageType.get_type(self.global_message_number)
         self.__message_data = DefinitionMessageData.get_message_definition(self.message_type)
 
         self.field_definitions = []
-        for index in range(self.fields):
+        for _ in range(self.fields):
             field_definition = FieldDefinition(file)
             self.file_size += field_definition.file_size
             self.field_definitions.append(field_definition)
@@ -61,7 +66,7 @@ class DefinitionMessage(Data):
         self.dev_field_definitions = []
         if self.has_dev_fields:
             self._decode(DefinitionMessage.dm_dev_schema)
-            for index in range(self.dev_fields):
+            for _ in range(self.dev_fields):
                 dev_field_definition = DeveloperFieldDefinition(dev_field_dict, file)
                 self.file_size += dev_field_definition.file_size
                 self.dev_field_definitions.append(dev_field_definition)

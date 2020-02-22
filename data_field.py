@@ -20,6 +20,7 @@ class DataField(Data):
         self.field_definition = field_definition
         self.measurement_system = measurement_system
         self.field = definition_message.field(field_definition.field_definition_number)
+        self.field_value = None
         schema = self.__get_schema(field_definition.type_string(), field_definition.type_count())
         super().__init__(file, schema, None, definition_message.endian)
 
@@ -40,4 +41,4 @@ class DataField(Data):
 
     def __str__(self):
         """Return a string reprsentation of the DataField instance."""
-        return f'<DataField: {self.valuej}'
+        return f'<DataField: {self.values}'

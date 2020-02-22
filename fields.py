@@ -4,6 +4,7 @@ __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
+
 import datetime
 
 import Fit.conversions as conversions
@@ -15,6 +16,7 @@ from Fit.field_definition import FieldDefinition
 class Field(object):
     """The base object for all FIT file message fields."""
 
+    _name = None
     _units = None
     _scale = 1.0
     _offset = 0.0
@@ -24,7 +26,7 @@ class Field(object):
         """Return a new instance of the Field class."""
         for key, value in kwargs.items():
             vars(self)['_' + key] = value
-        if not hasattr(self, '_name'):
+        if self._name is None:
             raise ValueError(f'Unamed instance of {self.__class__.__name__}')
 
     @property
@@ -180,6 +182,8 @@ class CyclesDistanceField(Field):
 #
 class TimestampField(NamedField):
 
+    _utc = None
+
     def _convert_single(self, value, invalid):
         if self._utc:
             return datetime.datetime(1989, 12, 31, 0, 0, 0, tzinfo=datetime.timezone.utc) + datetime.timedelta(seconds=value)
@@ -215,24 +219,27 @@ class TimeOffsetField(Field):
 
 
 class TimeHourField(TimeMsField):
+    """A field that holds a time value measured in milliseconds."""
 
-    def _convert_single(self, value, invalid):
-        if value != invalid:
-            return conversions.hours_to_dt_time(value / self._scale)
+    def _convert_single(self, milliseconds, invalid):
+        if milliseconds != invalid:
+            return conversions.hours_to_dt_time(milliseconds / self._scale)
 
 
 class TimeMinField(TimeMsField):
+    """A field that holds a time value measured in minutes."""
 
-    def _convert_single(self, value, invalid):
-        if value != invalid:
-            return conversions.min_to_dt_time(value / self._scale)
+    def _convert_single(self, minutes, invalid):
+        if minutes != invalid:
+            return conversions.min_to_dt_time(minutes / self._scale)
 
 
 class TimeOfDayField(NamedField):
+    """A field that holds a time value measured in seconds."""
 
-    def _convert_single(self, value, invalid):
-        if value != invalid:
-            return conversions.secs_to_dt_time(value)
+    def _convert_single(self, seconds, invalid):
+        if seconds != invalid:
+            return conversions.secs_to_dt_time(seconds)
 
 
 class CyclesField(Field):
@@ -240,9 +247,7 @@ class CyclesField(Field):
 
     _name = 'cycles'
     _units = 'cycles'
-
-    def __init__(self, scale=2.0, *args, **kwargs):
-        super().__init__(scale=scale, *args, **kwargs)
+    _scale = 2.0
 
 
 class StepsField(Field):
@@ -257,12 +262,11 @@ class StrokesField(Field):
 
     _name = 'strokes'
     _units = 'strokes'
-
-    def __init__(self, scale=2.0, **kwargs):
-        super().__init__(scale=scale, **kwargs)
+    _scale = 2.0
 
 
 class FractionalCyclesField(Field):
+    """Field that holds cycles measurement for sports activity."""
 
     _name = 'total_fractional_cycles'
     _units = 'cycles'
@@ -281,6 +285,7 @@ class VersionField(NamedField):
 
 
 class EventDataField(Field):
+    """A field that holds data that depends on the event's type."""
 
     _name = 'event_data'
     _dependant_field = {
@@ -290,6 +295,7 @@ class EventDataField(Field):
     _dependant_field_control_fields = ['event']
 
     def dependant_field(self, control_value_list):
+        """Return a field whose type is based on the vent type."""
         event = control_value_list[0]
         return EventDataField._dependant_field[event]
 
@@ -302,17 +308,20 @@ class FractionalCadenceField(NamedField):
 
 
 class PowerField(NamedField):
+    """A field that holds a power measurement."""
 
     _name = 'power'
     _units = 'watts'
 
 
 class WorkField(Field):
+    """A field that holds a work measurement in joules for an activity or portion of an activity."""
 
     _name = 'total_work'
     _units = 'J'
 
 
 class TrainingEffectField(NamedField):
+    """A field that holds a Garmin training effect measurement (0.0-5.0)."""
 
     _scale = 10.0

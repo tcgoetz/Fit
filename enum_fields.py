@@ -13,6 +13,8 @@ import Fit.file_type as ft
 class EnumField(NamedField):
     """Base class for a field that can be represented by an enum value."""
 
+    _enum = None
+
     def _convert_single(self, value, invalid):
         return self._enum.from_string(value)
 

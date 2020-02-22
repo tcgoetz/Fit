@@ -52,8 +52,8 @@ class Schema(object):
         else:
             unpack_format = ''
         for key in self.ordered_dict:
-            (type, count, format) = self.ordered_dict[key]
-            for index in range(count):
+            (type, count, _) = self.ordered_dict[key]
+            for _ in range(count):
                 unpack_format += self.__type_to_unpack_format(type)
                 self.file_size[endian.value] += self.type_to_size(type)
         self.unpack_format[endian.value] = unpack_format
@@ -68,7 +68,7 @@ class Schema(object):
         """Create a dict of message fields given a bytesarray."""
         decoded_data = {}
         index = 0
-        for (key, (type, count, format)) in self.ordered_dict.items():
+        for (key, (_, count, _)) in self.ordered_dict.items():
             if count > 1:
                 decoded_data[key] = [data[index + repeat] for repeat in range(count)]
                 index += count
@@ -76,16 +76,6 @@ class Schema(object):
                 decoded_data[key] = data[index]
                 index += 1
         return decoded_data
-
-    def printable_data(self, decoded_data):
-        """Filter the decoded data return a string containing only printable characters."""
-        printable_data = {}
-        for (key, (type, count, format)) in self.ordered_dict.items():
-            if count > 1:
-                printable_data[key] = [(format % decoded_data[repeat]) for repeat in range(count)]
-            else:
-                printable_data[key] = (format % decoded_data[key])
-        return printable_data
 
 
 class Data(object):
@@ -118,12 +108,3 @@ class Data(object):
 
     def _convert(self):
         pass
-
-    def __str__(self):
-        """Return a prinatable representation of the data object."""
-        self.printable_data = self.primary_schema.printable_data(self.decoded_data)
-        if self.secondary_schemas is not None:
-            for schema, control_func in self.secondary_schemas:
-                if control_func():
-                    self.printable_data.update(schema.printable_data(self.decoded_data))
-        return str(self.printable_data)

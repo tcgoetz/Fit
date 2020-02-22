@@ -4,6 +4,7 @@ __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
+
 import collections
 import logging
 
@@ -41,10 +42,13 @@ class DeveloperFieldDefinition(FieldDefinitionBase):
             dev_field_dict (dict): a dictionary of developer defined fields.
             file (File):  a FIT File instance.
         """
+        self.field_number = None
+        self.size = None
+        self.developer_data_index = None
         super().__init__(file, DeveloperFieldDefinition.dfd_schema)
         self.dev_field_message = dev_field_dict.get(self.field_number)
         if self.dev_field_message is None:
-            raise FitUndefDevMessageType('Dev field %d undefined in %r' % (self.field_number, dev_field_dict))
+            raise FitUndefDevMessageType(f'Dev field {self.field_number} undefined in {dev_field_dict}')
         # Parse values from dev_field_message
         self.field_name = self.dev_field_message.fields.field_name
         self.native_message_type = MessageType(self.dev_field_message.fields.native_message_num)
@@ -58,14 +62,14 @@ class DeveloperFieldDefinition(FieldDefinitionBase):
             field_dict = DefinitionMessageData.get_message_definition(self.native_message_type)
             field = field_dict[self.native_field_num]
             self.display_field_name = 'dev_' + field.name
-            self._field = self.derive_field(self.display_field_name, self.units, self.scale, self.offset, field)
+            self._field = self.__derive_field(self.display_field_name, self.units, self.scale, self.offset, field)
         else:
             self.display_field_name = 'dev_' + self.field_name
-            self._field = self.map_field(self.display_field_name, self.units, self.scale, self.offset)
+            self._field = self.__map_field(self.display_field_name, self.units, self.scale, self.offset)
         logger.info('%s for %r field %s', self, self.native_message_type, self.native_field_num)
 
     @classmethod
-    def derive_field(cls, field_name, units, scale, offset, field_obj):
+    def __derive_field(cls, field_name, units, scale, offset, field_obj):
         if isinstance(field_obj, DistanceMetersField):
             return DerivedDevDistanceField(field_name, units, scale, offset, field_obj)
         if isinstance(field_obj, SpeedMpsField):
@@ -73,7 +77,7 @@ class DeveloperFieldDefinition(FieldDefinitionBase):
         return DevField(field_name, units, scale, offset)
 
     @classmethod
-    def map_field(cls, field_name, units, scale, offset):
+    def __map_field(cls, field_name, units, scale, offset):
         field_map = {
             'dev_distance'  : DevDistanceField,
             'dev_speed'     : DevSpeedField

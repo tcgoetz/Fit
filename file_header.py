@@ -4,6 +4,7 @@ __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
+
 import collections
 
 from Fit.exceptions import FitFileBadHeaderSize, FitFileBadProtocolVersion, FitFileDataType
@@ -11,7 +12,7 @@ from Fit.data import Schema, Data
 
 
 class FileHeader(Data):
-    """Class that represents a FIT file header."""
+    """Class that decodes a FIT file header."""
 
     fh_primary_schema = Schema(
         'fh_primary',
@@ -39,6 +40,11 @@ class FileHeader(Data):
 
     def __init__(self, file):
         """Return a FileHeader instance created by reading data from a Fit file."""
+        self.header_size = None
+        self.protocol_version = None
+        self.profile_version = None
+        self.data_size = None
+        self.data_type = None
         super().__init__(file, FileHeader.fh_primary_schema, [(FileHeader.fh_optional_schema, self.__decode_secondary)])
         self.__check()
 
@@ -55,4 +61,4 @@ class FileHeader(Data):
 
     def __str__(self):
         """Return a string representation of a FileHeader instance."""
-        return f'{self.__class__.__name__}(header size {self.header_size} prot ver {self.protocol_version} prof ver {self.profile_versio}'
+        return f'{self.__class__.__name__}(header size {self.header_size} prot ver {self.protocol_version} prof ver {self.profile_version}'

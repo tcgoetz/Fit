@@ -4,6 +4,7 @@ __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
+
 import collections
 import enum
 
@@ -25,6 +26,7 @@ class RecordHeader(Data):
 
     def __init__(self, file):
         """Return a RecordHeader instance created by reading the record header data from a FIT file."""
+        self.record_header = None
         super().__init__(file, self.rh_schema)
         self.message_class = MessageClass(self.message_type())
 

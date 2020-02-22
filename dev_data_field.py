@@ -4,6 +4,7 @@ __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
+
 import collections
 
 from Fit.data import Data, Schema
@@ -19,6 +20,7 @@ class DevDataField(Data):
         self.field = dev_field_definition.field()
         type = dev_field_definition.type_string()
         count = dev_field_definition.type_count()
+        self.field_value = None
         schema = Schema('DevDataField', collections.OrderedDict([('field_value', [type, count, '%d'])]))
         super().__init__(file, schema, None, definition_message.endian)
 
