@@ -8,7 +8,7 @@ __license__ = "GPL"
 class BaseType():
     """Manages FIT file format base types."""
 
-    base_type_data = {
+    __base_type_data = {
         0x00 : [False, 'enum',     0xFF,               'UINT8'],
         0x01 : [False, 'sint8',    0x7F,               'INT8'],
         0x02 : [False, 'uint8',    0xFF,               'UINT8'],
@@ -33,24 +33,27 @@ class BaseType():
     index_string = 3
 
     @classmethod
-    def _base_type(cls, index):
+    def __base_type(cls, index):
         try:
-            return cls.base_type_data[index]
+            return cls.__base_type_data[index]
         except Exception:
             raise IndexError(f'Unknown base type index {index}')
 
     @classmethod
     def _type_endian(cls, index):
-        return cls._base_type(index)[cls.index_endian]
+        return cls.__base_type(index)[cls.index_endian]
 
     @classmethod
-    def _type_name(cls, index):
-        return cls._base_type(index)[cls.index_name]
+    def type_name(cls, index):
+        """Return the name for a type given it's index."""
+        return cls.__base_type(index)[cls.index_name]
 
     @classmethod
     def _invalid(cls, index):
-        return cls._base_type(index)[cls.index_invalid]
+        """Return the invalid value for a type given it's index."""
+        return cls.__base_type(index)[cls.index_invalid]
 
     @classmethod
     def _type_string(cls, index):
-        return cls._base_type(index)[cls.index_string]
+        """Return the name of a type given it's index."""
+        return cls.__base_type(index)[cls.index_string]

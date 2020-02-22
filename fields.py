@@ -80,8 +80,10 @@ class Field(object):
 
 
 class NamedField(Field):
+    """A field with a name that is passed to the constructor."""
 
     def __init__(self, *args, **kwargs):
+        """Return an NamedField instance."""
         if len(args) > 0:
             super().__init__(name=args[0], **kwargs)
         else:
@@ -103,6 +105,7 @@ class UnknownField(Field):
 # Basic field types
 #
 class LeftRightBalanceField(NamedField):
+    """A composite field that indicates left or roight and the percentage for that side."""
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -114,17 +117,16 @@ class LeftRightBalanceField(NamedField):
             return f'{left_or_right} {percentage} %'
 
 
-class PercentField(Field):
+class PercentField(NamedField):
+    """A field holding a integer percentage value."""
 
     _units = '%'
-
-    def __init__(self, name, scale=1.0, **kwargs):
-        super().__init__(name=name, scale=100.0 * scale, **kwargs)
+    _scale = 100.0
 
 
-class BytePercentField(NamedField):
+class BytePercentField(PercentField):
+    """A field holding a integer percentage value."""
 
-    _units = '%'
     _scale = 2.0
 
 
@@ -133,7 +135,7 @@ class FitBaseTypeField(NamedField):
     def _convert_single(self, value, invalid):
         if value != invalid:
             try:
-                return FieldDefinition._type_name(value)
+                return FieldDefinition.type_name(value)
             except Exception:
                 return value
 
@@ -141,24 +143,18 @@ class FitBaseTypeField(NamedField):
 class MessageIndexField(NamedField):
 
     def _convert_single(self, value, invalid):
-        converted_value = {}
-        converted_value['selected'] = ((value & 0x8000) == 0x8000)
-        converted_value['value'] = (value & 0x0FFF)
-        return converted_value
+        return {'selected': ((value & 0x8000) == 0x8000), 'value': (value & 0x0FFF)}
 
 
 class CaloriesField(NamedField):
+    """A field containing a calories measurement in kcal."""
 
     _name = 'calories'
     _units = 'kcal'
 
 
-class ActiveCaloriesField(CaloriesField):
-
-    _name = 'active_calories'
-
-
 class CaloriesDayField(NamedField):
+    """A field containing a calories measurement for a day in kcal/day."""
 
     _units = 'kcal/day'
 
@@ -191,6 +187,7 @@ class TimestampField(NamedField):
 
 
 class TimeMsField(NamedField):
+    """A field holsing milliseconds returned as a datetime."""
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -198,6 +195,7 @@ class TimeMsField(NamedField):
 
 
 class TimeSField(NamedField):
+    """A field holding an integer number of seconds."""
 
     _units = 's'
 

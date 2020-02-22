@@ -13,6 +13,9 @@ from Fit.base_type import BaseType
 class FieldDefinitionBase(Data, BaseType):
     """Base object that defines the structure of a FIT file message field."""
 
+    base_type = None
+    size = None
+
     def invalid(self):
         """Return the invalid value for the field."""
         return self._invalid(self.base_type)
@@ -30,6 +33,10 @@ class FieldDefinitionBase(Data, BaseType):
 class FieldDefinition(FieldDefinitionBase):
     """Object that defines the structure of a FIT file message field."""
 
+    field_definition_number = None
+    size = None
+    base_type = None
+
     fd_schema = Schema(
         'fd',
         collections.OrderedDict(
@@ -46,6 +53,7 @@ class FieldDefinition(FieldDefinitionBase):
         Return a FieldDefinition instance created by reading data from a FIT file.
 
         Paramters:
+        ---------
             file (File):  a FIT File instance.
         """
         super().__init__(file, FieldDefinition.fd_schema)

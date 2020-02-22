@@ -256,9 +256,6 @@ class HealthAndLifeProduct(FuzzyFieldEnum):
 class UnknownProduct(UnknownEnumValue):
     """Unknown product codes used in FIT files."""
 
-    def __init__(self, index):
-        UnknownEnumValue.__init__(self, 'UnknownProduct', index)
-
 
 def product_enum(manufacturer, product_str):
     """Return a product enum given the manufacturer enum and a product string."""

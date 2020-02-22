@@ -614,7 +614,7 @@ class DefinitionMessageData():
             7 : fields.NamedField('activity_level'),
             14 : object_fields.TemperatureField('temperature_min'),
             15 : object_fields.TemperatureField('temperature_max'),
-            19 : fields.ActiveCaloriesField(),
+            19 : fields.CaloriesField('active_calories'),
             24 : activity_fields.ActivityTypeIntensityField('current_activity_type_intensity'),
             26 : fields.TimeSField('timestamp_16'),
             27 : type_fields.HeartRateField('heart_rate'),
