@@ -21,7 +21,7 @@ class DevDataField(Data):
         type = dev_field_definition.type_string()
         count = dev_field_definition.type_count()
         self.field_value = None
-        schema = Schema('DevDataField', collections.OrderedDict([('field_value', [type, count, '%d'])]))
+        schema = Schema('DevDataField', collections.OrderedDict([('field_value', [type, count])]))
         super().__init__(file, schema, None, definition_message.endian)
 
     def _convert(self):

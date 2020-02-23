@@ -18,17 +18,17 @@ class FileHeader(Data):
         'fh_primary',
         collections.OrderedDict(
             [
-                ('header_size', ['UINT8', 1, '%d']),
-                ('protocol_version', ['UINT8', 1, '%x']),
-                ('profile_version', ['UINT16', 1, '%d']),
-                ('data_size', ['UINT32', 1, '%d']),
-                ('data_type', ['CHAR', 4, '%c'])
+                ('header_size', ['UINT8', 1]),
+                ('protocol_version', ['UINT8', 1]),
+                ('profile_version', ['UINT16', 1]),
+                ('data_size', ['UINT32', 1]),
+                ('data_type', ['CHAR', 4])
             ]
         )
     )
     fh_optional_schema = Schema(
         'fh_optional',
-        collections.OrderedDict([('crc', ['UINT16', 1, '%x'])])
+        collections.OrderedDict([('crc', ['UINT16', 1])])
     )
     profile_version_str = {100 : 'activity', 1602 : 'device'}
 

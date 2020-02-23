@@ -20,7 +20,35 @@ class Architecture(enum.Enum):
 
 
 class Schema(object):
-    """Describes how the data of a FIT file message is encoded."""
+    """Describes how the data of a FIT file object is encoded."""
+
+    type_to_size = {
+        'CHAR': 1,
+        'INT8': 1,
+        'UINT8': 1,
+        'INT16': 2,
+        'UINT16': 2,
+        'INT32': 4,
+        'UINT32': 4,
+        'INT64': 8,
+        'UINT64': 8,
+        'FLOAT32': 4,
+        'FLOAT64': 4
+    }
+
+    __type_to_unpack_format = {
+        'CHAR': 'B',
+        'INT8': 'b',
+        'UINT8': 'B',
+        'INT16': 'h',
+        'UINT16': 'H',
+        'INT32': 'i',
+        'UINT32': 'I',
+        'INT64': 'q',
+        'UINT64': 'Q',
+        'FLOAT32': 'f',
+        'FLOAT64': 'd'
+    }
 
     def __init__(self, name, ordered_dict):
         """Return a message schema given it's name and an ordered dict of its fields."""
@@ -29,33 +57,16 @@ class Schema(object):
         self.file_size = [0, 0]
         self.unpack_format = [None, None]
 
-    @classmethod
-    def type_to_size(cls, type):
-        """Given the type a encoded value, return it's size."""
-        type_size = {
-            'CHAR' : 1, 'INT8' : 1, 'UINT8' : 1, 'INT16' : 2, 'UINT16' : 2, 'INT32' : 4, 'UINT32' : 4,
-            'INT64' : 8, 'UINT64' : 8, 'FLOAT32' : 4, 'FLOAT64' : 4
-        }
-        return type_size[type]
-
-    @classmethod
-    def __type_to_unpack_format(cls, type):
-        type_format = {
-            'CHAR' : 'B', 'INT8' : 'b', 'UINT8' : 'B', 'INT16' : 'h', 'UINT16' : 'H', 'INT32' : 'i',
-            'UINT32' : 'I', 'INT64' : 'q', 'UINT64' : 'Q', 'FLOAT32' : 'f', 'FLOAT64' : 'd'
-        }
-        return type_format[type]
-
     def __compile_unpack(self, endian):
         if endian is Architecture.Big_Endian:
             unpack_format = '>'
         else:
             unpack_format = ''
         for key in self.ordered_dict:
-            (type, count, _) = self.ordered_dict[key]
+            (type, count) = self.ordered_dict[key]
             for _ in range(count):
-                unpack_format += self.__type_to_unpack_format(type)
-                self.file_size[endian.value] += self.type_to_size(type)
+                unpack_format += self.__type_to_unpack_format[type]
+                self.file_size[endian.value] += self.type_to_size[type]
         self.unpack_format[endian.value] = unpack_format
 
     def get_unpack(self, endian):
@@ -68,7 +79,7 @@ class Schema(object):
         """Create a dict of message fields given a bytesarray."""
         decoded_data = {}
         index = 0
-        for (key, (_, count, _)) in self.ordered_dict.items():
+        for (key, (_, count)) in self.ordered_dict.items():
             if count > 1:
                 decoded_data[key] = [data[index + repeat] for repeat in range(count)]
                 index += count

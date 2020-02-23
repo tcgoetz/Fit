@@ -21,19 +21,27 @@ class DefinitionMessage(Data):
     dm_primary_schema = Schema(
         'dm_primary',
         collections.OrderedDict(
-            [('reserved', ['UINT8', 1, '%x']), ('architecture', ['UINT8', 1, '%x'])]
+            [
+                ('reserved', ['UINT8', 1]),
+                ('architecture', ['UINT8', 1])
+            ]
         )
     )
     dm_secondary_schema = Schema(
         'dm_secondary',
         collections.OrderedDict(
-            [('global_message_number', ['UINT16', 1, '%x']), ('fields', ['UINT8', 1, '%x'])]
+            [
+                ('global_message_number', ['UINT16', 1]),
+                ('fields', ['UINT8', 1])
+            ]
         )
     )
     dm_dev_schema = Schema(
         'dm_dev',
         collections.OrderedDict(
-            [('dev_fields', ['UINT8', 1, '%x'])]
+            [
+                ('dev_fields', ['UINT8', 1])
+            ]
         )
     )
 

@@ -24,12 +24,12 @@ class DeveloperFieldDefinition(FieldDefinitionBase):
     """Developer filed definitions decoded from a FIT file."""
 
     dfd_schema = Schema(
-        'dfd_schema',
+        'DeveloperFieldDefinition',
         collections.OrderedDict(
             [
-                ('field_number', ['UINT8', 1, '%x']),
-                ('size', ['UINT8', 1, '%x']),
-                ('developer_data_index', ['UINT8', 1, '%x'])
+                ('field_number', ['UINT8', 1]),
+                ('size', ['UINT8', 1]),
+                ('developer_data_index', ['UINT8', 1])
             ]
         )
     )

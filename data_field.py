@@ -26,7 +26,7 @@ class DataField(Data):
 
     def __populate_schema_cache(self, schema_sig, type, count):
         """Cache schema on the assumption that the set of schemas is much smaller than the number of times they are used."""
-        schema = Schema(schema_sig, collections.OrderedDict([('field_value', [type, count, '%d'])]))
+        schema = Schema(schema_sig, collections.OrderedDict([('field_value', [type, count])]))
         self.__schema_cache[schema_sig] = schema
         return schema
 

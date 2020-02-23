@@ -26,7 +26,7 @@ class FieldDefinitionBase(Data, BaseType):
 
     def type_count(self):
         """Return the number of values for the field."""
-        type_size = Schema.type_to_size(self.type_string())
+        type_size = Schema.type_to_size[self.type_string()]
         return int(self.size / type_size)
 
 
@@ -38,12 +38,12 @@ class FieldDefinition(FieldDefinitionBase):
     base_type = None
 
     fd_schema = Schema(
-        'fd',
+        'FieldDefinition',
         collections.OrderedDict(
             [
-                ('field_definition_number', ['UINT8', 1, '%x']),
-                ('size', ['UINT8', 1, '%x']),
-                ('base_type', ['UINT8', 1, '%x'])
+                ('field_definition_number', ['UINT8', 1]),
+                ('size', ['UINT8', 1]),
+                ('base_type', ['UINT8', 1])
             ]
         )
     )

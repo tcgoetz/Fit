@@ -21,7 +21,10 @@ class MessageClass(enum.Enum):
 class RecordHeader(Data):
     """Object that represents a FIT file record header."""
 
-    rh_schema = Schema('rh', collections.OrderedDict([('record_header', ['UINT8', 1, '%x'])]))
+    rh_schema = Schema(
+        'RecordHeader',
+        collections.OrderedDict([('record_header', ['UINT8', 1])])
+    )
     message_type_string = ['data', 'definition']
 
     def __init__(self, file):
