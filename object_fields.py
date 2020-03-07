@@ -15,6 +15,7 @@ class ObjectField(Field):
     """Class that handles a field that translates into a Python object."""
 
     def __init__(self, obj_func, output_func, **kwargs):
+        """Return an instance of ObjectField."""
         self.obj_func = obj_func
         self.output_func = output_func
         super().__init__(**kwargs)

@@ -21,6 +21,8 @@ logger = logging.getLogger(__name__)
 name_regex = r'\w+\.(fit|FIT)'
 
 
+# dynamically generated class properties
+# pylint: disable=no-member
 class File(object):
     """Object that represents a FIT file."""
 
@@ -29,6 +31,7 @@ class File(object):
         Return a File instance by parsing a FIT file.
 
         Parameters:
+        ----------
             filename (string): The name of the FIT file including full path.
             measurement_system (DisplayMeasure): The measurement units (metric, statute, etc) to uwe when parsing the FIT file.
 
@@ -114,6 +117,7 @@ class File(object):
         return (self.time_created, self.last_message_timestamp)
 
     def utc_datetime_to_local(self, dt):
+        """Return a local datetime based on the passed in UTC datetime and the file's known UTC offset."""
         if self.local_tz is not None and dt.tzinfo is datetime.timezone.utc:
             return dt.astimezone(self.local_tz).replace(tzinfo=None)
         return dt.replace(tzinfo=None)

@@ -20,7 +20,35 @@ class Architecture(enum.Enum):
 
 
 class Schema(object):
-    """Describes how the data of a FIT file message is encoded."""
+    """Describes how the data of a FIT file object is encoded."""
+
+    type_to_size = {
+        'CHAR': 1,
+        'INT8': 1,
+        'UINT8': 1,
+        'INT16': 2,
+        'UINT16': 2,
+        'INT32': 4,
+        'UINT32': 4,
+        'INT64': 8,
+        'UINT64': 8,
+        'FLOAT32': 4,
+        'FLOAT64': 4
+    }
+
+    __type_to_unpack_format = {
+        'CHAR': 'B',
+        'INT8': 'b',
+        'UINT8': 'B',
+        'INT16': 'h',
+        'UINT16': 'H',
+        'INT32': 'i',
+        'UINT32': 'I',
+        'INT64': 'q',
+        'UINT64': 'Q',
+        'FLOAT32': 'f',
+        'FLOAT64': 'd'
+    }
 
     def __init__(self, name, ordered_dict):
         """Return a message schema given it's name and an ordered dict of its fields."""
@@ -29,33 +57,16 @@ class Schema(object):
         self.file_size = [0, 0]
         self.unpack_format = [None, None]
 
-    @classmethod
-    def type_to_size(cls, type):
-        """Given the type a encoded value, return it's size."""
-        type_size = {
-            'CHAR' : 1, 'INT8' : 1, 'UINT8' : 1, 'INT16' : 2, 'UINT16' : 2, 'INT32' : 4, 'UINT32' : 4,
-            'INT64' : 8, 'UINT64' : 8, 'FLOAT32' : 4, 'FLOAT64' : 4
-        }
-        return type_size[type]
-
-    @classmethod
-    def __type_to_unpack_format(cls, type):
-        type_format = {
-            'CHAR' : 'B', 'INT8' : 'b', 'UINT8' : 'B', 'INT16' : 'h', 'UINT16' : 'H', 'INT32' : 'i',
-            'UINT32' : 'I', 'INT64' : 'q', 'UINT64' : 'Q', 'FLOAT32' : 'f', 'FLOAT64' : 'd'
-        }
-        return type_format[type]
-
     def __compile_unpack(self, endian):
         if endian is Architecture.Big_Endian:
             unpack_format = '>'
         else:
             unpack_format = ''
         for key in self.ordered_dict:
-            (type, count, format) = self.ordered_dict[key]
-            for index in range(count):
-                unpack_format += self.__type_to_unpack_format(type)
-                self.file_size[endian.value] += self.type_to_size(type)
+            (type, count) = self.ordered_dict[key]
+            for _ in range(count):
+                unpack_format += self.__type_to_unpack_format[type]
+                self.file_size[endian.value] += self.type_to_size[type]
         self.unpack_format[endian.value] = unpack_format
 
     def get_unpack(self, endian):
@@ -68,7 +79,7 @@ class Schema(object):
         """Create a dict of message fields given a bytesarray."""
         decoded_data = {}
         index = 0
-        for (key, (type, count, format)) in self.ordered_dict.items():
+        for (key, (_, count)) in self.ordered_dict.items():
             if count > 1:
                 decoded_data[key] = [data[index + repeat] for repeat in range(count)]
                 index += count
@@ -76,16 +87,6 @@ class Schema(object):
                 decoded_data[key] = data[index]
                 index += 1
         return decoded_data
-
-    def printable_data(self, decoded_data):
-        """Filter the decoded data return a string containing only printable characters."""
-        printable_data = {}
-        for (key, (type, count, format)) in self.ordered_dict.items():
-            if count > 1:
-                printable_data[key] = [(format % decoded_data[repeat]) for repeat in range(count)]
-            else:
-                printable_data[key] = (format % decoded_data[key])
-        return printable_data
 
 
 class Data(object):
@@ -118,12 +119,3 @@ class Data(object):
 
     def _convert(self):
         pass
-
-    def __str__(self):
-        """Return a prinatable representation of the data object."""
-        self.printable_data = self.primary_schema.printable_data(self.decoded_data)
-        if self.secondary_schemas is not None:
-            for schema, control_func in self.secondary_schemas:
-                if control_func():
-                    self.printable_data.update(schema.printable_data(self.decoded_data))
-        return str(self.printable_data)

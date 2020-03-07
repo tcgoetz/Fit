@@ -82,6 +82,3 @@ class LocalDeviceType(FieldEnum):
 
 class UnknownDeviceType(UnknownEnumValue):
     """Device type enums for device types that we don't know how to interpret."""
-
-    def __init__(self, index):
-        UnknownEnumValue.__init__(self, 'UnknownDeviceType', index)

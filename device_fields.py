@@ -28,17 +28,18 @@ class BatteryStatusField(EnumField):
 
 
 class AutoActivityDetectField(BitField):
+    """A filed that contains a mask of activitiy types that will automatically be tracked."""
 
     _name = 'auto_activity_detect'
     _bits = {
-        0x00000000 : 'none',
-        0x00000001 : 'running',
-        0x00000002 : 'cycling',
-        0x00000004 : 'swimming',
-        0x00000008 : 'walking',
-        0x00000020 : 'elliptical',
-        0x00000400 : 'sedentary',
-        0xffffffff : 'invalid'
+        0x00000000: 'none',
+        0x00000001: 'running',
+        0x00000002: 'cycling',
+        0x00000004: 'swimming',
+        0x00000008: 'walking',
+        0x00000020: 'elliptical',
+        0x00000400: 'sedentary',
+        0xffffffff: 'invalid'
     }
 
 
@@ -64,12 +65,14 @@ class BacklightModeField(EnumField):
 
 
 class AntNetworkField(EnumField):
+    """A field that holds an Ant network type."""
 
     _name = 'ant_network'
     _enum = fe.AntNetwork
 
 
 class SourceTypeField(EnumField):
+    """A field that holds the source type of device."""
 
     _name = 'source_type'
     _enum = fe.SourceType
@@ -79,6 +82,8 @@ class MainDeviceTypeField(EnumField):
     """Device types for devices connected to the main device via ANT+. Like a external heart rate monitor."""
 
     _name = 'main_device_type'
+    _manufacturer = None
+    _product = None
     _enum = de.MainDeviceType
 
     def is_invalid(self, value, invalid):
@@ -118,9 +123,9 @@ class DeviceTypeField(Field):
     _dependant_field_control_fields = ['source_type', 'device_type', 'manufacturer', 'product']
 
     _source_to_device_type_fields = {
-        fe.SourceType.ant          : Field,
-        fe.SourceType.antplus      : AntplusDeviceTypeField,
-        fe.SourceType.local        : LocalDeviceTypeField,
+        fe.SourceType.ant: Field,
+        fe.SourceType.antplus: AntplusDeviceTypeField,
+        fe.SourceType.local: LocalDeviceTypeField,
     }
 
     def dependant_field(self, control_value_list):
@@ -143,18 +148,21 @@ class DeviceTypeField(Field):
 
 
 class AutoSyncFrequencyField(EnumField):
+    """A filed that holds the maxiimum amount of time before the device automatically syncs with the cloud."""
 
     _name = 'auto_sync_frequency'
     _enum = fe.AutoSyncFrequency
 
 
 class BodyLocationField(EnumField):
+    """A field that identifies a location of a device on the body."""
 
     _name = 'body_location'
     _enum = fe.BodyLocation
 
 
 class WatchFaceModeField(EnumField):
+    """A field that identifies the mode the watch face is in."""
 
     _name = 'watch_face_mode'
     _enum = fe.WatchFaceMode

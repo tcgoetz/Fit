@@ -13,6 +13,7 @@ from Fit.data import Data, Schema
 class DataField(Data):
     """FIT file data field."""
 
+    field_value = None
     __schema_cache = {}
 
     def __init__(self, file, definition_message, field_definition, measurement_system):
@@ -25,7 +26,7 @@ class DataField(Data):
 
     def __populate_schema_cache(self, schema_sig, type, count):
         """Cache schema on the assumption that the set of schemas is much smaller than the number of times they are used."""
-        schema = Schema(schema_sig, collections.OrderedDict([('field_value', [type, count, '%d'])]))
+        schema = Schema(schema_sig, collections.OrderedDict([('field_value', [type, count])]))
         self.__schema_cache[schema_sig] = schema
         return schema
 
@@ -40,4 +41,4 @@ class DataField(Data):
 
     def __str__(self):
         """Return a string reprsentation of the DataField instance."""
-        return f'<DataField: {self.valuej}'
+        return f'<DataField: {self.values}'

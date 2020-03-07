@@ -15,11 +15,10 @@ def name_for_enum(enum_instance):
 class UnknownEnumValue(object):
     """Returned when a value can not be cast to an FieldEnum."""
 
-    def __init__(self, type, value):
+    def __init__(self, value):
         """Return a UnknownEnumValue instance."""
-        self.type = type
         self.value = value
-        self.name = f'{type}_{value}'
+        self.name = f'{type(self).__name__}_{value}'
 
     @classmethod
     def from_string(cls, string):
@@ -41,7 +40,7 @@ class UnknownEnumValue(object):
 
     def __repr__(self):
         """Return a string representation of a UnknownEnumValue instance."""
-        return f'<{self.type}.{self.name}: {self.value}>'
+        return f'<{type(self).__name__}.{self.name}: {self.value}>'
 
 
 class FieldEnum(enum.Enum):
@@ -68,7 +67,7 @@ class FieldEnum(enum.Enum):
         try:
             return cls._from_string(string)
         except (AttributeError, TypeError):
-            return UnknownEnumValue(cls.__name__, string)
+            return UnknownEnumValue(string)
 
 
 class FuzzyFieldEnum(FieldEnum):
@@ -80,7 +79,7 @@ class FuzzyFieldEnum(FieldEnum):
         for name, value in cls.__members__.items():
             if name.lower() in str(string).lower():
                 return value
-        return UnknownEnumValue(cls.__name__, string)
+        return UnknownEnumValue(string)
 
     @classmethod
     def from_string(cls, string):
@@ -92,7 +91,7 @@ class FuzzyFieldEnum(FieldEnum):
 
 
 class Switch(FieldEnum):
-    """An enum representing a FIT swicth FIT field value."""
+    """An enum representing a FIT switch field value."""
 
     off         = 0
     on          = 1
@@ -115,6 +114,8 @@ class DisplayMeasure(FuzzyFieldEnum):
 
 
 class DisplayHeart(FieldEnum):
+    """An enum that defines how heart rate will be displayed."""
+
     bpm     = 0
     max     = 1
     reserve = 2
@@ -122,6 +123,8 @@ class DisplayHeart(FieldEnum):
 
 
 class DisplayPosition(FieldEnum):
+    """An enum that defines how position data will be displayed."""
+
     degree = 0
     dregree_minute = 1
     degree_minute_second = 2
@@ -177,6 +180,8 @@ class DisplayOrientation(FieldEnum):
 
 
 class Side(FieldEnum):
+    """An enum that defines what side of the body a device is on."""
+
     right = 0
     left = 1
     invalid = 255
@@ -476,6 +481,7 @@ class GoalSource(FieldEnum):
 
 class WatchFaceMode(FieldEnum):
     """A enum that describes a mode of the watch face."""
+
     digital         = 0
     analog          = 1
     connect_iq      = 2
@@ -484,6 +490,7 @@ class WatchFaceMode(FieldEnum):
 
 class ClimbProEvent(FieldEnum):
     """A enum that contains an event from a climbing program."""
+
     approach        = 0
     start           = 1
     complete        = 2

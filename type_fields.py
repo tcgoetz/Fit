@@ -11,10 +11,11 @@ from Fit.fields import Field, NamedField
 class TypeField(NamedField):
     """A base class for fields based on python types."""
 
-    def __init__(self, type_func, *args, **kwargs):
-        """Return a field instance that holds an type. Convert to the type using type_func."""
-        self.type_func = type_func
-        super().__init__(*args, **kwargs)
+    @classmethod
+    def __nop(cls, value):
+        return value
+
+    type_func = __nop
 
     def _convert_single(self, value, invalid):
         if value != invalid:
@@ -24,41 +25,28 @@ class TypeField(NamedField):
                 return value
 
 
-class ScaledTypeField(TypeField):
-    """A base class for fields based on python types."""
-
-    def _convert_single(self, value, invalid):
-        if value != invalid:
-            try:
-                return self.type_func(value / self._scale)
-            except Exception:
-                return value
-
-
-class IntegerField(ScaledTypeField):
+class IntegerField(TypeField):
     """A FIT file message field with a integer value."""
 
-    def __init__(self, *args, **kwargs):
-        """Return a field instance that holds an integer."""
-        super().__init__(int, *args, **kwargs)
+    type_func = int
 
 
-class FloatField(ScaledTypeField):
+class FloatField(TypeField):
     """A FIT file message field with a float value."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(float, *args, **kwargs)
+    type_func = float
 
 
 class BoolField(TypeField):
     """A FIT file message field with a boolean value."""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(bool, *args, **kwargs)
+    type_func = bool
 
 
 class BitField(Field):
     """A FIT file message field with a bitfield value."""
+
+    _bits = {}
 
     def _convert_single(self, value, invalid):
         if value != invalid:

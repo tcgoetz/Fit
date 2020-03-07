@@ -26,16 +26,19 @@ class DataMessageDecodeContext():
     """Class that holds data used across decoding of all DataMessages."""
 
     def __init__(self):
+        """Return a DataMessageDecodeContext instance."""
         self.matched_timestamp_16 = None
         self.last_timestamp = None
         self.last_absolute_timestamp = None
 
     def absolute_timestamp(self, absolute_timestamp):
+        """Update the context given an absolute timestamp."""
         self.last_timestamp = absolute_timestamp
         self.last_absolute_timestamp = absolute_timestamp
         self.matched_timestamp_16 = None
 
     def timestamp16_to_timestamp(self, timestamp_16):
+        """Calculate an absolute timestamp given a relative timestamp16."""
         if self.matched_timestamp_16:
             if timestamp_16 >= self.matched_timestamp_16:
                 delta = timestamp_16 - self.matched_timestamp_16
