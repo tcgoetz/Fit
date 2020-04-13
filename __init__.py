@@ -12,7 +12,7 @@ from Fit.message_type import UnknownMessageType, MessageType
 import Fit.field_enums as field_enums
 from Fit.file_type import FileType
 from Fit.manufacturer import Manufacturer
-from Fit.product import GarminProduct, GarminLocalProduct, ScoscheProduct, WahooFitnessProduct, UnknownProduct
+from Fit.product import GarminProduct, GarminLocalProduct, ScoscheProduct, WahooFitnessProduct, UnknownProduct, product_enum
 from Fit.sport import Sport, SubSport
 from Fit.device_enums import MainDeviceType, AntplusDeviceType, LocalDeviceType, UnknownDeviceType
 import Fit.conversions as conversions
