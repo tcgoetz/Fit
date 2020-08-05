@@ -45,16 +45,9 @@ class DevObjectField(ObjectField):
 class DevDistanceField(DevObjectField):
     """Field holding a distance measurement."""
 
-    units_to_obj_func = {
-        'm'     : measurement.Distance.from_meters,
-        'ft'    : measurement.Distance.from_feet,
-        'km'    : measurement.Distance.from_kilometers,
-        'mi'    : measurement.Distance.from_miles
-    }
-
     def __init__(self, name, units, scale, offset, output_func=measurement.Distance.feet_or_meters):
         """Return a new instance of DevDistanceField."""
-        super().__init__(name, scale, offset, self.units_to_obj_func[units], output_func)
+        super().__init__(name, scale, offset, measurement.Distance.from_func(units), output_func)
 
 
 class DerivedDevDistanceField(DevDistanceField):
@@ -68,16 +61,9 @@ class DerivedDevDistanceField(DevDistanceField):
 class DevSpeedField(DevObjectField):
     """Field holding a speed measurement."""
 
-    units_to_obj_func = {
-        'mps'   : measurement.Speed.from_mps,
-        'km/h'  : measurement.Speed.from_kph,
-        'kph'   : measurement.Speed.from_kph,
-        'mph'   : measurement.Speed.from_mph
-    }
-
     def __init__(self, name, units, scale, offset, output_func=measurement.Speed.mph_or_kph):
         """Return a new instance of DevSpeedField."""
-        super().__init__(name, scale, offset, self.units_to_obj_func[units], output_func)
+        super().__init__(name, scale, offset, measurement.Speed.from_func(units), output_func)
 
 
 class DerivedDevSpeedField(DevSpeedField):

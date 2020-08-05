@@ -92,6 +92,23 @@ class Distance(Measurement):
         return cls.from_units(feet, 1609.344, invalid_value)
 
     @classmethod
+    def from_func(cls, units):
+        """Return a Distance object from function for a measurement in units."""
+        units_to_obj_func = {
+            'cm': cls.from_cm,
+            'centimeters': cls.from_cm,
+            'm': cls.from_meters,
+            'meters': cls.from_meters,
+            'km': cls.from_kilometers,
+            'kilometers': cls.from_kilometers,
+            'ft': cls.from_feet,
+            'feet': cls.from_feet,
+            'mi': cls.from_miles,
+            'miles': cls.from_miles
+        }
+        return units_to_obj_func[units.lower()]
+
+    @classmethod
     def from_meters_or_feet(cls, distance, measurement_system=fe.DisplayMeasure.metric):
         """Return a distance object."""
         return cls.from_meters(distance) if measurement_system is fe.DisplayMeasure.metric else cls.from_feet(distance)
@@ -213,6 +230,17 @@ class Speed(Measurement):
     def from_mmps(cls, mm_per_sec, invalid_value=None):
         """Return a Speed instance intialized with a value in millimeters per sec."""
         return cls.from_units(mm_per_sec, 0.001, invalid_value)
+
+    @classmethod
+    def from_func(cls, units):
+        """Return a Distance object from function for a measurement in units."""
+        units_to_obj_func = {
+            'mps'   : cls.from_mps,
+            'km/h'  : cls.from_kph,
+            'kph'   : cls.from_kph,
+            'mph'   : cls.from_mph
+        }
+        return units_to_obj_func[units.lower()]
 
     @classmethod
     def from_kph_or_mph(cls, speed, measurement_system=fe.DisplayMeasure.metric):
