@@ -246,7 +246,7 @@ class Speed(Measurement):
         try:
             return units_to_obj_func[units.lower()]
         except KeyError:
-            raise Exception(f'Non conversion for units {units}')
+            raise Exception(f'No conversion for units {units}')
 
     @classmethod
     def from_kph_or_mph(cls, speed, measurement_system=fe.DisplayMeasure.metric):
