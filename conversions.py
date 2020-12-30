@@ -99,11 +99,6 @@ def dt_to_epoch_ms(dt):
     return int((dt - datetime.datetime.fromtimestamp(0)).total_seconds() * 1000)
 
 
-def epoch_ms_to_dt(epoch_ms):
-    """Convert milliseconds since the epoch to a datetime object."""
-    return datetime.datetime.fromtimestamp(epoch_ms / 1000.0)
-
-
 def dt_to_utc_epoch_ms(dt):
     """Convert a UTC datetime object to milliseconds since the epoch."""
     return int((dt - datetime.datetime.utcfromtimestamp(0)).total_seconds() * 1000)
