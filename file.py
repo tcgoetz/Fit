@@ -110,7 +110,7 @@ class File(object):
             self.time_ended_local = self.utc_datetime_to_local(self.last_message_timestamp)
         else:
             self.time_ended_local = self.time_created_local
-        logger.info("File %s (%s): %s (%s) -> %s", self.filename, self.type, self.time_created_local, self.local_tz, self.time_ended_local)
+        self.dev_fields = {msg.fields.field_name: msg.fields.native_message_num for msg in self.field_description}
 
     def date_span(self):
         """Return a tuple of the start and end dates of the file."""
@@ -128,4 +128,4 @@ class File(object):
 
     def __str__(self):
         """Return a string representation of the class instance."""
-        return f'File({repr(self.type())})'
+        return f'File({repr(self.type)} {self.filename} {self.type} {repr(self.message_types)} dev fields {repr(self.dev_fields)})'
