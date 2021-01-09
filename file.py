@@ -110,6 +110,16 @@ class File(object):
             self.time_ended_local = self.utc_datetime_to_local(self.last_message_timestamp)
         else:
             self.time_ended_local = self.time_created_local
+        if MessageType.sport in self.message_types:
+            self.sport_type = self.sport[0].fields.sport
+            self.sub_sport_type = self.sport[0].fields.sub_sport
+        else:
+            self.sport_type = None
+            self.sub_sport_type = None
+        if MessageType.dev_data_id in self.message_types:
+            self.dev_application_id = self.dev_data_id[0].fields.application_id
+        else:
+            self.dev_application_id = None
         self.dev_fields = {msg.fields.field_name: msg.fields.native_message_num for msg in self.field_description}
 
     def date_span(self):
