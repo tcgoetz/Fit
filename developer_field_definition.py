@@ -93,4 +93,4 @@ class DeveloperFieldDefinition(FieldDefinitionBase):
     def __str__(self):
         """Return a string representation for the DeveloperFieldDefinition instance."""
         return (f'{self.__class__.__name__}({self.display_field_name}[{self.field_name}]: '
-                + f'scale {self.scale} offset {self.offset}, {self.type_count()} of {self.type_string()})')
+                + f'scale {self.scale} offset {self.offset} units {self.units}, {self.type_count()} of {self.type_string()})')

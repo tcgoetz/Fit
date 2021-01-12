@@ -120,7 +120,7 @@ class File(object):
             self.dev_application_id = self.dev_data_id[0].fields.application_id
         else:
             self.dev_application_id = None
-        self.dev_fields = {msg.fields.field_name: msg.fields.native_message_num for msg in self.field_description}
+        self.dev_fields = {msg.fields.field_name: {'native_message_num': msg.fields.native_message_num, 'units': msg.fields.units}for msg in self.field_description}
 
     def date_span(self):
         """Return a tuple of the start and end dates of the file."""
