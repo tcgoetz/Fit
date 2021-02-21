@@ -55,7 +55,7 @@ class Field(object):
         return self._invalid_single(value, invalid)
 
     def _convert_single(self, value, invalid):
-        if value != invalid:
+        if value is not None and value != invalid:
             return (value / self._scale) + self._offset
 
     def __convert_many(self, _convert_single, value, invalid):

@@ -83,7 +83,7 @@ class Schema(object):
             if count > 1:
                 decoded_data[key] = [data[index + repeat] for repeat in range(count)]
                 index += count
-            else:
+            elif count == 1:
                 decoded_data[key] = data[index]
                 index += 1
         return decoded_data
