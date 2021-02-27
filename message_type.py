@@ -152,7 +152,9 @@ class MessageType(enum.Enum):
     magnetometer_data               = 208
     barometer_data                  = 209
     one_d_sensor_calibration        = 210
-    # 211-224 not known
+    # 211-215 not known
+    hr_zones_timer                  = 216
+    # 217-224 not known
     set                             = 225
     # 226 not known
     stress_level                    = 227

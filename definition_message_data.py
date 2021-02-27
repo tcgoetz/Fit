@@ -765,6 +765,16 @@ class DefinitionMessageData():
         MessageType.magnetometer_data : {},
         MessageType.barometer_data : {},
         MessageType.one_d_sensor_calibration : {},
+        MessageType.hr_zones_timer : {
+            0 : enum_fields.HeartRateZonesTimerTypeField(),
+            1 : type_fields.IntegerField('record_num'),
+            2 : type_fields.IntegerField('total_beats_per_zone'),
+            6 : type_fields.IntegerField('hr_zones'),
+            10: enum_fields.HeartRateZonesMethodField(),
+            11 : type_fields.HeartRateField('max_heart_rate'),
+            12 : type_fields.HeartRateField('min_heart_rate'),
+            13 : type_fields.HeartRateField('lactate_threshhold_heart_rate')
+        },
         MessageType.set : {},
         MessageType.stress_level : {
             0 : fields.NamedField('stress_level'),
