@@ -118,7 +118,6 @@ class ClimbProEventField(EnumField):
 class HeartRateZonesTimerTypeField(EnumField):
     """A field that contains the type of the Heart Rate Zone Timer."""
 
-
     _name = 'hr_zones_timer_type'
     _enum = fe.HeartRateZonesTimerType
 
