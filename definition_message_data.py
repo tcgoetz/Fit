@@ -681,7 +681,13 @@ class DefinitionMessageData():
         MessageType.weather_alert : {},
         MessageType.cadence_zone : {},
         MessageType.hr : {},
-        MessageType.unknown_140 : {
+        MessageType.firstbeat : {
+            1 : type_fields.HeartRateField('max_heart_rate'),
+            4 : fields.TrainingEffectField('aerobic_training_effect'),
+            7 : type_fields.MetaMaxField(),
+            9 : fields.TimeMinField('recovery_time'),
+            14 : type_fields.HeartRateField('lactate_threshold_heart_rate'),
+            15 : object_fields.SpeedMpsField('lactate_threshold_speed'),  # 16 bit version
             21 : object_fields.LatiitudeField('position_21'),
             24 : object_fields.LongitudeField('position_24'),
         },

@@ -107,7 +107,7 @@ class MessageType(enum.Enum):
     cadence_zone                    = 131
     hr                              = 132
     # 133-141 not known
-    unknown_140                     = 140
+    firstbeat                       = 140
     unknown_141                     = 141
     segment_lap                     = 142
     # 143, 144 not known
@@ -176,6 +176,7 @@ class MessageType(enum.Enum):
     unknown_284                     = 284
     jump                            = 285
     respiration                     = 297
+    #
     climb_pro                       = 317
     #
     #
