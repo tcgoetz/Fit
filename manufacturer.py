@@ -180,7 +180,19 @@ class Manufacturer(FuzzyFieldEnum):
     cycligentinc                    = 297
     trailforks                      = 298
     mahle_ebikemotion               = 299
+    #
     nurvv                           = 300
+    MicroProgram                    = 301
+    Zone5Cloud                      = 302
+    GreenTEG                        = 303
+    Yamaha_Motors                   = 304
+    Whoop                           = 305
+    GRAVAA                          = 306
+    OneLap                          = 307
+    Monark_Exercise                 = 308
+    Form                            = 309
+    Decathlon                       = 310
+    #
     actigraphcorp                   = 5759
     #
     # Privates values
