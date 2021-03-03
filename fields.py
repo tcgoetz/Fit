@@ -55,7 +55,7 @@ class Field(object):
         return self._invalid_single(value, invalid)
 
     def _convert_single(self, value, invalid):
-        if value != invalid:
+        if value is not None and value != invalid:
             return (value / self._scale) + self._offset
 
     def __convert_many(self, _convert_single, value, invalid):
@@ -293,7 +293,7 @@ class EventDataField(Field):
     _dependant_field_control_fields = ['event']
 
     def dependant_field(self, control_value_list):
-        """Return a field whose type is based on the vent type."""
+        """Return a field whose type is based on the event type."""
         event = control_value_list[0]
         return EventDataField._dependant_field[event]
 

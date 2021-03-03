@@ -80,7 +80,11 @@ class DefinitionMessage(Data):
                 self.dev_field_definitions.append(dev_field_definition)
 
     def __decode_secondary(self):
-        self.endian = Architecture(self.architecture)
+        try:
+            self.endian = Architecture(self.architecture)
+        except Exception:
+            # treat all broken endians as little endian
+            self.endian = Architecture.Little_Endian
         return True
 
     def field(self, field_number):

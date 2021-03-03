@@ -681,7 +681,13 @@ class DefinitionMessageData():
         MessageType.weather_alert : {},
         MessageType.cadence_zone : {},
         MessageType.hr : {},
-        MessageType.unknown_140 : {
+        MessageType.firstbeat : {
+            1 : type_fields.HeartRateField('max_heart_rate'),
+            4 : fields.TrainingEffectField('aerobic_training_effect'),
+            7 : type_fields.MetaMaxField(),
+            9 : fields.TimeMinField('recovery_time'),
+            14 : type_fields.HeartRateField('lactate_threshold_heart_rate'),
+            15 : object_fields.SpeedMpsField('lactate_threshold_speed'),  # 16 bit version
             21 : object_fields.LatiitudeField('position_21'),
             24 : object_fields.LongitudeField('position_24'),
         },
@@ -759,6 +765,16 @@ class DefinitionMessageData():
         MessageType.magnetometer_data : {},
         MessageType.barometer_data : {},
         MessageType.one_d_sensor_calibration : {},
+        MessageType.hr_zones_timer : {
+            0 : enum_fields.HeartRateZonesTimerTypeField(),
+            1 : type_fields.IntegerField('record_num'),
+            2 : type_fields.IntegerField('total_beats_per_zone'),
+            6 : type_fields.IntegerField('hr_zones'),
+            10: enum_fields.HeartRateZonesMethodField(),
+            11 : type_fields.HeartRateField('max_heart_rate'),
+            12 : type_fields.HeartRateField('min_heart_rate'),
+            13 : type_fields.HeartRateField('lactate_threshhold_heart_rate')
+        },
         MessageType.set : {},
         MessageType.stress_level : {
             0 : fields.NamedField('stress_level'),

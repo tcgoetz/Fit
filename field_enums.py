@@ -494,3 +494,18 @@ class ClimbProEvent(FieldEnum):
     approach        = 0
     start           = 1
     complete        = 2
+
+
+class HeartRateZonesTimerType(FieldEnum):
+    """Gives the type of the Heart Rate Zone Timer."""
+
+    session = 18
+    lap = 19
+
+
+class HeartRateZonesMethod(FieldEnum):
+    """Gives the method used to calculate the heart rate zones."""
+
+    max_heart_rate = 1
+    heart_rate_reserve = 2
+    lactate_threshhold = 3

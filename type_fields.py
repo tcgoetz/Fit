@@ -103,3 +103,22 @@ class RespirationRateField(FloatField):
     _name = 'respiration_rate'
     _units = 'brpm'
     _scale = 100.0
+
+
+class Vo2MaxField(IntegerField):
+    """A new Vo2 Max measurement."""
+
+    _name = 'vo2_max'
+    _units = 'L/min'
+    _scale = 18724.5714
+
+
+class MetaMaxField(IntegerField):
+    """Reports metamax from which Vo2Max can be derived."""
+
+    _name = 'metamax'
+    _dependant_field_control_fields = []
+
+    def dependant_field(self, control_value_list):
+        """Return a Vo2MaxField as dependant field since it is derived from metamax."""
+        return Vo2MaxField
