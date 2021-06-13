@@ -10,37 +10,20 @@ PLATFORM=$(shell uname)
 ifeq ($(PLATFORM), Linux)
 
 PYTHON2=$(shell which python)
-PIP3=$(shell which pip3)
-PYTHON3=$(shell which python3)
 
 else ifeq ($(PLATFORM), Darwin) # MacOS
 
 PYTHON2=$(shell which python)
-PIP3=$(shell which pip3)
-PYTHON3=$(shell which python3)
 
 else
 
 PYTHON2=$(shell which python)
+
+
+endif
+
 PIP3=$(shell which pip3)
 PYTHON3=$(shell which python3)
-
-endif
-
-
-#
-# Install pip packages as user for devs and to system for pipeline runner
-#
-ifeq ($(USER), runner)
-
-PIP_INSTALL_OPT ?=
-
-else
-
-PIP_INSTALL_OPT ?= --user
-
-endif
-
 
 #PYTHON ?= ${PYTHON2}
 PYTHON ?= $(PYTHON3)
@@ -55,4 +38,4 @@ $(error pip not found)
 endif
 
 
-export PLATFORM PYTHON PIP PIP_INSTALL_OPT
+export PLATFORM PYTHON PIP
