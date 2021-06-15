@@ -7,8 +7,8 @@ __license__ = "GPL"
 import unittest
 import logging
 
-from Fit import field_enums
-from Fit import enum_fields
+from fit import field_enums
+from fit import enum_fields
 
 
 root_logger = logging.getLogger()

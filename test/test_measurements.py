@@ -9,7 +9,7 @@ __license__ = "GPL"
 import unittest
 import logging
 
-from Fit import Distance, Weight, Temperature, Speed
+from fit import Distance, Weight, Temperature, Speed
 
 
 root_logger = logging.getLogger()

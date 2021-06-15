@@ -7,9 +7,9 @@ __license__ = "GPL"
 import unittest
 import logging
 
-from Fit import field_enums
-from Fit.product import GarminProduct
-from Fit import manufacturer_product_fields as mp_fields
+from fit import field_enums
+from fit.product import GarminProduct
+from fit import manufacturer_product_fields as mp_fields
 
 
 root_logger = logging.getLogger()

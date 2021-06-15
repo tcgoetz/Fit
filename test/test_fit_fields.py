@@ -8,7 +8,7 @@ import unittest
 import logging
 import datetime
 
-from Fit import fields
+from fit import fields
 
 
 root_logger = logging.getLogger()
