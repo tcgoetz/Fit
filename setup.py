@@ -19,4 +19,4 @@ module_version = get_version(module_name + os.sep + 'version_info.py')
 
 setup(name=module_name, version=module_version, author='Tom Goetz', packages=[module_name, f'{module_name}.conversions', f'{module_name}.exceptions', f'{module_name}.field_enums'],
       license=open('LICENSE').read(), description='Decode FIT format files',
-      python_requires=">=3.0")
+      url="https://github.com/tcgoetz/Fit", python_requires=">=3.0")
