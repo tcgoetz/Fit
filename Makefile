@@ -10,15 +10,17 @@ install:
 	python3 setup.py install
 
 uninstall:
-	$(PIP) uninstall -y fit
+	pip3 uninstall -y fit
 
 deps:
-	$(PIP) install --upgrade --requirement requirements.txt
-	$(PIP) install --upgrade --requirement dev-requirements.txt
+	pip3 install --upgrade --requirement requirements.txt
+
+devdeps:
+	pip3 install --upgrade --requirement dev-requirements.txt
 
 remove_deps:
-	# $(PIP) uninstall -y --requirement requirements.txt
-	$(PIP) uninstall -y --requirement dev-requirements.txt
+	# pip3 uninstall -y --requirement requirements.txt
+	pip3 uninstall -y --requirement dev-requirements.txt
 
 test:
 	$(MAKE) -C test
