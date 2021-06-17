@@ -7,10 +7,18 @@ include defines.mk
 all: deps
 
 install:
-	$(PYTHON) setup.py install
+	$(PYTHON) -m build
 
 uninstall:
-	$(PIP) uninstall -y fit
+	$(PIP) uninstall -y fitfile
+
+dist: install
+
+publish_check: dist
+	$(PYTHON) -m twine check dist/*
+
+publish: publish_check
+	$(PYTHON) -m twine upload dist/* --verbose
 
 deps:
 	$(PIP) install --upgrade --requirement requirements.txt
@@ -39,6 +47,6 @@ clean: test_clean
 	rm -rf __pycache__
 	rm -rf build
 	rm -rf dist
-	rm -rf Fit.egg-info
+	rm -rf *.egg-info
 
 .PHONY: deps remove_deps test verify_commit clean

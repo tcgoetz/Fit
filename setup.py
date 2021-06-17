@@ -14,9 +14,26 @@ def get_version(version_file):
             return f'{match.group(1)}.{match.group(2)}.{match.group(3)}'
 
 
-module_name = 'fit'
+def get_long_description(readme_file):
+    """Extract long description fron the module readme."""
+    with open(readme_file, "r", encoding="utf-8") as file:
+        return file.read()
+
+
+module_name = 'fitfile'
 module_version = get_version(module_name + os.sep + 'version_info.py')
+module_long_description = get_long_description('README.rst')
+
+print(f"Building {module_name} {module_version}\n{module_long_description}")
 
 setup(name=module_name, version=module_version, author='Tom Goetz', packages=[module_name, f'{module_name}.conversions', f'{module_name}.exceptions', f'{module_name}.field_enums'],
-      license=open('LICENSE').read(), description='Decode FIT format files',
-      url="https://github.com/tcgoetz/Fit", python_requires=">=3.0")
+      description='Decode FIT format files.',
+      long_description=module_long_description,
+      long_description_content_type='text/x-rst',
+      url="https://github.com/tcgoetz/Fit",
+      classifiers=[
+          'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+          "Programming Language :: Python :: 3",
+          "Operating System :: OS Independent"
+      ],
+      python_requires=">=3.0")

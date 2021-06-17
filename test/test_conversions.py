@@ -8,7 +8,7 @@ import unittest
 import logging
 import datetime
 
-from fit import conversions
+from fitfile import conversions
 
 
 root_logger = logging.getLogger()
