@@ -34,6 +34,5 @@ setup(name=module_name, version=module_version, author='Tom Goetz', packages=[mo
       classifiers=[
           'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
           "Programming Language :: Python :: 3",
-          "Operating System :: OS Independent"
-      ],
+          "Operating System :: OS Independent"],
       python_requires=">=3.0")

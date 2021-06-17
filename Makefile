@@ -6,8 +6,11 @@ include defines.mk
 
 all: deps
 
-install:
+build:
 	$(PYTHON) -m build
+
+install: build
+	$(PIP) install --upgrade --force-reinstall ./dist/fitfile-*.whl 
 
 uninstall:
 	$(PIP) uninstall -y fitfile
@@ -36,7 +39,7 @@ test:
 verify_commit: test
 
 flake8:
-	$(PYTHON) -m flake8 fit/*.py fit/conversions/*.py fit/exceptions/*.py fit/field_enums/*.py --max-line-length=180 --ignore=E203,E221,E241,W503
+	$(PYTHON) -m flake8 fitfile/*.py fitfile/conversions/*.py fitfile/exceptions/*.py fitfile/field_enums/*.py --max-line-length=180 --ignore=E203,E221,E241,W503
 
 test_clean:
 	$(MAKE) -C test clean
@@ -49,4 +52,4 @@ clean: test_clean
 	rm -rf dist
 	rm -rf *.egg-info
 
-.PHONY: deps remove_deps test verify_commit clean
+.PHONY: deps remove_deps test verify_commit clean install uninstall dist build publish_check publish
