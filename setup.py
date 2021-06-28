@@ -24,7 +24,7 @@ module_name = 'fitfile'
 module_version = get_version(module_name + os.sep + 'version_info.py')
 module_long_description = get_long_description('README.rst')
 
-print(f"Building {module_name} {module_version}\n{module_long_description}")
+print(f"Building {module_name} {module_version}")
 
 setup(name=module_name, version=module_version, author='Tom Goetz', packages=[module_name, f'{module_name}.conversions', f'{module_name}.exceptions', f'{module_name}.field_enums'],
       description='Decode FIT format files.',
