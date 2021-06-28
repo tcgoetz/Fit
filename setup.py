@@ -30,7 +30,7 @@ def get_requirements(requirements_file):
 module_name = 'fitfile'
 module_version = get_version(module_name + os.sep + 'version_info.py')
 module_long_description = get_long_description('README.rst')
-install_requires = get_requirements('requirements.in')
+install_requires = get_requirements('requirements.txt')
 
 print(f"Building {module_name} {module_version}")
 
