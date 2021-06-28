@@ -5,6 +5,7 @@
 #
 # Handle multiple Python installs. What python are we using?
 #
+PLATFORM=$(shell uname)
 
 ifeq ($(PLATFORM), Linux)
 
@@ -18,8 +19,6 @@ else
 
 
 endif
-
-PLATFORM=$(shell uname)
 
 # PIP3=$(shell which pip3)
 PIP3=pip3
@@ -37,5 +36,7 @@ ifeq ($(PIP),)
 $(error pip not found)
 endif
 
+MODULE=fitfile
 
-export PLATFORM PYTHON PIP
+
+export MODULE PLATFORM PYTHON PIP
