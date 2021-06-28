@@ -23,7 +23,7 @@ dist: install
 publish_check: dist
 	$(PYTHON) -m twine check dist/*
 
-publish: publish_check
+publish: clean publish_check
 	$(PYTHON) -m twine upload dist/* --verbose
 
 deps:
