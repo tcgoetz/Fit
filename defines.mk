@@ -36,5 +36,7 @@ ifeq ($(PIP),)
 $(error pip not found)
 endif
 
+MODULE=fitfile
 
-export PLATFORM PYTHON PIP
+
+export MODULE PLATFORM PYTHON PIP

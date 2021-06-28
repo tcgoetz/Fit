@@ -20,9 +20,17 @@ def get_long_description(readme_file):
         return file.read()
 
 
+def get_requirements(requirements_file):
+    """Extract long requirements fron the module requirements.txt."""
+    print(f"Loading requirements from {requirements_file} in {os.getcwd()}")
+    with open(requirements_file, "r", encoding="utf-8") as file:
+        return file.readlines()
+
+
 module_name = 'fitfile'
 module_version = get_version(module_name + os.sep + 'version_info.py')
 module_long_description = get_long_description('README.rst')
+install_requires = get_requirements('requirements.in')
 
 print(f"Building {module_name} {module_version}")
 
@@ -31,6 +39,7 @@ setup(name=module_name, version=module_version, author='Tom Goetz', packages=[mo
       long_description=module_long_description,
       long_description_content_type='text/x-rst',
       url="https://github.com/tcgoetz/Fit",
+      install_requires=install_requires,
       classifiers=[
           'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
           "Programming Language :: Python :: 3",

@@ -1,16 +1,19 @@
 
-PROJECT_BASE=$(CURDIR)
-export PROJECT_BASE
+export PROJECT_BASE=$(CURDIR)
+
 
 include defines.mk
+
 
 all: deps
 
 build:
 	$(PYTHON) -m build
 
-install: build
-	$(PIP) install --upgrade --force-reinstall ./dist/fitfile-*.whl 
+$(PROJECT_BASE)/dist/$(MODULE)-*.whl: build
+
+install: $(PROJECT_BASE)/dist/$(MODULE)-*.whl
+	$(PIP) install --upgrade --force-reinstall $(PROJECT_BASE)/dist/$(MODULE)-*.whl 
 
 uninstall:
 	$(PIP) uninstall -y fitfile
