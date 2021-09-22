@@ -117,9 +117,9 @@ class File(object):
             self.sport_type = None
             self.sub_sport_type = None
         if MessageType.dev_data_id in self.message_types:
-            self.dev_application_id = self.dev_data_id[0].fields.application_id
+            self.dev_application_ids = [dev_data_id.fields.application_id for dev_data_id in self.dev_data_id]
         else:
-            self.dev_application_id = None
+            self.dev_application_ids = []
         self.dev_fields = {msg.fields.field_name: {'native_message_num': msg.fields.native_message_num, 'units': msg.fields.units}for msg in self.field_description}
 
     def date_span(self):
