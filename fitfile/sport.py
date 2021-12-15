@@ -130,6 +130,11 @@ class SubSport(FieldEnum):
     apneas_hunting          = 57
     virtual_activity        = 58
     obstacle                = 59
+    breathing               = 62
+    sail_race               = 65
+    ultra                   = 67
+    indoor_climbing         = 68
+    bouldering              = 69
     all                     = 254
     invalid                 = 255
 
