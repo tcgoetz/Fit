@@ -59,6 +59,7 @@ class Sport(FieldEnum):
     jumpmaster              = 46
     boxing                  = 47
     floor_climbing          = 48
+    diving                  = 53
     all                     = 254
     invalid                 = 255
 
