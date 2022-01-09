@@ -774,7 +774,7 @@ class DefinitionMessageData():
         MessageType.hr_zones_timer : {
             0 : HeartRateZonesTimerTypeField(),
             1 : IntegerField('record_num'),
-            2 : IntegerField('total_beats_per_zone'),
+            2 : TimeMsField('hr_zones_time'),
             6 : IntegerField('hr_zones'),
             10: HeartRateZonesMethodField(),
             11 : HeartRateField('max_heart_rate'),
