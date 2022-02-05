@@ -18,6 +18,8 @@ install: $(PROJECT_BASE)/dist/$(MODULE)-*.whl
 uninstall:
 	$(PIP) uninstall -y fitfile
 
+reinstall: clean uninstall install
+
 dist: install
 
 publish_check: dist
