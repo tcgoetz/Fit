@@ -67,6 +67,18 @@ class Sport(FieldEnum):
         """Return if this Sport enum instance is a preferred value or not."""
         return self.value > Sport.generic.value and self.value < Sport.all.value
 
+    def activity_name(self):
+        activity_name_str = {
+            'running': 'run',
+            'cycling': 'ride',
+            'walking': 'walk',
+            'hiking': 'hike',
+            'swimming': 'swim',
+            'paddling': 'paddle',
+            'kayaking': 'kayak'
+        }
+        return activity_name_str[self.name] if self.name in activity_name_str else self.name
+
 
 class SubSport(FieldEnum):
     """An enum field containing more specific sport information."""
