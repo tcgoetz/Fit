@@ -53,6 +53,7 @@ class Manufacturer(FuzzyFieldEnum):
     osynce                          = 38
     holux                           = 39
     concept2                        = 40
+    shimano                         = 41
     one_giant_leap                  = 42
     ace_sensor                      = 43
     brim_brothers                   = 44
@@ -134,6 +135,18 @@ class Manufacturer(FuzzyFieldEnum):
     Johnson_Health_Tech             = 122
     Polar_Electro                   = 123
     Seesense                        = 124
+    NCI_Technology                  = 125
+    iqsquare                        = 126
+    leomo                           = 127
+    ifit_com                        = 128
+    coros_byte                      = 129
+    versa_design                    = 130
+    chileaf                         = 131
+    cycplus                         = 132
+    gravaa_byte                     = 133
+    sigeyi                          = 134
+    coospo                          = 135
+    geoid                           = 136
     Garmin_local_154                = 154
     Garmin_local_218                = 218
     development                     = 255
@@ -192,6 +205,7 @@ class Manufacturer(FuzzyFieldEnum):
     Monark_Exercise                 = 308
     Form                            = 309
     Decathlon                       = 310
+    syncros                         = 311
     #
     actigraphcorp                   = 5759
     #
