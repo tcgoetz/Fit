@@ -27,6 +27,7 @@ class GarminProduct(FuzzyFieldEnum):
     fr225_single_byte_product_id    = 14
     Bike_Speed_Sensor_Gen3_sb       = 15
     Bike_Cadence_Sensor_Gen3_sb     = 16
+    Bike_Cadence_Sensor_V2          = 20
     ForeRunner_301_China            = 473
     ForeRunner_301_Japan            = 474
     ForeRunner_301_Korea            = 475
