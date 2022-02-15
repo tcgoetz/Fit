@@ -57,7 +57,7 @@ class Manufacturer(FuzzyFieldEnum):
     one_giant_leap                  = 42
     ace_sensor                      = 43
     brim_brothers                   = 44
-    xplova                          = 45
+    Xplova                          = 45
     perception_digital              = 46
     bf1systems                      = 47
     pioneer                         = 48

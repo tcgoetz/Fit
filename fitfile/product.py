@@ -405,6 +405,7 @@ class GarminLocalProduct(FuzzyFieldEnum):
     Accelerometer_21909             = 21909
     BTLE_Chipset                    = 24832
     Accelerometer_49208             = 49208
+    invalid                         = 65535
 
 
 class WahooFitnessProduct(FuzzyFieldEnum):
@@ -425,6 +426,12 @@ class HealthAndLifeProduct(FuzzyFieldEnum):
     Accelerometer_515 = 515
 
 
+class XplovaProduct(FuzzyFieldEnum):
+    """Scosche product codes used in FIT files."""
+
+    bluetooth_low_energy_chipset_11 = 11
+
+
 class UnknownProduct(UnknownEnumValue):
     """Unknown product codes used in FIT files."""
 
@@ -439,6 +446,7 @@ def product_enum(manufacturer, product_str):
         Manufacturer.Wahoo_Fitness          : WahooFitnessProduct,
         Manufacturer.Scosche                : ScoscheProduct,
         Manufacturer.Health_and_Life        : HealthAndLifeProduct,
+        Manufacturer.Xplova                 : XplovaProduct,
         Manufacturer.invalid                : GarminProduct,
     }
     return _manufacturer_to_product_enum[manufacturer].from_string(product_str)
