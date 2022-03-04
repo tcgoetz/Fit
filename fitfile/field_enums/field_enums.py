@@ -12,7 +12,7 @@ def name_for_enum(enum_instance):
     return getattr(enum_instance, 'name', enum_instance)
 
 
-class UnknownEnumValue(object):
+class UnknownEnumValue():
     """Returned when a value can not be cast to an FieldEnum."""
 
     def __init__(self, value):

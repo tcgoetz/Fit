@@ -10,7 +10,7 @@ import enum
 from .exceptions import FitMessageType
 
 
-class UnknownMessageType(object):
+class UnknownMessageType():
     """Represents an unknown FIT file message type."""
 
     def __init__(self, index):

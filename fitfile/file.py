@@ -23,7 +23,7 @@ name_regex = r'\w+\.(fit|FIT)'
 
 # dynamically generated class properties
 # pylint: disable=no-member
-class File(object):
+class File():
     """Object that represents a FIT file."""
 
     def __init__(self, filename, measurement_system=DisplayMeasure.metric):

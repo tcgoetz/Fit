@@ -19,7 +19,7 @@ class Architecture(enum.Enum):
     Big_Endian      = 1
 
 
-class Schema(object):
+class Schema():
     """Describes how the data of a FIT file object is encoded."""
 
     type_to_size = {
@@ -89,7 +89,7 @@ class Schema(object):
         return decoded_data
 
 
-class Data(object):
+class Data():
     """The base object for decoding FIT file data."""
 
     def __init__(self, file, primary_schema, secondary_schemas=None, endian=Architecture.Little_Endian):

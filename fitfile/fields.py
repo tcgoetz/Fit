@@ -12,7 +12,7 @@ from .field_enums import DisplayMeasure
 from .field_value import FieldValue
 
 
-class Field(object):
+class Field():
     """The base object for all FIT file message fields."""
 
     _name = None
