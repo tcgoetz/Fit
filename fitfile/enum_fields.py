@@ -7,7 +7,7 @@ __license__ = "GPL"
 
 from .fields import NamedField
 from .field_enums import FitBaseUnit, Switch, DisplayMeasure, DisplayHeart, DisplayPosition, HeartRateZoneCalc, PowerCalc, DateMode, TimeMode, Event, EventType, LapTrigger, \
-    SessionTrigger, ClimbProEvent, HeartRateZonesTimerType, HeartRateZonesMethod
+    SessionTrigger, ClimbProEvent, HeartRateZonesTimerType, HeartRateZonesMethod, SleepActivityLevel
 from .file_type import FileType
 
 
@@ -128,3 +128,10 @@ class HeartRateZonesMethodField(EnumField):
 
     _name = 'hr_zones_method'
     _enum = HeartRateZonesMethod
+
+
+class SleepActivityLevelField(EnumField):
+    """A field that contains Enum of values used to encode activity levels during sleep."""
+
+    _name = 'sleep_activity_level'
+    _enum = SleepActivityLevel

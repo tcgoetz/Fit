@@ -414,6 +414,8 @@ class Event(FieldEnum):
     elev_high_alert = 45
     elev_low_alert = 46
     comm_timeout = 47
+    sleep = 74
+    radar_threat_alert = 75
 
 
 class EventType(FieldEnum):
@@ -509,3 +511,13 @@ class HeartRateZonesMethod(FieldEnum):
     max_heart_rate = 1
     heart_rate_reserve = 2
     lactate_threshhold = 3
+
+
+class SleepActivityLevel(FieldEnum):
+    """Enum of values used to encode activity levels during sleep."""
+
+    unknown = 0
+    awake = 1.0
+    light_sleep = 2.0
+    deep_sleep = 3.0
+    rem_sleep = 4.0

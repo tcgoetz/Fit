@@ -8,4 +8,5 @@ __license__ = "GPL"
 
 from .field_enums import UnknownEnumValue, FieldEnum, FuzzyFieldEnum, Switch, FitBaseUnit, DisplayMeasure, DisplayHeart, DisplayPosition, DisplayOrientation, Side, BacklightMode, \
     AntNetwork, SourceType, BatteryStatus, AutoSyncFrequency, BodyLocation, Gender, HeartRateZoneCalc, PowerCalc, Language, DateMode, TimeMode, Activity, ActivityType, Event, EventType, \
-    LapTrigger, SessionTrigger, PersonalRecordType, GoalType, GoalRecurrence, GoalSource, WatchFaceMode, ClimbProEvent, HeartRateZonesTimerType, HeartRateZonesMethod, name_for_enum
+    LapTrigger, SessionTrigger, PersonalRecordType, GoalType, GoalRecurrence, GoalSource, WatchFaceMode, ClimbProEvent, HeartRateZonesTimerType, HeartRateZonesMethod, name_for_enum, \
+    SleepActivityLevel

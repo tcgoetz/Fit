@@ -10,7 +10,8 @@ from .fields import Field, TimestampField, TimeMsField, TimeSField, TimeMinField
     CyclesDistanceField, CyclesCaloriesField, CaloriesDayField
 from .type_fields import IntegerField, FloatField, StringField, BoolField, HeartRateField, RespirationRateField, AbsolutePressureField, BytesField, MetaMaxField, FitBaseTypeField
 from .enum_fields import FileTypeField, TimeModeField, SwitchField, DateModeField, DisplayMeasureField, DisplayHeartField, DisplayPositionField, HeartRateZoneCalcField, \
-    PowerCalcField, EventField, EventTypeField, SessionTriggerField, LapTriggerField, FitBaseUnitField, HeartRateZonesTimerTypeField, HeartRateZonesMethodField, ClimbProEventField
+    PowerCalcField, EventField, EventTypeField, SessionTriggerField, LapTriggerField, FitBaseUnitField, HeartRateZonesTimerTypeField, HeartRateZonesMethodField, ClimbProEventField, \
+    SleepActivityLevelField
 from .object_fields import HeightField, WeightField, EnhancedDistanceMetersField, CompressedSpeedDistanceField, DistanceMillimetersField, DistanceCentimetersToMetersField, \
     DistanceMillimetersToMetersField, DistanceCentimetersToKmsField, DistanceMetersField, SpeedMpsField, LatiitudeField, LongitudeField, AltitudeField, TemperatureField
 from .activity_fields import ActivityClassField, SportField, SubSportField, SportBasedCyclesField, SportBasedCadenceField, CadenceField, ActivityBasedCyclesField, \
@@ -810,7 +811,7 @@ class DefinitionMessageData():
         },
         # Names and types for this message are guesses
         MessageType.sleep_level : {
-            0 : FloatField('sleep_level'),
+            0 : SleepActivityLevelField('sleep_level'),
         },
         # Names and types for this message are guesses
         MessageType.end : {},

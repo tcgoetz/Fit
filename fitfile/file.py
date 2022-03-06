@@ -88,6 +88,12 @@ class File():
         if data_message_type not in self.message_types:
             self.message_types.append(data_message_type)
 
+    @classmethod
+    def __calculate_utc_offset(cls, message):
+        time_utc = message.fields.timestamp
+        time_local = message.fields.local_timestamp
+        return (time_local - time_utc.replace(tzinfo=None)).total_seconds()
+
     def __sumarize(self):
         first_file_id = self.file_id[0]
         self.time_created = first_file_id.fields.time_created
@@ -95,13 +101,13 @@ class File():
         self.product = first_file_id.fields.product
         self.serial_number = first_file_id.fields.serial_number
         self.device = f'{self.product}_{self.serial_number}'
+        # File time zone and offset
         if MessageType.device_settings in self.message_types:
             self.utc_offset = self.device_settings[0].fields.time_offset
+        elif MessageType.start in self.message_types:
+            self.utc_offset = self.__calculate_utc_offset(self.start[0])
         elif MessageType.monitoring_info in self.message_types:
-            first_monitoring_info = self.monitoring_info[0]
-            monitoring_info_time_utc = first_monitoring_info.fields.timestamp
-            monitoring_info_time_local = first_monitoring_info.fields.local_timestamp
-            self.utc_offset = (monitoring_info_time_local - monitoring_info_time_utc.replace(tzinfo=None)).total_seconds()
+            self.utc_offset = self.__calculate_utc_offset(self.monitoring_info[0])
         else:
             self.utc_offset = 0
         self.local_tz = datetime.timezone(datetime.timedelta(seconds=self.utc_offset))
@@ -110,6 +116,15 @@ class File():
             self.time_ended_local = self.utc_datetime_to_local(self.last_message_timestamp)
         else:
             self.time_ended_local = self.time_created_local
+        # File start and end times
+        if MessageType.start in self.message_types:
+            self.start_time = self.start[0].fields.timestamp
+        else:
+            self.start_time = self.time_created
+        if MessageType.end in self.message_types:
+            self.end_time = self.end[0].fields.timestamp
+        else:
+            self.end_time = self.last_message_timestamp
         if MessageType.sport in self.message_types:
             self.sport_type = self.sport[0].fields.sport
             self.sub_sport_type = self.sport[0].fields.sub_sport
@@ -124,7 +139,7 @@ class File():
 
     def date_span(self):
         """Return a tuple of the start and end dates of the file."""
-        return (self.time_created, self.last_message_timestamp)
+        return (self.start_time, self.end_time)
 
     def utc_datetime_to_local(self, dt):
         """Return a local datetime based on the passed in UTC datetime and the file's known UTC offset."""
