@@ -8,7 +8,8 @@ from .message_type import MessageType
 from .fields import Field, TimestampField, TimeMsField, TimeSField, TimeMinField, TimeHourField, TimeOffsetField, TimeOfDayField, NamedField, PowerField, PercentField, \
     TrainingEffectField, CaloriesField, LeftRightBalanceField, WorkField, FractionalCadenceField, FractionalCyclesField, BytePercentField, MessageIndexField, VersionField, \
     CyclesDistanceField, CyclesCaloriesField, CaloriesDayField
-from .type_fields import IntegerField, FloatField, StringField, BoolField, HeartRateField, RespirationRateField, AbsolutePressureField, BytesField, MetaMaxField, FitBaseTypeField
+from .type_fields import IntegerField, FloatField, StringField, BoolField, HeartRateField, RespirationRateField, AbsolutePressureField, BytesField, MetaMaxField, \
+    FitBaseTypeField, YearOffset
 from .enum_fields import FileTypeField, TimeModeField, SwitchField, DateModeField, DisplayMeasureField, DisplayHeartField, DisplayPositionField, HeartRateZoneCalcField, \
     PowerCalcField, EventField, EventTypeField, SessionTriggerField, LapTriggerField, FitBaseUnitField, HeartRateZonesTimerTypeField, HeartRateZonesMethodField, \
     ClimbProEventField, SleepActivityLevelField
@@ -114,6 +115,7 @@ class DefinitionMessageData():
             21 : DisplayMeasureField('temperature_setting'),
             22 : NamedField('local_id'),
             23 : NamedField('global_id'),
+            24: YearOffset('year_of_birth'),
             28 : TimeOfDayField('wake_time'),
             29 : TimeOfDayField('sleep_time'),
             30 : DisplayMeasureField('height_setting'),
@@ -695,6 +697,7 @@ class DefinitionMessageData():
             9 : TimeMinField('recovery_time'),
             14 : HeartRateField('lactate_threshold_heart_rate'),
             15 : SpeedMpsField('lactate_threshold_speed'),  # 16 bit version
+            20 : TrainingEffectField('anaerobic_training_effect'),
             21 : LatiitudeField('position_21'),
             24 : LongitudeField('position_24'),
         },

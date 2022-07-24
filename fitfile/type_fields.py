@@ -31,7 +31,7 @@ class TypeField(NamedField):
     def _convert_single(self, value, invalid):
         if value != invalid:
             try:
-                return self.type_func(value / self._scale)
+                return self.type_func((value / self._scale) + self._offset)
             except Exception:
                 return value
 
@@ -133,3 +133,9 @@ class MetaMaxField(IntegerField):
     def dependant_field(self, control_value_list):
         """Return a Vo2MaxField as dependant field since it is derived from metamax."""
         return Vo2MaxField
+
+
+class YearOffset(IntegerField):
+    """A FIT file message field holding a year as 1900 + value."""
+
+    _offset = 1900
