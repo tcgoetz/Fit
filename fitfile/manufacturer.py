@@ -206,6 +206,19 @@ class Manufacturer(FuzzyFieldEnum):
     Form                            = 309
     Decathlon                       = 310
     syncros                         = 311
+    heatup                          = 312
+    cannondale                      = 313
+    true_fitness                    = 314
+    rgt_cycling                     = 315
+    vasa                            = 316
+    race_republic                   = 317
+    fazua                           = 318
+    oreka_training                  = 319
+    lsec                            = 320  # Lishun Electric & Communication
+    lululemon_studio                = 321
+    shanyue                         = 322
+    spinning_mda                    = 323
+    hilldating                      = 324
     #
     actigraphcorp                   = 5759
     #

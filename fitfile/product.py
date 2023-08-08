@@ -28,6 +28,7 @@ class GarminProduct(FuzzyFieldEnum):
     Bike_Speed_Sensor_Gen3_sb       = 15
     Bike_Cadence_Sensor_Gen3_sb     = 16
     Bike_Cadence_Sensor_V2          = 20
+    Optical_Heart_Rate_Sensor       = 255
     ForeRunner_301_China            = 473
     ForeRunner_301_Japan            = 474
     ForeRunner_301_Korea            = 475
@@ -219,6 +220,7 @@ class GarminProduct(FuzzyFieldEnum):
     Fenix_5_Sapphire                = 2697
     VivoActive_3                    = 2700
     Edge_1030                       = 2713
+    ForeRunner_35_Sea               = 2727
     ForeRunner_235_China_NFC        = 2733
     Foretrex_601_701                = 2769
     VivoMove_HR                     = 2772
@@ -266,6 +268,7 @@ class GarminProduct(FuzzyFieldEnum):
     Fenix_5S_Plus_Apac              = 3134
     Fenix_5X_Plus_Apac              = 3135
     Edge_520_Plus_Apac              = 3142
+    Descent_t1                      = 3143
     Forerunner235L_Asia             = 3144
     Forerunner235_Asia              = 3145
     VivoActive_3m_Asia              = 3163
@@ -310,6 +313,7 @@ class GarminProduct(FuzzyFieldEnum):
     Marq_Commander_Asia             = 3449
     Marq_Expedition_Asia            = 3450
     Marq_Athlete_Asia               = 3451
+    Instinct_Solar                  = 3466
     ForeRunner_45_Asia              = 3469
     VivoActive_3_Daimler            = 3473
     legacy_Rey                      = 3498
@@ -349,25 +353,85 @@ class GarminProduct(FuzzyFieldEnum):
     Edge_130_Plus_Asia              = 3813
     Approach_S12                    = 3823
     VenusQ_Asia                     = 3837
+    Edge_1040                       = 3843
     Marq_Golfer_Asia                = 3850
     Venu_2_Plus                     = 3851
+    gnss                            = 3865
     ForeRunner_55                   = 3869
     Enduro_Asia                     = 3872
+    INSTINCT_2                      = 3888
+    Fenix_7S                        = 3905
+    Fenix_7                         = 3906
+    Fenix_7X                        = 3907
+    Fenix_7S_APAC                   = 3908
+    Fenix_7_APAC                    = 3909
+    Fenix_X_APAC                    = 3910
     Approach_G12                    = 3927
     Descent_Mk2s_Asia               = 3930
     Approach_S42                    = 3934
+    Epix_gen2                       = 3943
+    Epix_gen2_apac                  = 3944
     Venu_2S_Asia                    = 3949
     Venu_2_Asia                     = 3950
     ForeRunner_945_LTE_Asia         = 3978
+    VivoMove_Sport                  = 3982
+    VivoMove_Trend                  = 3983
     Approach_S12_Asia               = 3986
+    ForeRunner_255_Music            = 3990
+    ForeRunner_255_Small_Music      = 3991
+    ForeRunner_255                  = 3992
+    ForeRunner_255_Small            = 3993
     Approach_G12_Asia               = 4001
     Approach_S42_Asia               = 4002
+    Descent_g1                      = 4005
+    Venu2_Plus_Asia                 = 4017
+    ForeRunner_955                  = 4024
     ForeRunner_55_Asia              = 4033
+    EDGE_540                        = 4061
+    EDGE_840                        = 4062
+    VivoSmart_5                     = 4063
+    INSTINCT_2_ASIA                 = 4071
+    MARQ_GEN2                       = 4105  # Adventurer, Athlete, Captain, Golfer
+    VENUSQ2                         = 4115
+    VENUSQ2MUSIC                    = 4116
+    MARQ_GEN2_AVIATOR               = 4124
+    D2_AIR_X10                      = 4125
+    HRM_PRO_PLUS                    = 4130
+    DESCENT_G1_ASIA                 = 4132
+    TACTIX7                         = 4135
+    INSTINCT_CROSSOVER              = 4155
+    EDGE_EXPLORE2                   = 4169
+    APPROACH_S70                    = 4233
+    FR265_LARGE                     = 4257
+    FR265_SMALL                     = 4258
+    TACX_NEO_SMART                  = 4265  # Neo Smart, Tacx
+    TACX_NEO2_SMART                 = 4266  # Neo 2 Smart, Tacx
+    TACX_NEO2_T_SMART               = 4267  # Neo 2T Smart, Tacx
+    TACX_NEO_SMART_BIKE             = 4268  # Neo Smart Bike, Tacx
+    TACX_SATORI_SMART               = 4269  # Satori Smart, Tacx
+    TACX_FLOW_SMART                 = 4270  # Flow Smart, Tacx
+    TACX_VORTEX_SMART               = 4271  # Vortex Smart, Tacx
+    TACX_BUSHIDO_SMART              = 4272  # Bushido Smart, Tacx
+    TACX_GENIUS_SMART               = 4273  # Genius Smart, Tacx
+    TACX_FLUX_FLUX_S_SMART          = 4274  # Flux/Flux S Smart, Tacx
+    TACX_FLUX2_SMART                = 4275  # Flux 2 Smart, Tacx
+    TACX_MAGNUM                     = 4276  # Magnum, Tacx
+    EDGE_1040_ASIA                  = 4305
+    EPIX_GEN2_PRO_42                = 4312
+    EPIX_GEN2_PRO_47                = 4313
+    EPIX_GEN2_PRO_51                = 4314
+    ForeRunner_965                  = 4315
+    ENDURO2                         = 4341
+    Fenix_7_PRO_SOLAR               = 4375
+    INSTINCT_2X                     = 4394
+    DESCENT_T2                      = 4442
+    #
     FootPod_SDM4                    = 10007
     Edge_Remote                     = 10014
+    Training_Center                 = 20119
     TACX_Training_App_Win           = 20533
     TACX_Training_App_Mac           = 20534
-    Training_Center                 = 20119
+    TACX_Training_App_Mac_Catalyst  = 20565
     TACX_Training_App_Android       = 30045
     TACX_Training_Aapp_IOS          = 30046
     TACX_Training_App_Legacy        = 30047
@@ -432,6 +496,13 @@ class XplovaProduct(FuzzyFieldEnum):
     bluetooth_low_energy_chipset_11 = 11
 
 
+class FaveroProduct(FuzzyFieldEnum):
+    """Scosche product codes used in FIT files."""
+
+    ASSIOMA_UNO     = 10
+    ASSIOMA_DUO     = 12
+
+
 class UnknownProduct(UnknownEnumValue):
     """Unknown product codes used in FIT files."""
 
@@ -447,6 +518,7 @@ def product_enum(manufacturer, product_str):
         Manufacturer.Scosche                : ScoscheProduct,
         Manufacturer.Health_and_Life        : HealthAndLifeProduct,
         Manufacturer.Xplova                 : XplovaProduct,
+        Manufacturer.favero_electronics     : FaveroProduct,
         Manufacturer.invalid                : GarminProduct,
     }
     return _manufacturer_to_product_enum[manufacturer].from_string(product_str)
