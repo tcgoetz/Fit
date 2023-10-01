@@ -107,7 +107,7 @@ def dt_to_utc_epoch_ms(dt):
 def printable(string_in):
     """Return a string with only prinatable characters given a string with potentially unprintable characters."""
     if string_in is not None:
-        return filter(lambda x: x in string.printable, string_in)
+        return "".join(filter(lambda x: x in string.printable, string_in))
 
 
 def persec_speed_to_pace(speed):
