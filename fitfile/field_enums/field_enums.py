@@ -70,6 +70,26 @@ class FieldEnum(enum.Enum):
             return UnknownEnumValue(string)
 
 
+class CaseInsensitiveFieldEnum(FieldEnum):
+    """A enum representing a field value that can be instantiated with a case insensitive match."""
+
+    @classmethod
+    def from_string_ext(cls, string):
+        """Return an instance of FieldEnum instantiated with string using a case insensitive match."""
+        for name, value in cls.__members__.items():
+            if name.lower() == str(string).lower():
+                return value
+        return UnknownEnumValue(string)
+
+    @classmethod
+    def from_string(cls, string):
+        """Return an instance of FieldEnum instantiated with string."""
+        try:
+            return cls._from_string(string)
+        except (AttributeError, TypeError):
+            return cls.from_string_ext(string)
+
+
 class FuzzyFieldEnum(FieldEnum):
     """A enum representing a field value that can be instantiated with a fuzzy match."""
 
@@ -279,7 +299,7 @@ class BodyLocation(FieldEnum):
     invalid = 255
 
 
-class Gender(FieldEnum):
+class Gender(CaseInsensitiveFieldEnum):
     female = 0
     male = 1
 

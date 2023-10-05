@@ -16,7 +16,7 @@ class EnumField(NamedField):
 
     _enum = None
 
-    def _convert_single(self, value, invalid):
+    def _convert_single(self, value, invalid=None):
         return self._enum.from_string(value)
 
 
