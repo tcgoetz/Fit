@@ -15,6 +15,9 @@ $(PROJECT_BASE)/dist/$(MODULE)-*.whl: build
 install: $(PROJECT_BASE)/dist/$(MODULE)-*.whl
 	$(PIP) install --upgrade --force-reinstall $(PROJECT_BASE)/dist/$(MODULE)-*.whl 
 
+install_pip:
+	$(PIP) install --upgrade --force-reinstall fitfile 
+
 uninstall:
 	$(PIP) uninstall -y fitfile
 
