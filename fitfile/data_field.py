@@ -8,6 +8,7 @@ __license__ = "GPL"
 import collections
 
 from .data import Data, Schema
+from .exceptions import FitDataFieldParse
 
 
 class DataField(Data):
@@ -36,8 +37,16 @@ class DataField(Data):
             return self.__schema_cache[schema_sig]
         return self.__populate_schema_cache(schema_sig, type, count)
 
+    def _convert_single(self, value, invalid):
+        try:
+            self.values = self.field.convert(value, invalid, self.measurement_system)
+        except Exception as e:
+            raise FitDataFieldParse(value, self.field, e)
+
     def _convert(self):
-        self.values = self.field.convert(self.field_value, self.field_definition.invalid(), self.measurement_system)
+        if isinstance(self.field_value, list):
+            return [self._convert_single(sub_value, self.field_definition.invalid()) for sub_value in self.field_value]
+        return self._convert_single(self.field_value, self.field_definition.invalid())
 
     def __str__(self):
         """Return a string reprsentation of the DataField instance."""

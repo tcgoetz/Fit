@@ -6,4 +6,4 @@ __license__ = "GPL"
 
 # flake8: noqa
 
-from .exceptions import FitException, FitFileError, FitFileBadHeaderSize, FitFileBadProtocolVersion, FitFileDataType, FitMessageType, FitMessageParse, FitUndefDevMessageType, FitOutOfOrderMessage
+from .exceptions import FitException, FitFileError, FitFileBadHeaderSize, FitFileBadProtocolVersion, FitFileDataType, FitMessageType, FitMessageParse, FitDataFieldParse, FitUndefDevMessageType, FitOutOfOrderMessage

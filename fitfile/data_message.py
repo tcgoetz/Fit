@@ -10,6 +10,7 @@ import datetime
 
 from .data_field import DataField
 from .dev_data_field import DevDataField
+from .exceptions import FitMessageParse
 
 
 logger = logging.getLogger(__name__)
@@ -63,7 +64,10 @@ class DataMessage():
         self.file_size = 0
         message_fields = {}
         for index in range(definition_message.fields):
-            data_field = DataField(fit_file, definition_message, definition_message.field_definitions[index], measurement_system)
+            try:
+                data_field = DataField(fit_file, definition_message, definition_message.field_definitions[index], measurement_system)
+            except Exception as e:
+                raise FitMessageParse(self, e)
             self.file_size += data_field.file_size
             for field_value in data_field.values:
                 message_fields[field_value.field.name] = field_value
