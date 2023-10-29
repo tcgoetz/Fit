@@ -25,6 +25,7 @@ class BatteryStatusField(EnumField):
 
     _name = 'battery_status'
     _enum = BatteryStatus
+    _default = BatteryStatus.invalid
 
 
 class AutoActivityDetectField(BitField):

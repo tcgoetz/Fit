@@ -21,7 +21,7 @@ class UnknownEnumValue():
         self.name = f'{type(self).__name__}_{value}'
 
     @classmethod
-    def from_string(cls, string):
+    def from_string(cls, string, default=None):
         """Return a UnknownEnumValue instance created from a string."""
         return cls(string)
 
@@ -62,11 +62,13 @@ class FieldEnum(enum.Enum):
             return None
 
     @classmethod
-    def from_string(cls, string):
+    def from_string(cls, string, default=None):
         """Return an instance of FieldEnum instantiated with string or an instancxe of UnknownEnumValue if not found."""
         try:
             return cls._from_string(string)
         except (AttributeError, TypeError):
+            if default:
+                return default
             return UnknownEnumValue(string)
 
 
@@ -82,11 +84,13 @@ class CaseInsensitiveFieldEnum(FieldEnum):
         return UnknownEnumValue(string)
 
     @classmethod
-    def from_string(cls, string):
+    def from_string(cls, string, default=None):
         """Return an instance of FieldEnum instantiated with string."""
         try:
             return cls._from_string(string)
         except (AttributeError, TypeError):
+            if default:
+                return default
             return cls.from_string_ext(string)
 
 
@@ -102,11 +106,13 @@ class FuzzyFieldEnum(FieldEnum):
         return UnknownEnumValue(string)
 
     @classmethod
-    def from_string(cls, string):
+    def from_string(cls, string, default=None):
         """Return an instance of FieldEnum instantiated with string."""
         try:
             return cls._from_string(string)
         except (AttributeError, TypeError):
+            if default:
+                return default
             return cls.from_string_ext(string)
 
 
@@ -236,6 +242,8 @@ class SourceType(FieldEnum):
 
 
 class BatteryStatus(FieldEnum):
+    """An enum that defines the state of a battery."""
+
     new = 1
     good = 2
     ok = 3

@@ -153,9 +153,8 @@ class CompressedSpeedDistanceField(Field):
     speed_field = SpeedMpsField('speed')
     distance_field = DistanceCentimetersToKmsField('distance')
 
-    def convert(self, value, invalid, measurement_system):
+    def _convert_single(self, value, invalid):
         """Convert the value to sub fields."""
-        self.measurement_system = measurement_system
         speed = value & 0x3f
         distance = value >> 12
-        return self.speed_field.convert(speed, 0xff, measurement_system) + self.distance_field.convert(distance, 0xff, measurement_system)
+        return self.speed_field.convert(speed, 0xff, self.measurement_system) + self.distance_field.convert(distance, 0xff, self.measurement_system)

@@ -15,9 +15,10 @@ class EnumField(NamedField):
     """Base class for a field that can be represented by an enum value."""
 
     _enum = None
+    _default = None
 
     def _convert_single(self, value, invalid=None):
-        return self._enum.from_string(value)
+        return self._enum.from_string(value, self._default)
 
 
 class SwitchField(EnumField):

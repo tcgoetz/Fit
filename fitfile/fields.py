@@ -67,10 +67,12 @@ class Field():
 
     def convert(self, value, invalid, measurement_system=DisplayMeasure.metric):
         """Return a FieldValue as intepretted by the field's rules."""
+        self.measurement_system = measurement_system
         return [FieldValue(self, value, invalid, **{self._name: self._convert_many(value, invalid)})]
 
     def reconvert(self, value, invalid, measurement_system=DisplayMeasure.metric):
         """Return the field's value as intepretted by the field's rules."""
+        self.measurement_system = measurement_system
         return {self._name: self._convert_many(value, invalid)}
 
     def __repr__(self):
