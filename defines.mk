@@ -13,7 +13,7 @@ SHELL=/usr/bin/bash
 
 else ifeq ($(PLATFORM), Darwin) # MacOS
 
-SHELL=/usr/local/bin/bash
+SHELL ?= /usr/bin/bash
 
 else
 
