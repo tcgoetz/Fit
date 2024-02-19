@@ -60,4 +60,7 @@ clean: test_clean
 	rm -rf dist
 	rm -rf *.egg-info
 
+merge_develop:
+	git fetch --all && git merge remotes/origin/develop
+
 .PHONY: deps remove_deps test verify_commit clean install uninstall dist build publish_check publish
