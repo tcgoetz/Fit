@@ -63,4 +63,4 @@ clean: test_clean
 merge_develop:
 	git fetch --all && git merge remotes/origin/develop
 
-.PHONY: deps remove_deps test verify_commit clean install uninstall dist build publish_check publish
+.PHONY: deps remove_deps test verify_commit clean install uninstall dist build publish_check publish merge_develop
