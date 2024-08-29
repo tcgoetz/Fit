@@ -314,3 +314,19 @@ class TrainingEffectField(NamedField):
     """A field that holds a Garmin training effect measurement (0.0-5.0)."""
 
     _scale = 10.0
+
+#
+# Climbing related fields
+#
+class ClimbingGrade(NamedField):
+    _name = 'grade'
+
+class ClimbingRouteComleted(NamedField):
+    _name = 'route_completed'
+
+    def _convert_single(self, value, invalid):
+        if value != invalid:
+            if value == 3:
+                return True
+            elif value == 2:
+                return False
