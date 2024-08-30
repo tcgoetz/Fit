@@ -178,6 +178,7 @@ class MessageType(enum.Enum):
     unknown_284                     = 284
     jump                            = 285
     respiration                     = 297
+    split                           = 312
     #
     climb_pro                       = 317
     #

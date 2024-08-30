@@ -7,7 +7,7 @@ __license__ = "GPL"
 from .message_type import MessageType
 from .fields import Field, TimestampField, TimeMsField, TimeSField, TimeMinField, TimeHourField, TimeOffsetField, TimeOfDayField, NamedField, PowerField, PercentField, \
     TrainingEffectField, CaloriesField, LeftRightBalanceField, WorkField, FractionalCadenceField, FractionalCyclesField, BytePercentField, MessageIndexField, VersionField, \
-    CyclesDistanceField, CyclesCaloriesField, CaloriesDayField
+    CyclesDistanceField, CyclesCaloriesField, CaloriesDayField, ClimbingGrade, ClimbingRouteComleted
 from .type_fields import IntegerField, FloatField, StringField, BoolField, HeartRateField, RespirationRateField, AbsolutePressureField, BytesField, MetaMaxField, \
     FitBaseTypeField, YearOffset
 from .enum_fields import FileTypeField, TimeModeField, SwitchField, DateModeField, DisplayMeasureField, DisplayHeartField, DisplayPositionField, HeartRateZoneCalcField, \
@@ -834,6 +834,21 @@ class DefinitionMessageData():
         },
         MessageType.respiration : {
             0 : RespirationRateField(),
+        },
+        MessageType.split: {
+            1  : TimeMsField('total_elapsed_time'),
+            2  : TimeMsField('total_timer_time'),
+            4  : TimestampField('start_time', utc=True),
+            5  : TimestampField('end_time', utc=True),
+            13 : DistanceMetersField('ascent'),
+            14 : DistanceMetersField('descent'),
+            15 : HeartRateField('min_heart_rate'),
+            16 : HeartRateField('max_heart_rate'),
+            26 : FloatField('avg_vertical_speed'),
+            28 : CaloriesField('total_calories'),
+            70 : ClimbingGrade('grade'),
+            71 : ClimbingRouteComleted('completed'),
+            72 : IntegerField('falls'),
         },
         MessageType.climb_pro : {
             0 : LatiitudeField('position_lat'),
