@@ -5,7 +5,12 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 
+import logging
+
 from .field_enums import DisplayMeasure
+
+
+logger = logging.getLogger(__name__)
 
 
 class Measurement():
@@ -93,6 +98,11 @@ class Distance(Measurement):
         return cls.from_units(feet, 1609.344, invalid_value)
 
     @classmethod
+    def from_unknown(cls, value, invalid_value=None):
+        """Create a Distance object from a distance measurement with unknown units."""
+        return cls.from_units(value, 1.0, invalid_value)
+
+    @classmethod
     def from_func(cls, units):
         """Return a Distance object from function for a measurement in units."""
         units_to_obj_func = {
@@ -110,7 +120,8 @@ class Distance(Measurement):
         try:
             return units_to_obj_func[units.lower()]
         except KeyError:
-            raise Exception(f'No conversion for units {units}')
+            logger.error(f'No conversion for distance units {units}')
+            return cls.from_unknown
 
     @classmethod
     def from_meters_or_feet(cls, distance, measurement_system=DisplayMeasure.metric):
@@ -236,18 +247,26 @@ class Speed(Measurement):
         return cls.from_units(mm_per_sec, 0.001, invalid_value)
 
     @classmethod
+    def from_unknown(cls, value, invalid_value=None):
+        """Create a Speed object from a speed value with unknown units."""
+        return cls.from_units(value, 1.0, invalid_value)
+
+    @classmethod
     def from_func(cls, units):
         """Return a Distance object from function for a measurement in units."""
         units_to_obj_func = {
             'mps'   : cls.from_mps,
-            'km/h'  : cls.from_kph,
+            'm/s'   : cls.from_mps,
             'kph'   : cls.from_kph,
-            'mph'   : cls.from_mph
+            'km/h'  : cls.from_kph,
+            'mph'   : cls.from_mph,
+            'm/h'   : cls.from_mph
         }
         try:
             return units_to_obj_func[units.lower()]
         except KeyError:
-            raise Exception(f'No conversion for units {units}')
+            logger.error(f'No conversion for speed units {units}')
+            return cls.from_unknown
 
     @classmethod
     def from_kph_or_mph(cls, speed, measurement_system=DisplayMeasure.metric):

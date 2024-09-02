@@ -42,15 +42,9 @@ class TestMeasurement(unittest.TestCase):
         self.assertEqual(Distance.from_func('Feet'), Distance.from_feet)
         self.assertEqual(Distance.from_func('MeterS'), Distance.from_meters)
 
-    def test_distance_from_func_raises(self):
-        self.assertRaises(Exception, Distance.from_func, 'xxx')
-
     def test_speed_from_func(self):
         self.assertEqual(Speed.from_func('KPH'), Speed.from_kph)
         self.assertEqual(Speed.from_func('Mph'), Speed.from_mph)
-
-    def test_speed_from_func_raises(self):
-        self.assertRaises(Exception, Speed.from_func, 'xxx')
 
     def test_weight(self):
         weight = Weight.from_grams(100000)
