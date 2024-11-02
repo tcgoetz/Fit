@@ -56,13 +56,11 @@ class ActivityField(EnumField):
     _enum = Activity
 
 
-class ActivityTypeField(Field):
+class ActivityTypeField(EnumField):
     """A field holding an activity type as a integer enum value."""
 
     _name = 'activity_type'
-
-    def _convert_single(self, value, invalid):
-        return ActivityType(value)
+    _enum = ActivityType
 
 
 class ActivityClassField(Field):

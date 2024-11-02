@@ -315,11 +315,13 @@ class TrainingEffectField(NamedField):
 
     _scale = 10.0
 
+
 #
 # Climbing related fields
 #
 class ClimbingGrade(NamedField):
     _name = 'grade'
+
 
 class ClimbingRouteComleted(NamedField):
     _name = 'route_completed'
