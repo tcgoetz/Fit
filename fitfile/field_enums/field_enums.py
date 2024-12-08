@@ -536,6 +536,7 @@ class HeartRateZonesTimerType(FieldEnum):
 class HeartRateZonesMethod(FieldEnum):
     """Gives the method used to calculate the heart rate zones."""
 
+    custom = 0
     max_heart_rate = 1
     heart_rate_reserve = 2
     lactate_threshhold = 3
