@@ -202,9 +202,11 @@ class TimeOffsetField(Field):
 
     def _convert_single(self, value, invalid):
         # if the offset is greater than 24 hours, than it's negative
-        if value > 86400:
+        if value <= 86400:
+            return value
+        if value >= 4294880895:
             return -(0xFFFFFFFF - value + 1)
-        return value
+        return datetime.datetime.now(datetime.timezone.utc).astimezone().utcoffset().total_seconds()
 
 
 class TimeHourField(TimeMsField):
