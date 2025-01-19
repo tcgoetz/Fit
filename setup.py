@@ -9,7 +9,7 @@ def get_version(version_file):
     """Extract version fron module source."""
     with open(version_file, 'r') as file:
         data = file.read()
-        match = re.search(r'version_info = \((\d), (\d), (\d)\)', data, re.M)
+        match = re.search(r'version_info = \((\d+), (\d+), (\d+)\)', data, re.M)
         if match:
             return f'{match.group(1)}.{match.group(2)}.{match.group(3)}'
 
