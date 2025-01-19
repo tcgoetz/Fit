@@ -842,7 +842,7 @@ class DefinitionMessageData():
             5  : TimestampField('end_time', utc=True),
             13 : DistanceMetersField('ascent'),
             14 : DistanceMetersField('descent'),
-            15 : HeartRateField('min_heart_rate'),
+            15 : HeartRateField('avg_heart_rate'),
             16 : HeartRateField('max_heart_rate'),
             26 : FloatField('avg_vertical_speed'),
             28 : CaloriesField('total_calories'),
