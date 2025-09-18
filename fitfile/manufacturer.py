@@ -147,6 +147,23 @@ class Manufacturer(FuzzyFieldEnum):
     sigeyi                          = 134
     coospo                          = 135
     geoid                           = 136
+    bosch                           = 137
+    kyto                            = 138
+    kinetic_sports                  = 139
+    decathlon_byte                  = 140
+    tq_systems                      = 141
+    tag_heuer                       = 142
+    keiser_fitness                  = 143
+    zwift_byte                      = 144
+    porsche_ep                      = 145
+    blackbird                       = 146
+    meilan_byte                     = 147
+    ezon                            = 148
+    laisi                           = 149
+    myzone                          = 150
+    abawo                           = 151
+    bafang                          = 152
+    luhong_technology               = 153
     Garmin_local_154                = 154
     Garmin_local_218                = 218
     development                     = 255
@@ -219,6 +236,17 @@ class Manufacturer(FuzzyFieldEnum):
     shanyue                         = 322
     spinning_mda                    = 323
     hilldating                      = 324
+    aero_sensor                     = 325
+    nike                            = 326
+    magicshine                      = 327
+    ictrainer                       = 328
+    absolute_cycling                = 329
+    eo_swimbetter                   = 330
+    mywhoosh                        = 331
+    ravemen                         = 332
+    tektro_racing_products          = 333
+    darad_innovation_corporation    = 334
+    cycloptim                       = 335
     #
     actigraphcorp                   = 5759
     #
