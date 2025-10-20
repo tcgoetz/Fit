@@ -61,7 +61,7 @@ class Sport(FieldEnum):
     floor_climbing          = 48
     baseball                = 49
     diving                  = 53
-    emergency_alert         = 54 # Not documented in the SDK, could mean something else
+    emergency_alert         = 54  # Not documented in the SDK, could mean something else
     hiit                    = 62
     racket                  = 64
     wheelchair_push_walk    = 65
