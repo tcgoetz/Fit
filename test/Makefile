@@ -24,4 +24,4 @@ clean:
 # Targets for testing smaller slices of functionality.
 #
 $(TEST_GROUPS):
-	$(PYTHON) test_$@.py
+	$(PYTHON_PATH) test_$@.py

@@ -1,45 +1,55 @@
 
 export PROJECT_BASE=$(CURDIR)
+export VENV=$(PROJECT_BASE)/../.venv
 
 
 include defines.mk
 
+$(info $$PROJECT_BASE is [${PROJECT_BASE}])
+$(info $$VENV is [${VENV}])
+$(info $$PLATFORM is [${PLATFORM}])
+$(info $$SHELL is [${SHELL}])
+
+export PIP_PATH=$(VENV)/bin/$(PIP)
+$(info $$PIP_PATH is [${PIP_PATH}])
+export PYTHON_PATH=$(VENV)/bin/$(PYTHON)
+$(info $$PYTHON_PATH is [${PYTHON_PATH}])
 
 all: deps
 
 build:
-	$(PYTHON) -m build
+	$(PYTHON_PATH) -m build
 
 $(PROJECT_BASE)/dist/$(MODULE)-*.whl: build
 
 install: $(PROJECT_BASE)/dist/$(MODULE)-*.whl
-	$(PIP) install --upgrade --force-reinstall $(PROJECT_BASE)/dist/$(MODULE)-*.whl 
+	$(PIP_PATH) install --upgrade --force-reinstall $(PROJECT_BASE)/dist/$(MODULE)-*.whl 
 
 install_pip:
-	$(PIP) install --upgrade --force-reinstall fitfile 
+	$(PIP_PATH) install --upgrade --force-reinstall fitfile 
 
 uninstall:
-	$(PIP) uninstall -y fitfile
+	$(PIP_PATH) uninstall -y fitfile
 
 reinstall: clean uninstall install
 
 dist: install
 
 publish_check: dist
-	$(PYTHON) -m twine check dist/*
+	$(PYTHON_PATH) -m twine check dist/*
 
 publish: clean publish_check
-	$(PYTHON) -m twine upload dist/* --verbose
+	$(PYTHON_PATH) -m twine upload dist/* --verbose
 
 deps:
-	$(PIP) install --upgrade --requirement requirements.txt
+	$(PIP_PATH) install --upgrade --requirement requirements.txt
 
 devdeps:
-	$(PIP) install --upgrade --requirement dev-requirements.txt
+	$(PIP_PATH) install --upgrade --requirement dev-requirements.txt
 
 remove_deps:
-	# $(PIP) uninstall -y --requirement requirements.txt
-	$(PIP) uninstall -y --requirement dev-requirements.txt
+	# $(PIP_PATH) uninstall -y --requirement requirements.txt
+	$(PIP_PATH) uninstall -y --requirement dev-requirements.txt
 
 test:
 	$(MAKE) -C test
@@ -47,7 +57,7 @@ test:
 verify_commit: test
 
 flake8:
-	$(PYTHON) -m flake8 fitfile/*.py fitfile/conversions/*.py fitfile/exceptions/*.py fitfile/field_enums/*.py --max-line-length=180 --ignore=E203,E221,E241,W503
+	$(PYTHON_PATH) -m flake8 fitfile/*.py fitfile/conversions/*.py fitfile/exceptions/*.py fitfile/field_enums/*.py --max-line-length=180 --ignore=E203,E221,E241,W503
 
 test_clean:
 	$(MAKE) -C test clean
