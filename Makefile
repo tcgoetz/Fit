@@ -63,6 +63,7 @@ test_clean:
 	$(MAKE) -C test clean
 
 clean: test_clean
+	echo "Cleaning Fit"
 	$(MAKE) -C test clean
 	rm -f *.pyc
 	rm -rf __pycache__
