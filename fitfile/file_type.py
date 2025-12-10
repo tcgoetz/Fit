@@ -33,5 +33,6 @@ class FileType(FieldEnum):
     metrics                     = 44
     sleep                       = 49
     unknown_file_type_64        = 64
+    hrv_status                  = 68
     manufacturer_range_start    = 0xfe
     invalid                     = 255

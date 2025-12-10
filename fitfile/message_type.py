@@ -182,7 +182,8 @@ class MessageType(enum.Enum):
     #
     climb_pro                       = 317
     #
-    #
+    hrv_status_summary              = 370
+    hrv_value                       = 371
     #
     mfg_range_min                   = 0xFF00
     mfg_range_max                   = 0xFFFE

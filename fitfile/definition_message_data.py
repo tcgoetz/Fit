@@ -858,6 +858,20 @@ class DefinitionMessageData():
             4 : IntegerField('climb_category'),
             5 : DistanceMetersField('current_dist')
         },
+        MessageType.hrv_status_summary : {
+            0 : FloatField('weekly_average'),        # RMSSD weekly average (scale 128)
+            1 : FloatField('last_night'),            # Last night RMSSD (scale 128)
+            2 : FloatField('last_night_average'),    # Last night average (scale 128)
+            3 : FloatField('baseline_low'),          # Baseline low bound (scale 128)
+            4 : FloatField('baseline_high'),         # Baseline high bound (scale 128)
+            5 : FloatField('baseline_balanced_low'), # Balanced range low (scale 128)
+            6 : IntegerField('status'),              # HRV status (0=unknown, 2=poor, 3=low, 4=balanced)
+            7 : IntegerField('reading_count'),       # Number of readings
+            8 : FloatField('baseline_balanced_high') # Balanced range high (scale 128)
+        },
+        MessageType.hrv_value : {
+            0 : FloatField('hrv_value')              # RMSSD value (scale 128)
+        },
         MessageType.mfg_range_min : {},
         MessageType.mfg_range_max : {},
     }
