@@ -397,9 +397,10 @@ class ActivityType(FieldEnum):
     fitness_equipment   = 4
     swimming            = 5
     walking             = 6
-    sedentary           = 7
+    sedentary           = 8
     stop_disable        = 8
     unknown             = 9
+    wheelchair_pushing  = 13
     all                 = 245
     invalid             = 255
 
