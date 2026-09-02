@@ -8,6 +8,8 @@ import struct
 import logging
 import enum
 
+from .exceptions.exceptions import FitDataUnpackError
+
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +35,7 @@ class Schema():
         'INT64': 8,
         'UINT64': 8,
         'FLOAT32': 4,
-        'FLOAT64': 4
+        'FLOAT64': 8
     }
 
     __type_to_unpack_format = {
@@ -88,6 +90,10 @@ class Schema():
                 index += 1
         return decoded_data
 
+    def __repr__(self):
+        """Return a string representation of the class instance."""
+        return f'Schema({self.name} {repr(self.ordered_dict)} {repr(self.unpack_format)})'
+
 
 class Data():
     """The base object for decoding FIT file data."""
@@ -104,17 +110,22 @@ class Data():
 
     def _decode(self, schema):
         """Given a schema decode file data into fields and add them as properties of the data object."""
-        (unpack_format, file_size) = schema.get_unpack(self.endian)
-        self.file_size += file_size
-        bytes = struct.unpack(unpack_format, self.file.read(file_size))
+        (unpack_format, size) = schema.get_unpack(self.endian)
+        self.file_size += size
+        try:
+            bytes = struct.unpack(unpack_format, self.file.read(size))
+        except Exception as e:
+            raise FitDataUnpackError(self.endian, unpack_format, size, e)
         vars(self).update(schema._decode(bytes))
 
     def decode_all(self):
         """Decode file data using all of the data objects schemas."""
+        # logger.debug("Decoding primary schema %r", self.primary_schema)
         self._decode(self.primary_schema)
         if self.secondary_schemas is not None:
             for schema, control_func in self.secondary_schemas:
                 if control_func():
+                    # logger.debug("Decoding secondary schema %r", schema)
                     self._decode(schema)
 
     def _convert(self):

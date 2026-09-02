@@ -34,7 +34,7 @@ install_requires = get_requirements('requirements.txt')
 
 print(f"Building {module_name} {module_version}")
 
-setup(name=module_name, version=module_version, author='Tom Goetz', packages=[module_name, f'{module_name}.conversions', f'{module_name}.exceptions', f'{module_name}.field_enums'],
+setup(name=module_name, version=module_version, author='Tom Goetz', packages=[module_name, f'{module_name}.conversions', f'{module_name}.exceptions', f'{module_name}.fields', f'{module_name}.fields.field_enums', f'{module_name}.fields.enum_fields', f'{module_name}.messages'],
       description='Decode FIT format files.',
       long_description=module_long_description,
       long_description_content_type='text/x-rst',

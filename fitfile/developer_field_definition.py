@@ -12,8 +12,8 @@ from .data import Schema
 from .field_definition import FieldDefinitionBase
 from .message_type import MessageType
 from .definition_message_data import DefinitionMessageData
-from .object_fields import DistanceMetersField, SpeedMpsField
-from .dev_field import DevField, DevDistanceField, DerivedDevDistanceField, DevSpeedField, DerivedDevSpeedField
+from .fields.objects import DistanceMetersField, SpeedMpsField
+from .fields.dev import DevField, DevDistanceField, DerivedDevDistanceField, DevSpeedField, DerivedDevSpeedField
 from .exceptions import FitUndefDevMessageType
 
 

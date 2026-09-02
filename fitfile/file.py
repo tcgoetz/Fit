@@ -13,10 +13,11 @@ from .record_header import RecordHeader, MessageClass
 from .definition_message import DefinitionMessage
 from .data_message import DataMessageDecodeContext, DataMessage
 from .message_type import MessageType
-from .field_enums import DisplayMeasure
+from .measurement import MeasurementSystem
 
 
 logger = logging.getLogger(__name__)
+root_logger = logging.getLogger()
 
 name_regex = r'\w+\.(fit|FIT)'
 
@@ -26,28 +27,30 @@ name_regex = r'\w+\.(fit|FIT)'
 class File():
     """Object that represents a FIT file."""
 
-    def __init__(self, filename, measurement_system=DisplayMeasure.metric):
+    def __init__(self, filename, measurement_system=MeasurementSystem.metric):
         """
         Return a File instance by parsing a FIT file.
 
         Parameters:
         ----------
             filename (string): The name of the FIT file including full path.
-            measurement_system (DisplayMeasure): The measurement units (metric, statute, etc) to uwe when parsing the FIT file.
+            measurement_system (MeasurementSystem): The measurement units (metric, statute, etc) to uwe when parsing the FIT file.
 
         """
         self.filename = filename
         self.measurement_system = measurement_system
         self.message_types = []
         self.messages = []
+        logger.debug("- Started file %s", self.filename)
         for message_type in MessageType:
             vars(self)[message_type.name] = []
         with open(filename, 'rb') as file:
             self.__parse(file)
         self.__sumarize()
+        logger.debug("- Completed file %s", self.filename)
 
     def __parse(self, file):
-        logger.debug("Parsing File %s", self.filename)
+        logger.debug("-- Parsing File %s", self.filename)
         self.file_header = FileHeader(file)
         self.data_size = self.file_header.data_size
         self._definition_messages = {}
@@ -95,6 +98,7 @@ class File():
         return (time_local - time_utc.replace(tzinfo=None)).total_seconds()
 
     def __sumarize(self):
+        logger.debug("-- Summerizing file %s", self.filename)
         first_file_id = self.file_id[0]
         self.time_created = first_file_id.fields.time_created
         self.type = first_file_id.fields.type
@@ -104,8 +108,8 @@ class File():
         # File time zone and offset
         if MessageType.device_settings in self.message_types:
             self.utc_offset = self.device_settings[0].fields.time_offset
-        elif MessageType.start in self.message_types:
-            self.utc_offset = self.__calculate_utc_offset(self.start[0])
+        elif MessageType.sleep_data_info in self.message_types:
+            self.utc_offset = self.__calculate_utc_offset(self.sleep_data_info[0])
         elif MessageType.monitoring_info in self.message_types:
             self.utc_offset = self.__calculate_utc_offset(self.monitoring_info[0])
         else:
@@ -117,8 +121,8 @@ class File():
         else:
             self.time_ended_local = self.time_created_local
         # File start and end times
-        if MessageType.start in self.message_types:
-            self.start_time = self.start[0].fields.timestamp
+        if MessageType.sleep_data_info in self.message_types:
+            self.start_time = self.sleep_data_info[0].fields.timestamp
         else:
             self.start_time = self.time_created
         if MessageType.end in self.message_types:
@@ -131,6 +135,7 @@ class File():
         else:
             self.sport_type = None
             self.sub_sport_type = None
+        logger.debug("Sport %r - %r", self.sport_type, self.sub_sport_type)
         if MessageType.dev_data_id in self.message_types:
             self.dev_application_ids = [dev_data_id.fields.application_id for dev_data_id in self.dev_data_id]
         else:

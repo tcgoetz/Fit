@@ -38,6 +38,13 @@ class FitMessageType(FitFileError):
     """An exception do to a unrecognized FIT file message type."""
 
 
+class FitDataUnpackError(FitFileError):
+    """An exception happened while decoding data for a FIT file message."""
+    def __init__(self, endian, unpack_format, unpack_size, inner=None):
+        """Return a FitMessageParse instance."""
+        super().__init__(f"Failed to unpack data endian {repr(endian)} format {unpack_format} size {unpack_size}", inner)
+
+
 class FitMessageParse(FitFileError):
     """An exception happened while parsing a FIT file message."""
     def __init__(self, message, inner=None):
@@ -45,10 +52,10 @@ class FitMessageParse(FitFileError):
         super().__init__(f"Failed to parse Message {repr(message)}", inner)
 
 
-class FitDataFieldParse(FitFileError):
+class FitDataFieldConvertError(FitFileError):
     """An exception happened while parsing a FIT file message."""
     def __init__(self, data_field_value, field, inner=None):
-        """Return a FitDataFieldParse instance."""
+        """Return a FitDataFieldConvertError instance."""
         super().__init__(f"Failed to parse DataField {repr(data_field_value)} for Field {repr(field)} ", inner)
 
 

@@ -7,8 +7,8 @@ __license__ = "GPL"
 import unittest
 import logging
 
-from fitfile import field_enums
-from fitfile import enum_fields
+from fitfile import UnknownEnumValue, MeasurementSystem
+from fitfile.fields import Switch, SwitchField
 
 
 root_logger = logging.getLogger()
@@ -27,26 +27,26 @@ class TestFitFieldEnum(unittest.TestCase):
         pass
 
     def test_field_enum_valid_conversion(self):
-        self.assertEqual(field_enums.Switch.from_string('on'), field_enums.Switch.on)
+        self.assertEqual(Switch.from_string('on'), Switch.on)
 
     def test_field_enum_unknown_conversion(self):
-        self.assertIsInstance(field_enums.Switch.from_string('junk'), field_enums.UnknownEnumValue)
+        self.assertIsInstance(Switch.from_string('junk'), UnknownEnumValue)
 
     def test_field_enum_fuzzy_metric(self):
-        self.assertEqual(field_enums.DisplayMeasure.from_string('metric_system'), field_enums.DisplayMeasure.metric)
+        self.assertEqual(MeasurementSystem.from_string('metric_system'), MeasurementSystem.metric)
 
     def test_field_enum_fuzzy_statute(self):
-        self.assertEqual(field_enums.DisplayMeasure.from_string('statute_us'), field_enums.DisplayMeasure.statute)
+        self.assertEqual(MeasurementSystem.from_string('statute_us'), MeasurementSystem.statute)
 
     def test_enum_field_valid_conversion(self):
-        switch = enum_fields.SwitchField('test')
+        switch = SwitchField('test')
         field_value_list = switch.convert(1, 255)
-        self.assertEqual(field_value_list[0]['test'], field_enums.Switch.on)
+        self.assertEqual(field_value_list[0]['test'], Switch.on)
 
     def test_enum_field_unknown_conversion(self):
-        switch = enum_fields.SwitchField('test')
+        switch = SwitchField('test')
         field_value_list = switch.convert(10, 255)
-        self.assertIsInstance(field_value_list[0]['test'], field_enums.UnknownEnumValue)
+        self.assertIsInstance(field_value_list[0]['test'], UnknownEnumValue)
 
 
 if __name__ == '__main__':

@@ -57,7 +57,7 @@ test:
 verify_commit: test
 
 flake8:
-	$(PYTHON_PATH) -m flake8 fitfile/*.py fitfile/conversions/*.py fitfile/exceptions/*.py fitfile/field_enums/*.py --max-line-length=180 --ignore=E203,E221,E241,W503
+	$(PYTHON_PATH) -m flake8 fitfile/*.py fitfile/conversions/*.py fitfile/exceptions/*.py fitfile/fields/*.py fitfile/fields/enum_fields/*.py fitfile/messages/*.py --max-line-length=180 --ignore=E203,E221,E241,W503
 
 test_clean:
 	$(MAKE) -C test clean

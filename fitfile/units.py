@@ -6,7 +6,7 @@ __license__ = "GPL"
 
 import enum
 
-from .field_enums import DisplayMeasure
+from .measurement import MeasurementSystem
 
 
 class UnitTypes(enum.Enum):
@@ -20,14 +20,14 @@ class UnitTypes(enum.Enum):
 
 
 unit_strings = {
-    DisplayMeasure.statute : {
+    MeasurementSystem.statute : {
         UnitTypes.distance_long : 'miles',
         UnitTypes.pace          : 'per mile',
         UnitTypes.speed         : 'mph',
         UnitTypes.altitude      : 'feet',
         UnitTypes.tempurature   : 'F'
     },
-    DisplayMeasure.metric : {
+    MeasurementSystem.metric : {
         UnitTypes.distance_long : 'kilometers',
         UnitTypes.pace          : 'per kilometers',
         UnitTypes.speed         : 'kph',

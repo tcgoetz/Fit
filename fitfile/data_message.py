@@ -8,8 +8,7 @@ __license__ = "GPL"
 import logging
 import datetime
 
-from .data_field import DataField
-from .dev_data_field import DevDataField
+from .fields import DataField, DevDataField
 from .exceptions import FitMessageParse
 
 
