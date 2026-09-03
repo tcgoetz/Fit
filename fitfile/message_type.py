@@ -196,7 +196,7 @@ class MessageType(enum.Enum):
     sleep_data_info                         = 273
     sleep_data                              = 274  # this is a guess
     sleep_level                             = 275
-    end                                     = 276  # this is a guess
+    sleep_end                               = 276  # this is a guess
     metrics_281                             = 281  # guess, file type metrics
     metrics_282                             = 282  # guess, file type metrics
     unknown_284                             = 284

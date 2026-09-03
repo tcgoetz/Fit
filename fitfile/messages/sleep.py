@@ -5,7 +5,14 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 
-from ..fields import IntegerField
+from ..fields import IntegerField, TimeSField, StringField, TimestampField
+
+
+sleep_data_info_message = {
+    1 : TimeSField('sample_length'),
+    2 : TimestampField('local_timestamp', utc=False),
+    4 : StringField('version'),
+}
 
 
 sleep_assessment_message = {

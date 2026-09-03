@@ -29,6 +29,7 @@ from .types import *
 #
 from .field_enums.activity import Sport, SubSport
 from .field_enums.device import BatteryStatus, MainDeviceType
+from .field_enums.event import Event, EventType
 from .field_enums.file_type import FileType
 from .field_enums.heart_rate import HeartRateZoneCalc, HeartRateZonesTimerType, HeartRateVarianceStatus
 from .field_enums.manufacturer import Manufacturer

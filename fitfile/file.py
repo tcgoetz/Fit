@@ -125,8 +125,8 @@ class File():
             self.start_time = self.sleep_data_info[0].fields.timestamp
         else:
             self.start_time = self.time_created
-        if MessageType.end in self.message_types:
-            self.end_time = self.end[0].fields.timestamp
+        if MessageType.sleep_end in self.message_types:
+            self.end_time = self.sleep_end[0].fields.timestamp
         else:
             self.end_time = self.last_message_timestamp
         if MessageType.sport in self.message_types:

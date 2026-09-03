@@ -6,7 +6,7 @@ __license__ = "GPL"
 
 from .message_type import MessageType
 from .fields import BytesField, NamedField, VersionField, FloatField, IntegerField, TimestampField, TimeMsField, WatchFaceModeField, SleepActivityLevelField, \
-    SleepDisruptionsSeveritylField, SwitchField, EnhancedRespirationRateField, MessageIndexField, HeartRateField, HeartRateVarianceField, TemperatureField
+    SleepDisruptionsSeveritylField, SwitchField, EnhancedRespirationRateField, MessageIndexField, HeartRateField, HeartRateVarianceField, TemperatureField, TimeSField
 
 from .messages import file_id_message, device_settings_message, user_profile_message, hrm_profile_message, bike_profile_message, zones_target_message, hr_zone_message, \
     power_zone_message, sport_message, data_screen_message, goal_message, alert_message, range_alert_message, session_message, lap_message, record_message, event_message, \
@@ -14,7 +14,7 @@ from .messages import file_id_message, device_settings_message, user_profile_mes
     file_creator_message, training_file_message, monitoring_info_message, device_status_message, personal_record_message, connectivity_message, activity_metrics_message, \
     epo_status_message, sensor_message, field_description_message, dev_data_id_message, time_in_zone_message, jump_message, split_message, climb_pro_message, \
     hrv_status_summary_message, timestamp_correlation_message, best_effort_message, workout_schedule_message, gps_metadata_message, user_metrics_message, \
-    training_settings_message, stress_level_message, sleep_assessment_message
+    training_settings_message, stress_level_message, sleep_assessment_message, sleep_data_info_message
 
 
 class DefinitionMessageData():
@@ -167,16 +167,14 @@ class DefinitionMessageData():
         MessageType.pulse_ox : {
             0 : FloatField('pulse_ox'),
         },
-        MessageType.sleep_data_info : {  # Names and types for this message are guesses
-            2 : TimestampField('local_timestamp', utc=False),
-        },
-        MessageType.sleep_data : {  # Names and types for this message are guesses
+        MessageType.sleep_data_info : sleep_data_info_message,
+        MessageType.sleep_data : {
             0 : BytesField('data'),
         },
-        MessageType.sleep_level : {  # Names and types for this message are guesses
+        MessageType.sleep_level : {
             0 : SleepActivityLevelField('sleep_level'),
         },
-        MessageType.end : {},  # Names and types for this message are guesses
+        MessageType.sleep_end : {},
         MessageType.metrics_281 : {},
         MessageType.metrics_282 : {},
         MessageType.unknown_284 : {
@@ -222,8 +220,14 @@ class DefinitionMessageData():
         MessageType.device_aux_battery_info : {},
         MessageType.hsa_gyroscope_data : {},
         MessageType.training_load : {},
-        MessageType.sleep_schedule : {},
-        MessageType.sleep_restless_moments : {},
+        MessageType.sleep_schedule : {
+            0 : TimeSField('bed_time'),
+            1 : TimeSField('wake_time'),
+        },
+        MessageType.sleep_restless_moments : {
+            1 : IntegerField('restless_moments_count'),
+            2 : TimeSField('durations'),
+        },
         MessageType.chrono_shot_session : {},
         MessageType.chrono_shot_data : {},
         MessageType.hsa_configuration_data : {},

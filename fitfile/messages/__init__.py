@@ -30,7 +30,7 @@ from .range_alert import range_alert_message
 from .record import record_message
 from .sensor import sensor_message
 from .session import session_message
-from .sleep import sleep_assessment_message, sleep_assessment_message
+from .sleep import sleep_assessment_message, sleep_data_info_message
 from .split import split_message
 from .sport import sport_message
 from .stress import stress_level_message
