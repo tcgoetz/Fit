@@ -379,6 +379,11 @@ class Temperature(Measurement):
         super().__init__(celsius, raw_value, invalid_value, self.to_f, 'F')
 
     @classmethod
+    def from_millicelsius(cls, milliliters, invalid_value=None):
+        """Return a Volume instance created from a value in milliliters."""
+        return cls.from_units(milliliters, 0.001, invalid_value)
+
+    @classmethod
     def from_celsius(cls, celsius, invalid_value=None):
         """Return a Temperature instance intialized with a value in celsius."""
         return cls(celsius, celsius, invalid_value)

@@ -249,6 +249,7 @@ class MessageType(enum.Enum):
     skin_temp_overnight                     = 398
     hill_score                              = 402
     endurance_score                         = 403
+    unknown_407                             = 407
     hsa_wrist_temperature_data              = 409
     nap_event                               = 412
     workout_schedule                        = 428

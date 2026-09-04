@@ -88,6 +88,14 @@ class TemperatureField(ObjectField):
         super().__init__(Temperature.from_celsius, Temperature.f_or_c, name=name)
 
 
+class TemperatureMilliField(ObjectField):
+    """Field holding a temperature measurement in celsius."""
+
+    def __init__(self, name='temperature'):
+        """Return a ObjectField instance."""
+        super().__init__(Temperature.from_millicelsius, Temperature.f_or_c, name=name)
+
+
 class DistanceMetersField(ObjectField):
     """Field holding a distance measurement in meters."""
 

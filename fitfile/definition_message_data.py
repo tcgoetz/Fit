@@ -14,7 +14,7 @@ from .messages import file_id_message, device_settings_message, user_profile_mes
     file_creator_message, training_file_message, monitoring_info_message, device_status_message, personal_record_message, connectivity_message, activity_metrics_message, \
     epo_status_message, sensor_message, field_description_message, dev_data_id_message, time_in_zone_message, jump_message, split_message, climb_pro_message, \
     hrv_status_summary_message, timestamp_correlation_message, best_effort_message, workout_schedule_message, gps_metadata_message, user_metrics_message, \
-    training_settings_message, stress_level_message, sleep_assessment_message, sleep_data_info_message
+    training_settings_message, stress_level_message, sleep_assessment_message, sleep_data_info_message, TemperatureMilliField
 
 
 class DefinitionMessageData():
@@ -239,7 +239,13 @@ class DefinitionMessageData():
         MessageType.skin_temp_overnight : {},
         MessageType.hill_score : {},
         MessageType.endurance_score : {},
-        MessageType.hsa_wrist_temperature_data : {},
+        MessageType.unknown_407 : {
+            7 : TimestampField('local_timestamp', utc=False),
+        },
+        MessageType.hsa_wrist_temperature_data : {
+            0 : TimeSField('processing_interval'),
+            1 : TemperatureMilliField('value')
+        },
         MessageType.nap_event : {},
         MessageType.workout_schedule : workout_schedule_message,
         MessageType.sleep_disruption_severity_period : {
