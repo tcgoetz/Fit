@@ -6,8 +6,8 @@ __license__ = "GPL"
 
 
 from ..fields import TimeMsField, IntegerField, ActivityField, EventField, EventTypeField, TimestampField, NamedField, HeartRateField, TrainingEffectField, \
-    TimeMinField, SpeedMpsField, LatiitudeField, LongitudeField, SportField, PowerField, TimeSField, DistanceMetersField, BenefitField, BoolField, WeightField, HeightField, \
-    GenderField, Vo2MaxField, DistanceCentimetersToMetersField
+    TimeMinField, SpeedMpsField, SportField, PowerField, TimeSField, DistanceMetersField, BenefitField, BoolField, WeightField, HeightField, \
+    GenderField, Vo2MaxField, DistanceCentimetersToMetersField, SubSportField
 
 
 activity_message = {
@@ -27,13 +27,14 @@ activity_metrics_message = {
     7 : Vo2MaxField(),
     9 : TimeMinField('recovery_time'),
     11 : SportField(),
+    12 : SubSportField(),  # ??
     14 : HeartRateField('lactate_threshold_heart_rate'),
     15 : PowerField('lactate_threshold_power'),
     16 : SpeedMpsField('lactate_threshold_speed'),  # 16 bit version
     17 : IntegerField('ending_performance_condition'),
     20 : TrainingEffectField('anaerobic_training_effect'),
-    21 : LatiitudeField('lat_21'),
-    24 : LongitudeField('long_24'),
+    # 21 : LatiitudeField('lat_21'),  not right
+    # 24 : LongitudeField('long_24'),
     25 : IntegerField('ending_body_battery'),
     29 : Vo2MaxField('first_vo2_max'),
     35 : TimeSField('unknown_time'),  # uint32			1000		s

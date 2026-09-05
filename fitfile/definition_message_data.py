@@ -7,7 +7,7 @@ __license__ = "GPL"
 from .message_type import MessageType
 from .fields import BytesField, NamedField, VersionField, FloatField, IntegerField, TimestampField, TimeMsField, WatchFaceModeField, SleepActivityLevelField, \
     SleepDisruptionsSeveritylField, SwitchField, EnhancedRespirationRateField, MessageIndexField, HeartRateField, HeartRateVarianceField, TemperatureField, TimeSField, \
-    TemperatureMilliField, Spo2MeasurementTypeField
+    TemperatureMilliField, Spo2MeasurementTypeField, GpsEventTypeField
 
 from .messages import file_id_message, device_settings_message, user_profile_message, hrm_profile_message, bike_profile_message, zones_target_message, hr_zone_message, \
     power_zone_message, sport_message, data_screen_message, goal_message, alert_message, range_alert_message, session_message, lap_message, record_message, event_message, \
@@ -210,7 +210,11 @@ class DefinitionMessageData():
         MessageType.tank_update : {},
         MessageType.power_mode : {},
         MessageType.tank_summary : {},
-        MessageType.gps_event : {},
+        MessageType.gps_event : {
+            0 : GpsEventTypeField(),
+            1 : IntegerField('data'),
+
+        },
         MessageType.ecg_summary : {},
         MessageType.ecg_raw_sample : {},
         MessageType.ecg_smooth_sample : {},

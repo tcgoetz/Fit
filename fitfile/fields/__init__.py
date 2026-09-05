@@ -17,7 +17,7 @@ from .sport import CyclesField, StepsField, StrokesField, CyclesDistanceField, F
 
 
 from .calories import CaloriesField, CaloriesDayField, CyclesCaloriesField
-from .data import *
+from ..data_field import *
 from .dev import *
 from .device import *
 from .objects import *
@@ -52,7 +52,7 @@ from .enum_fields.climb import ClimbProEventField
 from .enum_fields.user_profile import DisplayHeartField, DisplayMeasureField, DisplayOrientation, DisplayPositionField, DisplayOrientationField, LanguageField, GenderField
 from .enum_fields.device import UnknownDeviceTypeField, MainDeviceTypeField, LocalDeviceTypeField, AntNetworkField, BacklightModeField, SourceTypeField, BatteryStatusField, \
     DateModeField, BodyLocationField, AutoSyncFrequencyField, AntplusDeviceTypeField, SideField, TimeModeField, WatchFaceModeField, EpoCpeStatusField, SatellitesField, \
-    RadarThreatLevelTypeField
+    RadarThreatLevelTypeField, GpsEventTypeField
 from .enum_fields.event import EventField, EventTypeField
 from .enum_fields.file_type import FileType, FileTypeField
 from .enum_fields.fit_base_unit import FitBaseUnitField

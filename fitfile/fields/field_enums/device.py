@@ -241,3 +241,8 @@ class RadarThreatLevelType(Enum):
     threat_approaching      = 2
     threat_approaching_fast = 3
 
+
+class GpsEventType(Enum):
+    signal_lost = 3
+    ultra_trac_trigger = 11
+    mode_change = 49

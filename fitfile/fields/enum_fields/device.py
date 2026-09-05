@@ -7,7 +7,7 @@ __license__ = "GPL"
 
 from .enum import EnumField
 from ..field_enums.device import UnknownDeviceType, MainDeviceType, LocalDeviceType, BatteryStatus, AntNetwork, BacklightMode, SourceType, AntplusDeviceType, AutoSyncFrequency, \
-    BodyLocation, DateMode, Side, TimeMode, WatchFaceMode, EpoCpeStatus, Satellites, RadarThreatLevelType
+    BodyLocation, DateMode, Side, TimeMode, WatchFaceMode, EpoCpeStatus, Satellites, RadarThreatLevelType, GpsEventType
 
 
 class UnknownDeviceTypeField(EnumField):
@@ -136,3 +136,10 @@ class RadarThreatLevelTypeField(EnumField):
 
     _name = 'satellites'
     _enum = RadarThreatLevelType
+
+
+class GpsEventTypeField(EnumField):
+    """A field that identifies the mode the ."""
+
+    _name = 'gps_event_type'
+    _enum = GpsEventType
