@@ -6,7 +6,8 @@ __license__ = "GPL"
 
 
 from .enum import EnumField
-from ..field_enums.settings import VolumeUnits, SelfEvaluationStatus, TouchStatus, RunningPowerMode, ClimbProMode, ClimbDetection, ClimbProTerrain, TapSensitivity
+from ..field_enums.settings import VolumeUnits, SelfEvaluationStatus, TouchStatus, RunningPowerMode, ClimbProMode, ClimbDetection, ClimbProTerrain, TapSensitivity, \
+    AutoScrollMode, AutoPauseSetting
 
 
 class VolumeUnitsField(EnumField):
@@ -63,3 +64,16 @@ class TapSensitivityField(EnumField):
 
     _name = 'tap_sensitivity'
     _enum = TapSensitivity
+
+
+class AutoScrollModeField(EnumField):
+
+    _name = 'auto_scroll'
+    _enum = AutoScrollMode
+
+
+class AutoPauseSettingField(EnumField):
+    """A field that indicates when to pause."""
+
+    _name = 'auto_pause'
+    _enum = AutoPauseSetting

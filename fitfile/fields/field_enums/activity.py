@@ -283,12 +283,6 @@ class AutoLapMode(Enum):
     manual_only = 6
 
 
-class AutoPauseSetting(Enum):
-    off = 0
-    when_stopped = 1
-    custom = 2
-
-
 class PowerCalc(Enum):
     custom      = 0
     percent_ftp = 1
@@ -323,8 +317,8 @@ class Benefit(Enum):
     sprint      = 7
 
 
-class AutoScrollMode(Enum):
-    off = 0
-    slow = 1
-    medium = 2
-    fast = 3
+class Spo2MeasurementType(Enum):
+    off_wrist = 0
+    spot_check = 1
+    continuous_check = 2
+    periodic = 3

@@ -192,7 +192,7 @@ class MessageType(enum.Enum):
     exercise_title                          = 264
     # 265-267 not known
     dive_summary                            = 268
-    pulse_ox                                = 269
+    spo2                                    = 269
     sleep_data_info                         = 273
     sleep_data                              = 274  # this is a guess
     sleep_level                             = 275
@@ -227,6 +227,7 @@ class MessageType(enum.Enum):
     ecg_summary                             = 336
     ecg_raw_sample                          = 337
     ecg_smooth_sample                       = 338
+    metrics_339                             = 339
     sleep_assessment                        = 346
     functional_metrics                      = 356
     race_event                              = 358

@@ -6,7 +6,8 @@ __license__ = "GPL"
 
 from .message_type import MessageType
 from .fields import BytesField, NamedField, VersionField, FloatField, IntegerField, TimestampField, TimeMsField, WatchFaceModeField, SleepActivityLevelField, \
-    SleepDisruptionsSeveritylField, SwitchField, EnhancedRespirationRateField, MessageIndexField, HeartRateField, HeartRateVarianceField, TemperatureField, TimeSField
+    SleepDisruptionsSeveritylField, SwitchField, EnhancedRespirationRateField, MessageIndexField, HeartRateField, HeartRateVarianceField, TemperatureField, TimeSField, \
+    TemperatureMilliField, Spo2MeasurementTypeField
 
 from .messages import file_id_message, device_settings_message, user_profile_message, hrm_profile_message, bike_profile_message, zones_target_message, hr_zone_message, \
     power_zone_message, sport_message, data_screen_message, goal_message, alert_message, range_alert_message, session_message, lap_message, record_message, event_message, \
@@ -14,7 +15,7 @@ from .messages import file_id_message, device_settings_message, user_profile_mes
     file_creator_message, training_file_message, monitoring_info_message, device_status_message, personal_record_message, connectivity_message, activity_metrics_message, \
     epo_status_message, sensor_message, field_description_message, dev_data_id_message, time_in_zone_message, jump_message, split_message, climb_pro_message, \
     hrv_status_summary_message, timestamp_correlation_message, best_effort_message, workout_schedule_message, gps_metadata_message, user_metrics_message, \
-    training_settings_message, stress_level_message, sleep_assessment_message, sleep_data_info_message, TemperatureMilliField
+    training_settings_message, stress_level_message, sleep_assessment_message, sleep_data_info_message
 
 
 class DefinitionMessageData():
@@ -164,8 +165,10 @@ class DefinitionMessageData():
         MessageType.dive_alarm : {},
         MessageType.exercise_title : {},
         MessageType.dive_summary : {},
-        MessageType.pulse_ox : {
-            0 : FloatField('pulse_ox'),
+        MessageType.spo2 : {
+            0 : FloatField('reading_spo2'),
+            1 : IntegerField('reading_confidence'),
+            2 : Spo2MeasurementTypeField('mode'),
         },
         MessageType.sleep_data_info : sleep_data_info_message,
         MessageType.sleep_data : {
@@ -175,7 +178,10 @@ class DefinitionMessageData():
             0 : SleepActivityLevelField('sleep_level'),
         },
         MessageType.sleep_end : {},
-        MessageType.metrics_281 : {},
+        MessageType.metrics_281 : {
+            1 : TimestampField('end', utc=True),
+            2 : TimestampField('start', utc=True)
+        },
         MessageType.metrics_282 : {},
         MessageType.unknown_284 : {
             1 : TimestampField('ts_1', utc=True),
@@ -208,6 +214,9 @@ class DefinitionMessageData():
         MessageType.ecg_summary : {},
         MessageType.ecg_raw_sample : {},
         MessageType.ecg_smooth_sample : {},
+        MessageType.metrics_339 : {
+            0 : TimestampField('local_time', utc=False),
+        },
         MessageType.sleep_assessment : sleep_assessment_message,
         MessageType.functional_metrics : {},
         MessageType.race_event : {},

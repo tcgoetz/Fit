@@ -6,8 +6,8 @@ __license__ = "GPL"
 
 
 from .enum import EnumField
-from ..field_enums.activity import Activity, ActivityType, Sport, SubSport, LapTrigger, PowerCalc, PowerZoneCalc, SessionTrigger, Benefit, AutoLapMode, AutoPauseSetting, \
-    PowerAveraging, AutoScrollMode
+from ..field_enums.activity import Activity, ActivityType, Sport, SubSport, LapTrigger, PowerCalc, PowerZoneCalc, SessionTrigger, Benefit, AutoLapMode, PowerAveraging, \
+    Spo2MeasurementType
 
 
 class ActivityField(EnumField):
@@ -71,13 +71,6 @@ class AutoLapModeField(EnumField):
     _enum = AutoLapMode
 
 
-class AutoPauseSettingField(EnumField):
-    """A field that indicates when to pause."""
-
-    _name = 'auto_pause'
-    _enum = AutoPauseSetting
-
-
 class PowerCalcField(EnumField):
 
     _name = 'pwr_calc_type'
@@ -109,7 +102,7 @@ class BenefitField(EnumField):
     _enum = Benefit
 
 
-class AutoScrollModeField(EnumField):
+class Spo2MeasurementTypeField(EnumField):
 
-    _name = 'auto_scroll'
-    _enum = AutoScrollMode
+    _name = 'spo2_measurement_type'
+    _enum = Spo2MeasurementType

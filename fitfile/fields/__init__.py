@@ -27,7 +27,7 @@ from .types import *
 #
 # field_enums
 #
-from .field_enums.activity import Sport, SubSport
+from .field_enums.activity import Sport, SubSport, Spo2MeasurementType
 from .field_enums.device import BatteryStatus, MainDeviceType
 from .field_enums.event import Event, EventType
 from .field_enums.file_type import FileType
@@ -46,7 +46,7 @@ from .field_enums.user_profile import Gender
 # from .enum_fields.enum import Enum
 
 from .enum_fields.activity import Activity, ActivityField, ActivityType, ActivityTypeField, SportField, SubSportField, LapTriggerField, SessionTriggerField, PowerCalcField, \
-    PowerZoneCalcField, BenefitField, AutoLapModeField, AutoPauseSettingField, PowerAveragingField, AutoScrollModeField
+    PowerZoneCalcField, BenefitField, AutoLapModeField, PowerAveragingField, Spo2MeasurementTypeField
 from .enum_fields.alert import AlertMetricField
 from .enum_fields.climb import ClimbProEventField
 from .enum_fields.user_profile import DisplayHeartField, DisplayMeasureField, DisplayOrientation, DisplayPositionField, DisplayOrientationField, LanguageField, GenderField
@@ -61,6 +61,6 @@ from .enum_fields.heart_rate import HeartRateZoneCalcField, HeartRateZoneCalcFie
 from .enum_fields.manufacturer import Manufacturer, ManufacturerField
 from .enum_fields.product import ProductField, GarminProductField
 from .enum_fields.settings import VolumeUnitsField, SelfEvaluationStatusField, TouchStatusField, RunningPowerModeField, ClimbProModeModeField, ClimbDetectionField, \
-    ClimbProTerrainField, TapSensitivityField
+    ClimbProTerrainField, TapSensitivityField, AutoScrollModeField, AutoPauseSettingField
 from .enum_fields.sleep import SleepActivityLevelField, SleepDisruptionsSeveritylField
 from .enum_fields.switch import SwitchField

@@ -73,3 +73,16 @@ class TapSensitivity(Enum):
     high = 0
     medium = 1
     low = 2
+
+
+class AutoScrollMode(Enum):
+    off = 0
+    slow = 1
+    medium = 2
+    fast = 3
+
+
+class AutoPauseSetting(Enum):
+    off = 0
+    when_stopped = 1
+    custom = 2
