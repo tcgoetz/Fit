@@ -307,3 +307,13 @@ class IndoorFontGrade(Enum):
     grade_9a        = 27
     grade_9aplus    = 28
     grade_9b        = 29
+
+
+class PowerSaveTimeout(Enum):
+    normal      = 0
+    extended    = 1
+
+
+class SportChange(Enum):
+    manual_only = 0
+    on          = 1

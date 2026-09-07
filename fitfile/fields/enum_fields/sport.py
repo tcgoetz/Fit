@@ -6,7 +6,7 @@ __license__ = "GPL"
 
 
 from .enum import EnumField
-from ..field_enums.sport import Sport, SubSport, BoulderingFontGrade, IndoorFontGrade
+from ..field_enums.sport import Sport, SubSport, BoulderingFontGrade, IndoorFontGrade, PowerSaveTimeout, SportChange
 
 
 class SportField(EnumField):
@@ -53,3 +53,13 @@ class BoulderingFontGradeField(EnumField):
 class IndoorFontGradeField(EnumField):
     _name = 'grade'
     _enum = IndoorFontGrade
+
+
+class PowerSaveTimeoutField(EnumField):
+    _name = 'power_save_timeout'
+    _enum = PowerSaveTimeout
+
+
+class SportChangeField(EnumField):
+    _name = 'sport_change'
+    _enum = SportChange

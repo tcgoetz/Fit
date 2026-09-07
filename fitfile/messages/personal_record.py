@@ -1,4 +1,4 @@
-"""Structured data for decoding a FIT file power zone message."""
+"""Structured data for decoding a FIT file personal record message."""
 
 __author__ = "Tom Goetz"
 __copyright__ = "Copyright Tom Goetz"

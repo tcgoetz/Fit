@@ -64,6 +64,6 @@ from .enum_fields.manufacturer import Manufacturer, ManufacturerField
 from .enum_fields.product import ProductField, GarminProductField
 from .enum_fields.settings import VolumeUnitsField, SelfEvaluationStatusField, TouchStatusField, RunningPowerModeField, ClimbProModeModeField, ClimbDetectionField, \
     ClimbProTerrainField, TapSensitivityField, AutoScrollModeField, AutoPauseSettingField
-from .enum_fields.sport import SportField, SubSportField
+from .enum_fields.sport import SportField, SubSportField, PowerSaveTimeoutField, SportChangeField
 from .enum_fields.sleep import SleepActivityLevelField, SleepDisruptionsSeveritylField
 from .enum_fields.switch import SwitchField

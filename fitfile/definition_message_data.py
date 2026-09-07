@@ -15,7 +15,9 @@ from .messages import file_id_message, device_settings_message, user_profile_mes
     file_creator_message, training_file_message, monitoring_info_message, device_status_message, personal_record_message, connectivity_message, activity_metrics_message, \
     epo_status_message, sensor_message, field_description_message, dev_data_id_message, time_in_zone_message, jump_message, split_message, climb_pro_message, \
     hrv_status_summary_message, timestamp_correlation_message, best_effort_message, workout_schedule_message, gps_metadata_message, user_metrics_message, \
-    training_settings_message, stress_level_message, sleep_assessment_message, sleep_data_info_message, length_message, split_summary_message
+    training_settings_message, stress_level_message, sleep_assessment_message, sleep_data_info_message, length_message, split_summary_message, multisport_settings_message, \
+    multisport_activity_message
+    
 
 
 class DefinitionMessageData():
@@ -96,8 +98,8 @@ class DefinitionMessageData():
         MessageType.activity_metrics : activity_metrics_message,
         MessageType.epo_status : epo_status_message,
         MessageType.segment_lap : {},
-        MessageType.multisport_settings : {},
-        MessageType.multisport_activity : {},
+        MessageType.multisport_settings : multisport_settings_message,
+        MessageType.multisport_activity : multisport_activity_message,
         MessageType.memo_glob : {},
         MessageType.sensor : sensor_message,
         MessageType.segment_id : {},

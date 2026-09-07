@@ -24,6 +24,7 @@ from .lap import lap_message
 from .location import location_message
 from .monitoring import monitoring_message
 from .monitoring_info import monitoring_info_message
+from .multisport import multisport_activity_message, multisport_settings_message
 from .personal_record import personal_record_message
 from .power_zone import power_zone_message
 from .range_alert import range_alert_message
