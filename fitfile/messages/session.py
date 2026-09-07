@@ -9,7 +9,7 @@ from ..fields import IntegerField, FloatField, HeartRateField, StringField, Enha
     TrainingEffectField, LeftRightBalanceField, WorkField, PercentField, FractionalCadenceField, FractionalCyclesField, BytePercentField, EventField, SessionTriggerField, \
     DisplayMeasureField, LatiitudeField, LongitudeField, DistanceCentimetersToKmsField, SpeedMpsField, DistanceMetersField, DistanceCentimetersToMetersField, AltitudeField, \
     TemperatureField, DistanceMillimetersField, WeightField, SportField, SubSportField, SportBasedCyclesField, SportBasedCadenceField, CadenceField, BenefitField, TimeSField, \
-    RespirationRateField, HeartRateVarianceField, SwitchField, PowerField
+    RespirationRateField, HeartRateVarianceField, SwitchField, PowerField, SwimStrokesCadenceField
 
 
 session_message = {
@@ -56,7 +56,7 @@ session_message = {
     41 : IntegerField('avg_stroke_count'),
     42 : DistanceCentimetersToMetersField('avg_stroke_distance'),
     43 : NamedField('swim_stroke'),
-    44 : DistanceMetersField('pool_length'),
+    44 : DistanceCentimetersToMetersField('pool_length'),
     45 : PowerField('threshold_power'),
     46 : DisplayMeasureField('pool_length_unit'),
     47 : IntegerField('num_active_lengths'),
@@ -84,8 +84,8 @@ session_message = {
     69 : TimeMsField('avg_lap_time'),
     70 : IntegerField('best_lap_index'),
     71 : AltitudeField('min_altitude'),  # 16 bit version
-    78 : NamedField('total_swim_time'),
-    79 : NamedField('average_stroke'),
+    78 : TimeMsField('active_time'),
+    79 : SwimStrokesCadenceField('avg_swimming_cadence'),    # strokes/length
     80 : NamedField('swolf'),
     82 : NamedField('player_score'),
     83 : NamedField('opponent_score'),

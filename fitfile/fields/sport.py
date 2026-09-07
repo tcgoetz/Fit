@@ -6,6 +6,7 @@ __license__ = "GPL"
 
 
 from .field import Field, NamedField
+from .enum_fields.sport import Sport, SubSport, BoulderingFontGradeField, IndoorFontGradeField
 
 
 class CyclesField(Field):
@@ -29,6 +30,13 @@ class StrokesField(Field):
     _name = 'strokes'
     _units = 'strokes'
     _scale = 2.0
+
+
+class SwimStrokesField(NamedField):
+    """Field that holds strokes measurement for sports activity."""
+
+    _name = 'swim_strokes'
+    _units = 'strokes'
 
 
 class CyclesDistanceField(Field):
@@ -82,14 +90,31 @@ class TrainingEffectField(NamedField):
     _scale = 10.0
 
 
-#
-# Climbing related fields
-#
-class ClimbingGrade(NamedField):
+class ClimbingGradeField(NamedField):
     _name = 'grade'
 
 
-class ClimbingRouteComleted(NamedField):
+class SportBasedGradeField(NamedField):
+    """A climbing route grade field that generates dependant fields based on the sport and subsport type."""
+
+    _dependant_field_control_fields = ['sport', 'sub_sport']
+    _subsport_to_field = {
+        SubSport.bouldering : BoulderingFontGradeField,
+        SubSport.indoor_climbing : IndoorFontGradeField
+    }
+
+    def dependant_field(self, control_value_list):
+        """Return a dependant field instance given the control field values."""
+        sport = control_value_list[0]
+        if sport is Sport.rock_climbing:
+            sub_sport = control_value_list[1]
+            dependant_field = self._cycles_name_to_field.get(sub_sport, ClimbingGradeField)
+        else:
+            dependant_field = ClimbingGradeField
+        return dependant_field()
+
+
+class ClimbingRouteComletedField(NamedField):
     _name = 'route_completed'
 
     def _convert_single(self, value, invalid):

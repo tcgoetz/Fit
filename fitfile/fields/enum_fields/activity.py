@@ -6,8 +6,8 @@ __license__ = "GPL"
 
 
 from .enum import EnumField
-from ..field_enums.activity import Activity, ActivityType, Sport, SubSport, LapTrigger, PowerCalc, PowerZoneCalc, SessionTrigger, Benefit, AutoLapMode, PowerAveraging, \
-    Spo2MeasurementType
+from ..field_enums.activity import Activity, ActivityType, LapTrigger, PowerCalc, PowerZoneCalc, SessionTrigger, Benefit, AutoLapMode, PowerAveraging, \
+    Spo2MeasurementType, SwimStroke, LengthType, SplitType
 
 
 class ActivityField(EnumField):
@@ -22,39 +22,6 @@ class ActivityTypeField(EnumField):
 
     _name = 'activity_type'
     _enum = ActivityType
-
-
-class SportField(EnumField):
-    """A field representing a sport via an ineger enum value."""
-
-    _name = 'sport'
-    _enum = Sport
-    _units = {
-        0 : 'cycles',
-        1 : 'steps',
-        2 : 'strokes',
-        5 : 'strokes',
-        11 : 'steps',
-        15 : 'strokes',
-        17 : 'steps',
-        19 : 'strokes',
-        37 : 'strokes',
-    }
-
-    @classmethod
-    def units(cls, sport_index):
-        """Return the proper units for an activity given the sport index."""
-        try:
-            return cls._units[sport_index]
-        except Exception:
-            return cls._units[0]
-
-
-class SubSportField(EnumField):
-    """A field representing a sub-sport via an ineger enum value."""
-
-    _name = 'sub_sport'
-    _enum = SubSport
 
 
 class LapTriggerField(EnumField):
@@ -106,3 +73,21 @@ class Spo2MeasurementTypeField(EnumField):
 
     _name = 'spo2_measurement_type'
     _enum = Spo2MeasurementType
+
+
+class SwimStrokeField(EnumField):
+
+    _name = 'swim_stroke'
+    _enum = SwimStroke
+
+
+class LengthTypeField(EnumField):
+
+    _name = 'length_type'
+    _enum = LengthType
+
+
+class SplitTypeField(EnumField):
+
+    _name = 'split_type'
+    _enum = SplitType

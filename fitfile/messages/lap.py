@@ -7,7 +7,7 @@ __license__ = "GPL"
 
 from ..fields import IntegerField, HeartRateField, EnhancedRespirationRateField, Volume, TimestampField, NamedField, TimeMsField, CaloriesField, PowerField, \
     LeftRightBalanceField, WorkField, PercentField, FractionalCadenceField, FractionalCyclesField, BytePercentField, MessageIndexField, EventField, EventTypeField, \
-    LapTriggerField, LatiitudeField, LongitudeField, DistanceCentimetersToKmsField, SpeedMpsField, DistanceMetersField, DistanceCentimetersToMetersField, AltitudeField, \
+    LapTriggerField, LatiitudeField, LongitudeField, DistanceCentimetersToMetersField, SpeedMpsField, DistanceMetersField, AltitudeField, \
     TemperatureField, DistanceMillimetersField, SportField, SubSportField, SportBasedCyclesField, SportBasedCadenceField, CadenceField, RespirationRateField, FloatField
 
 
@@ -21,7 +21,7 @@ lap_message = {
     6 : LongitudeField('end_position_long'),
     7 : TimeMsField('total_elapsed_time'),
     8 : TimeMsField('total_timer_time'),
-    9 : DistanceCentimetersToKmsField('total_distance'),
+    9 : DistanceCentimetersToMetersField('total_distance'),
     10 : SportBasedCyclesField('total_cycles'),
     11 : CaloriesField('total_calories'),
     12 : CaloriesField('total_fat_calories'),
@@ -154,7 +154,7 @@ lap_message = {
     #
     163 : PercentField('unpaved'),
     164 : SpeedMpsField('step_speed_loss_distance'),
-    165 : SpeedMpsField('step_speed_loss_percent'),
+    165 : PercentField('step_speed_loss_percent'),
     166 : IntegerField('avg_force'),
     167 : IntegerField('max_force'),
     168 : IntegerField('normalized_force'),

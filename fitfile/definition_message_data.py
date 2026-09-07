@@ -15,7 +15,7 @@ from .messages import file_id_message, device_settings_message, user_profile_mes
     file_creator_message, training_file_message, monitoring_info_message, device_status_message, personal_record_message, connectivity_message, activity_metrics_message, \
     epo_status_message, sensor_message, field_description_message, dev_data_id_message, time_in_zone_message, jump_message, split_message, climb_pro_message, \
     hrv_status_summary_message, timestamp_correlation_message, best_effort_message, workout_schedule_message, gps_metadata_message, user_metrics_message, \
-    training_settings_message, stress_level_message, sleep_assessment_message, sleep_data_info_message
+    training_settings_message, stress_level_message, sleep_assessment_message, sleep_data_info_message, length_message, split_summary_message
 
 
 class DefinitionMessageData():
@@ -81,7 +81,7 @@ class DefinitionMessageData():
         MessageType.ant_tx : {},
         MessageType.ant_channel_id : {},
         MessageType.open_water_event : {},
-        MessageType.length : {},
+        MessageType.length : length_message,
         MessageType.monitoring_info : monitoring_info_message,
         MessageType.device_status : device_status_message,
         MessageType.pad : {},
@@ -203,7 +203,7 @@ class DefinitionMessageData():
         MessageType.race : {},
         MessageType.split_time : {},
         MessageType.split: split_message,
-        MessageType.split_summary : {},
+        MessageType.split_summary : split_summary_message,
         MessageType.hsa_body_battery_data : {},
         MessageType.hsa_event : {},
         MessageType.climb_pro : climb_pro_message,

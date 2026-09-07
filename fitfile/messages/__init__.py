@@ -31,7 +31,7 @@ from .record import record_message
 from .sensor import sensor_message
 from .session import session_message
 from .sleep import sleep_assessment_message, sleep_data_info_message
-from .split import split_message
+from .split import split_message, split_summary_message, length_message
 from .sport import sport_message
 from .stress import stress_level_message
 from .timestamp_correlation import timestamp_correlation_message

@@ -116,6 +116,14 @@ class CadenceField(NamedField):
     _units = 'rpm'
 
 
+class EnhancedCadenceField(NamedField):
+    """Field that holds cycles/minute measurement for sports activity."""
+
+    _name = 'cadence'
+    _units = 'rpm'
+    _scale = 128
+
+
 class StepsCadenceField(NamedField):
     """Field that holds cycles/minute measurement for sports activity."""
 
@@ -123,11 +131,12 @@ class StepsCadenceField(NamedField):
     _units = 'steps/min'
 
 
-class StrokesCadenceField(NamedField):
+class SwimStrokesCadenceField(NamedField):
     """Field that holds cycles/minute measurement for sports activity."""
 
     _name = 'strokes_per_min'
     _units = 'strokes/min'
+    _scale = 10
 
 
 def _cadence_sport_to_field(activity):
@@ -139,12 +148,12 @@ def _cadence_sport_to_field(activity):
         'hiking'                    : StepsCadenceField,
         'elliptical'                : StepsCadenceField,
         # strokes activities
-        'cycling'                   : StrokesCadenceField,
-        'swimming'                  : StrokesCadenceField,
-        'rowing'                    : StrokesCadenceField,
-        'paddling'                  : StrokesCadenceField,
-        'stand_up_paddleboarding'   : StrokesCadenceField,
-        'kayaking'                  : StrokesCadenceField,
+        'cycling'                   : SwimStrokesCadenceField,
+        'swimming'                  : SwimStrokesCadenceField,
+        'rowing'                    : SwimStrokesCadenceField,
+        'paddling'                  : SwimStrokesCadenceField,
+        'stand_up_paddleboarding'   : SwimStrokesCadenceField,
+        'kayaking'                  : SwimStrokesCadenceField,
     }
     try:
         return _units[activity.name]
@@ -159,7 +168,7 @@ class SportBasedCadenceField(CadenceField):
     _scale_map = {
         CadenceField: 1.0,
         StepsCadenceField: 0.5,
-        StrokesCadenceField: 1.0
+        SwimStrokesCadenceField: 1.0
     }
 
     def dependant_field(self, control_value_list):
