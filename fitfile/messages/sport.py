@@ -12,6 +12,7 @@ sport_message = {
     0 : SportField(),
     1 : SubSportField(),
     3 : StringField('name'),
+    #
     15 : SwitchField('popularity_routing'),
     18 : SwitchField('sharp_bend_warnings'),
     21 : SwitchField('workout_videos'),

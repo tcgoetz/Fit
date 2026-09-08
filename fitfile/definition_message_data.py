@@ -17,7 +17,6 @@ from .messages import file_id_message, device_settings_message, user_profile_mes
     hrv_status_summary_message, timestamp_correlation_message, best_effort_message, workout_schedule_message, gps_metadata_message, user_metrics_message, \
     training_settings_message, stress_level_message, sleep_assessment_message, sleep_data_info_message, length_message, split_summary_message, multisport_settings_message, \
     multisport_activity_message
-    
 
 
 class DefinitionMessageData():
