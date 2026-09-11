@@ -250,7 +250,13 @@ class DefinitionMessageData():
         MessageType.skin_temp : {
             1 : TemperatureField(),
         },
-        MessageType.skin_temp_overnight : {},
+        MessageType.skin_temp_overnight : {
+            0 : TimestampField('local_timestamp', utc=False),
+            1 : FloatField('average_deviation'),
+            2 : FloatField('average_7_day_deviation'),
+            #
+            4 : FloatField('nightly_value'),
+        },
         MessageType.hill_score : {},
         MessageType.endurance_score : {},
         MessageType.unknown_407 : {
@@ -265,7 +271,9 @@ class DefinitionMessageData():
         MessageType.sleep_disruption_severity_period : {
             0 : SleepDisruptionsSeveritylField()
         },
-        MessageType.sleep_disruption_overnight_severity : {},
+        MessageType.sleep_disruption_overnight_severity : {
+            0 : SleepDisruptionsSeveritylField()
+        },
         #
         MessageType.metrics_493 : {
             0 : TimestampField('start', utc=True),
