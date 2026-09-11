@@ -14,6 +14,7 @@ from .definition_message import DefinitionMessage
 from .data_message import DataMessageDecodeContext, DataMessage
 from .message_type import MessageType
 from .measurement import MeasurementSystem
+from .fields.field_enums.file_type import FileType
 
 
 logger = logging.getLogger(__name__)
@@ -97,6 +98,25 @@ class File():
         time_local = message.fields.local_timestamp
         return (time_local - time_utc.replace(tzinfo=None)).total_seconds()
 
+    def __summarize_start_stop(self):
+        if self.type is FileType.sleep:
+            # Modern sleep files have a start and stop event that gives the sleep start and stop times
+            if MessageType.event in self.message_types:
+                self.start_time = self.event[0].fields.timestamp
+                self.end_time = self.event[1].fields.timestamp
+            else:
+                if MessageType.sleep_data_info in self.message_types:
+                    self.start_time = self.sleep_data_info[0].fields.timestamp
+                else:
+                    self.start_time = self.time_created
+                if MessageType.sleep_end in self.message_types:
+                    self.end_time = self.sleep_end[0].fields.timestamp
+                else:
+                    self.end_time = self.last_message_timestamp
+        else:
+            self.start_time = self.time_created
+            self.end_time = self.last_message_timestamp
+
     def __sumarize(self):
         logger.debug("-- Summerizing file %s", self.filename)
         first_file_id = self.file_id[0]
@@ -116,19 +136,7 @@ class File():
             self.utc_offset = 0
         self.local_tz = datetime.timezone(datetime.timedelta(seconds=self.utc_offset))
         self.time_created_local = self.utc_datetime_to_local(self.time_created)
-        if self.last_message_timestamp is not None:
-            self.time_ended_local = self.utc_datetime_to_local(self.last_message_timestamp)
-        else:
-            self.time_ended_local = self.time_created_local
-        # File start and end times
-        if MessageType.sleep_data_info in self.message_types:
-            self.start_time = self.sleep_data_info[0].fields.timestamp
-        else:
-            self.start_time = self.time_created
-        if MessageType.sleep_end in self.message_types:
-            self.end_time = self.sleep_end[0].fields.timestamp
-        else:
-            self.end_time = self.last_message_timestamp
+        self.__summarize_start_stop()
         if MessageType.sport in self.message_types:
             self.sport_type = self.sport[0].fields.sport
             self.sub_sport_type = self.sport[0].fields.sub_sport

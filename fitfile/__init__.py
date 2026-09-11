@@ -9,11 +9,14 @@ __license__ = "GPL"
 
 from .version_info import version_string, __version__
 
+from .checks import *
+from .conversions import *
 from .enum import UnknownEnumValue, name_for_enum
 from .file import File
 from .message_type import MessageType, UnknownMessageType
 from .measurement import MeasurementSystem, Distance, Latitude, Longitude, Speed, Weight, Volume, Temperature, Cadence
 from .units import unit_strings
+
 
 #
 # field_enums

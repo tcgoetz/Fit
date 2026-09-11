@@ -35,7 +35,7 @@ from .field_enums.file_type import FileType
 from .field_enums.heart_rate import HeartRateZoneCalc, HeartRateZonesTimerType, HeartRateVarianceStatus
 from .field_enums.manufacturer import Manufacturer
 from .field_enums.product import GarminProduct
-from .field_enums.sleep import SleepActivityLevel
+from .field_enums.sleep import SleepActivityLevel, NapPeriodFeedback
 from .field_enums.sport import Sport, SubSport
 from .field_enums.switch import Switch
 from .field_enums.user_profile import Gender
@@ -65,5 +65,5 @@ from .enum_fields.product import ProductField, GarminProductField
 from .enum_fields.settings import VolumeUnitsField, SelfEvaluationStatusField, TouchStatusField, RunningPowerModeField, ClimbProModeModeField, ClimbDetectionField, \
     ClimbProTerrainField, TapSensitivityField, AutoScrollModeField, AutoPauseSettingField
 from .enum_fields.sport import SportField, SubSportField, PowerSaveTimeoutField, SportChangeField
-from .enum_fields.sleep import SleepActivityLevelField, SleepDisruptionsSeveritylField
+from .enum_fields.sleep import SleepActivityLevelField, SleepDisruptionsSeveritylField, NapPeriodFeedbackField, NapSourceField
 from .enum_fields.switch import SwitchField

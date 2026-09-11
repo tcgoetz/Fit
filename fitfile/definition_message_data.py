@@ -16,7 +16,7 @@ from .messages import file_id_message, device_settings_message, user_profile_mes
     epo_status_message, sensor_message, field_description_message, dev_data_id_message, time_in_zone_message, jump_message, split_message, climb_pro_message, \
     hrv_status_summary_message, timestamp_correlation_message, best_effort_message, workout_schedule_message, gps_metadata_message, user_metrics_message, \
     training_settings_message, stress_level_message, sleep_assessment_message, sleep_data_info_message, length_message, split_summary_message, multisport_settings_message, \
-    multisport_activity_message
+    multisport_activity_message, nap_event_message
 
 
 class DefinitionMessageData():
@@ -260,7 +260,7 @@ class DefinitionMessageData():
             0 : TimeSField('processing_interval'),
             1 : TemperatureMilliField('value')
         },
-        MessageType.nap_event : {},
+        MessageType.nap_event : nap_event_message,
         MessageType.workout_schedule : workout_schedule_message,
         MessageType.sleep_disruption_severity_period : {
             0 : SleepDisruptionsSeveritylField()

@@ -5,7 +5,7 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 
-from ..fields import IntegerField, TimeSField, StringField, TimestampField
+from ..fields import IntegerField, TimeSField, StringField, TimestampField, NapPeriodFeedbackField, BoolField, NapSourceField
 
 
 sleep_data_info_message = {
@@ -31,4 +31,16 @@ sleep_assessment_message = {
     #
     14 : IntegerField('interruptions_score'),
     15 : IntegerField('average_stress_during_sleep', scale=100),
+}
+
+
+nap_event_message = {
+    0 : TimestampField('start_time', utc=True),
+    1 : IntegerField('start_timezone_offset'),
+    2 : TimestampField('end_time', utc=True),
+    3 : IntegerField('end_timezone_offset'),
+    4 : NapPeriodFeedbackField(),
+    5 : BoolField('is_deleted'),
+    6 : NapSourceField(),
+    7 : TimestampField('update_timestamp', utc=True),
 }

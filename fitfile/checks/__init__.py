@@ -5,3 +5,5 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 # flake8: noqa
+
+from .checks import dt_is_valid
