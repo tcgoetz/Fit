@@ -278,7 +278,7 @@ class DefinitionMessageData():
         MessageType.metrics_493 : {
             0 : TimestampField('start', utc=True),
             1 : TimestampField('end', utc=True),
-            11 : TimestampField('unknown_ts', utc=True),
+            11 : TimestampField('last_something', utc=True),
         },
         #
         MessageType.mfg_range_min : {},
