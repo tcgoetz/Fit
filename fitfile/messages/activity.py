@@ -7,7 +7,8 @@ __license__ = "GPL"
 
 from ..fields import TimeMsField, IntegerField, ActivityField, EventField, EventTypeField, TimestampField, NamedField, HeartRateField, TrainingEffectField, \
     TimeMinField, SpeedMpsField, SportField, PowerField, TimeSField, DistanceMetersField, BenefitField, BoolField, WeightField, HeightField, \
-    GenderField, Vo2MaxField, DistanceCentimetersToMetersField, SubSportField
+    GenderField, Vo2MaxField, DistanceCentimetersToMetersField, DistanceMillimetersToMetersField, SubSportField, CaloriesField, MetaMaxField, \
+    ActivityClassField
 
 
 activity_message = {
@@ -22,30 +23,40 @@ activity_message = {
 
 
 activity_metrics_message = {
+    0 : HeartRateField('avg_heart_rate'),
     1 : HeartRateField('max_heart_rate'),
+    #
     4 : TrainingEffectField('aerobic_training_effect'),
-    7 : Vo2MaxField(),
+    5 : Vo2MaxField('vo2_max1'),
+    #
+    7 : Vo2MaxField('current_vo2_max'),
+    #
     9 : TimeMinField('recovery_time'),
+    #
     11 : SportField(),
     12 : SubSportField(),  # ??
+    #
     14 : HeartRateField('lactate_threshold_heart_rate'),
     15 : PowerField('lactate_threshold_power'),
     16 : SpeedMpsField('lactate_threshold_speed'),  # 16 bit version
     17 : IntegerField('ending_performance_condition'),
     20 : TrainingEffectField('anaerobic_training_effect'),
     # 21 : LatiitudeField('lat_21'),  not right
-    # 24 : LongitudeField('long_24'),
+    24 : DistanceCentimetersToMetersField('3d_distance'),
     25 : IntegerField('ending_body_battery'),
-    29 : Vo2MaxField('first_vo2_max'),
-    35 : TimeSField('unknown_time'),  # uint32			1000		s
+    29 : Vo2MaxField('vo2_max3'),
+    30 : Vo2MaxField('first_vo2_max'),
+    32 : DistanceMillimetersToMetersField('ascent'),
+    35 : TimeMsField('elapsed_time'),  # uint32			1000		s
     36 : DistanceCentimetersToMetersField('distance'),  # uint32			100		m
     48 : TimestampField('local_timestamp', utc=False),
     41 : BenefitField('primary_benefit'),
+    44 : CaloriesField('active_calories'),
     50 : IntegerField('ending_potential'),
     60 : DistanceMetersField('total_ascent'),
     61 : DistanceMetersField('total_descent'),
     62 : IntegerField('ending_body_battery'),
-    63 : HeartRateField('average_heartrate'),
+    63 : HeartRateField('avg_heart_rate'),
 }
 
 
@@ -69,21 +80,28 @@ workout_schedule_message = {
 
 
 user_metrics_message = {
-    0 : Vo2MaxField(),
+    0 : Vo2MaxField('pre_activity_vo2_max'),
     1 : IntegerField('age'),
     2 : HeightField(),  # uint8			100		m
     3 : WeightField('weight'),  # uint16			10		kg
     4 : GenderField(),
-    6 : HeartRateField('max_hr'),
+    5 : ActivityClassField(),
+    6 : HeartRateField('max_heart_rate'),
     8 : TimeMinField('remaining_recovery_time'),  # uint16					min
+    #
+    10 : HeartRateField('resting_heart_rate'),
     11 : HeartRateField('lactate_threshold_heart_rate'),
     12 : PowerField('lactate_threshold_power'),  # uint16					watts
     13 : SpeedMpsField('lactate_threshold_speed'),  # uint16			10		km/h
     15 : IntegerField('beginning_body_battery'),
     16 : TimestampField('start_of_activity', utc=False),
+    17 : Vo2MaxField('pre_activity_vo2_max'),
+    18 : Vo2MaxField('unknown_vo2_max'),
     19 : Vo2MaxField('first_vo2_max'),  # sint32			18724.57143		ml/kg/min
+    #
     32 : IntegerField('beginning_potential'),
+    #
     35 : TimestampField('end_of_previous_activity', utc=False),
+    #
     39 : TimestampField('wake_up_time', utc=False),
-
 }
