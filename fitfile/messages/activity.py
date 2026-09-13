@@ -7,8 +7,7 @@ __license__ = "GPL"
 
 from ..fields import TimeMsField, IntegerField, ActivityField, EventField, EventTypeField, TimestampField, NamedField, HeartRateField, TrainingEffectField, \
     TimeMinField, SpeedMpsField, SportField, PowerField, TimeSField, DistanceMetersField, BenefitField, BoolField, WeightField, HeightField, \
-    GenderField, Vo2MaxField, DistanceCentimetersToMetersField, DistanceMillimetersToMetersField, SubSportField, CaloriesField, MetaMaxField, \
-    ActivityClassField
+    GenderField, Vo2MaxField, DistanceCentimetersToMetersField, DistanceMillimetersToMetersField, SubSportField, CaloriesField, ActivityClassField
 
 
 activity_message = {
