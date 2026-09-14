@@ -239,6 +239,11 @@ class Speed(Measurement):
         return cls.from_units(km_per_hour, 0.2777778, invalid_value)
 
     @classmethod
+    def from_tmph(cls, tenths_miles_per_hour, invalid_value=None):
+        """Return a Speed instance intialized with a value in miles per hour."""
+        return cls.from_units(tenths_miles_per_hour, 0.044704, invalid_value)
+
+    @classmethod
     def from_mph(cls, miles_per_hour, invalid_value=None):
         """Return a Speed instance intialized with a value in miles per hour."""
         return cls.from_units(miles_per_hour, 0.44704, invalid_value)
@@ -254,6 +259,11 @@ class Speed(Measurement):
         return cls.from_units(mm_per_sec, 0.001, invalid_value)
 
     @classmethod
+    def from_hmph(cls, hm_per_hour, invalid_value=None):
+        """Return a Speed instance intialized with a value in hecto meters per hour."""
+        return cls.from_units(hm_per_hour, 0.1, invalid_value)
+
+    @classmethod
     def from_unknown(cls, value, invalid_value=None):
         """Create a Speed object from a speed value with unknown units."""
         return cls.from_units(value, 1.0, invalid_value)
@@ -264,6 +274,7 @@ class Speed(Measurement):
         units_to_obj_func = {
             'mps'   : cls.from_mps,
             'm/s'   : cls.from_mps,
+            'hmph'   : cls.from_hmph,
             'kph'   : cls.from_kph,
             'km/h'  : cls.from_kph,
             'mph'   : cls.from_mph,
@@ -279,6 +290,11 @@ class Speed(Measurement):
     def from_kph_or_mph(cls, speed, measurement_system=MeasurementSystem.metric):
         """Return a Speed instance intialized with a value in kilometers per hopur or miles per hour."""
         return cls.from_kph(speed) if measurement_system is MeasurementSystem.metric else cls.from_mph(speed)
+
+    @classmethod
+    def from_hmph_or_tmph(cls, speed, measurement_system=MeasurementSystem.metric):
+        """Return a Speed instance intialized with a value in hectometers (100) per hopur or tenths of a mile per hour."""
+        return cls.from_hmph(speed) if measurement_system is MeasurementSystem.metric else cls.from_tmph(speed)
 
     def to_kph(self):
         """Return the speed measurement as kilometers per hour."""

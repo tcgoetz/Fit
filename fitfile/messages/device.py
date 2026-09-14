@@ -134,6 +134,7 @@ device_used_message = {
     2 : IntegerField('cadence'),
     3 : IntegerField('elevation'),
     4 : IntegerField('heart_rate'),
+    5 : IntegerField('heart_rate_related'),     # guess: hrv?
     6 : IntegerField('power'),
 }
 

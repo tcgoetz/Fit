@@ -61,8 +61,8 @@ activity_metrics_message = {
 
 best_effort_message = {
     1 : SportField(),
-    2 : DistanceMetersField('distance'),  # uint32			100		m
-    3 : TimeSField('time'),  # uint32			1000		s
+    2 : DistanceCentimetersToMetersField('distance'),  # uint32			100		m
+    3 : TimeMsField('time'),  # uint32			1000		s
     4 : TimestampField('start_time', utc=False),
     5 : BoolField('personal_record')
 }

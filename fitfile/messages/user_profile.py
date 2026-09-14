@@ -6,7 +6,7 @@ __license__ = "GPL"
 
 
 from ..fields import TimestampField, NamedField, PowerField, TimeOfDayField, GenderField, LanguageField, HeightField, WeightField, EnhancedDistanceMetersField, \
-    DisplayMeasureField, DisplayHeartField, DisplayPositionField, IntegerField, HeartRateField, YearOffset, ActivityClassField
+    DisplayMeasureField, DisplayHeartField, DisplayPositionField, IntegerField, HeartRateField, YearOffset, ActivityClassField, SpeedKphField
 
 
 user_profile_message = {
@@ -41,7 +41,7 @@ user_profile_message = {
     #
     35 : TimestampField('ts_35', utc=True),
     #
-    37 : IntegerField('ltspeed'),
+    37 : SpeedKphField('lactate_threshold_speed'),
     #
     41 : TimestampField('time_last_lthr_update', utc=True),
     #

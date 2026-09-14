@@ -28,7 +28,7 @@ from .types import *
 #
 # field_enums
 #
-from .field_enums.activity import Spo2MeasurementType, SwimStroke, LengthType
+from .field_enums.activity import Spo2MeasurementType, SwimStroke, LengthType, Benefit
 from .field_enums.device import BatteryStatus, MainDeviceType
 from .field_enums.event import Event, EventType
 from .field_enums.file_type import FileType

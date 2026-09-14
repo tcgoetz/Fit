@@ -64,6 +64,14 @@ class SpeedMpsField(ObjectField):
         super().__init__(Speed.from_mmps, Speed.mph_or_kph, name=name)
 
 
+class SpeedKphField(ObjectField):
+    """Field holding a distance measure in km per hour."""
+
+    def __init__(self, name):
+        """Return a SpeedMpsField instance."""
+        super().__init__(Speed.from_hmph_or_tmph, Speed.mph_or_kph, name=name)
+
+
 class LongitudeField(ObjectField):
     """Field that handles a longitude measure in semicircles."""
 
