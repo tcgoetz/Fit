@@ -10,11 +10,11 @@ __license__ = "GPL"
 from .field import Field, NamedField, UnknownField, LeftRightBalanceField, PercentField, BytePercentField, MessageIndexField, VersionField
 
 from .activity import ActivityBasedCyclesField, ActivityClassField, IntensityField, ActivityTypeIntensityField, SportBasedCyclesField, CadenceField, StepsCadenceField, \
-    SwimStrokesCadenceField, SportBasedCadenceField, WorkField, WorkoutCapabilitiesField, EnhancedCadenceField
+    SwimStrokesCadenceField, SportBasedCadenceField, WorkField, WorkoutCapabilitiesField, EnhancedCadenceField, ActivityEvalEffort, ActivityEvalFeel
 
 from .time import TimestampField, TimeMsField, TimeSField, TimeOffsetField, TimeHourField, TimeMinField, TimeOfDayField
 from .sport import CyclesField, StepsField, StrokesField, CyclesDistanceField, FractionalCadenceField, PowerField, TrainingEffectField, SportBasedGradeField, \
-    ClimbingRouteComletedField, FractionalCyclesField, SwimStrokesField
+    ClimbingRouteComletedField, FractionalCyclesField, SwimStrokesField, TrainingLoadField
 
 
 from .calories import CaloriesField, CaloriesDayField, CyclesCaloriesField

@@ -6,6 +6,7 @@ __license__ = "GPL"
 
 
 from .field import Field, NamedField
+from .types import FloatField
 from .enum_fields.sport import Sport, SubSport, BoulderingFontGradeField, IndoorFontGradeField
 
 
@@ -84,10 +85,19 @@ class PowerField(NamedField):
     _units = 'watts'
 
 
-class TrainingEffectField(NamedField):
+class TrainingEffectField(FloatField):
     """A field that holds a Garmin training effect measurement (0.0-5.0)."""
 
     _scale = 10.0
+    _precision = 1
+
+
+class TrainingLoadField(FloatField):
+    """A field that holds a Garmin training load measurement."""
+
+    _name = 'training_load'
+    _scale = 65536.0
+    _precision = 1
 
 
 class ClimbingGradeField(NamedField):

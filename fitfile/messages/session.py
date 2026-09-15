@@ -9,7 +9,7 @@ from ..fields import IntegerField, FloatField, HeartRateField, StringField, Enha
     TrainingEffectField, LeftRightBalanceField, WorkField, PercentField, FractionalCadenceField, FractionalCyclesField, BytePercentField, EventField, SessionTriggerField, \
     DisplayMeasureField, LatiitudeField, LongitudeField, DistanceCentimetersToKmsField, SpeedMpsField, DistanceMetersField, DistanceCentimetersToMetersField, AltitudeField, \
     TemperatureField, DistanceMillimetersField, WeightField, SportField, SubSportField, SportBasedCyclesField, SportBasedCadenceField, CadenceField, BenefitField, TimeSField, \
-    RespirationRateField, HeartRateVarianceField, SwitchField, PowerField, SwimStrokesCadenceField
+    RespirationRateField, HeartRateVarianceField, SwitchField, PowerField, SwimStrokesCadenceField, ActivityEvalFeel, ActivityEvalEffort, TrainingLoadField
 
 
 session_message = {
@@ -161,7 +161,7 @@ session_message = {
     155 : IntegerField('o2_toxicity', units='OTUs'),
     156 : IntegerField('DiveNumberFieldNum'),
     #
-    168 : IntegerField('training_load_peak'),
+    168 : TrainingLoadField(),
     169 : EnhancedRespirationRateField('enhanced_avg_respiration_rate'),
     170 : EnhancedRespirationRateField('enhanced_max_respiration_rate'),
     #
@@ -179,8 +179,8 @@ session_message = {
     #
     188 : BenefitField('primary_benefit'),
     #
-    192 : IntegerField('workout_feel'),
-    193 : IntegerField('workout_rpe'),
+    192 : ActivityEvalFeel(),
+    193 : ActivityEvalEffort(),
     194 : PercentField('avg_spo2'),
     195 : PercentField('avg_stress'),
     196 : CaloriesField('metabolic_calories'),

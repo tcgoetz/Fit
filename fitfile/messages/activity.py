@@ -7,7 +7,8 @@ __license__ = "GPL"
 
 from ..fields import TimeMsField, IntegerField, ActivityField, EventField, EventTypeField, TimestampField, NamedField, HeartRateField, TrainingEffectField, \
     TimeMinField, SpeedMpsField, SportField, PowerField, TimeSField, DistanceMetersField, BenefitField, BoolField, WeightField, HeightField, \
-    GenderField, Vo2MaxField, DistanceCentimetersToMetersField, DistanceMillimetersToMetersField, SubSportField, CaloriesField, ActivityClassField
+    GenderField, Vo2MaxField, DistanceCentimetersToMetersField, DistanceMillimetersToMetersField, SubSportField, CaloriesField, ActivityClassField, \
+    BestEffortDistance
 
 
 activity_message = {
@@ -61,7 +62,7 @@ activity_metrics_message = {
 
 best_effort_message = {
     1 : SportField(),
-    2 : DistanceCentimetersToMetersField('distance'),  # uint32			100		m
+    2 : BestEffortDistance(),  # uint32			100		m
     3 : TimeMsField('time'),  # uint32			1000		s
     4 : TimestampField('start_time', utc=False),
     5 : BoolField('personal_record')

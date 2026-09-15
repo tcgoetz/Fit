@@ -28,7 +28,7 @@ class ObjectField(Field):
     def convert(self, value, invalid, measurement_system=MeasurementSystem.metric):
         """Return a FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
-        # apply scle and offset to invalid to or tests for invalid will fail!!
+        # apply scale and offset to invalid to or tests for invalid will fail!!
         value_obj = self.obj_func((value / self._scale) - self._offset, (invalid / self._scale) - self._offset)
         return [FieldValue(self, value_obj, invalid, **{self._name: self._convert_many(value_obj, invalid)})]
 
@@ -158,6 +158,31 @@ class DistanceMillimetersField(DistanceMetersField):
     def __init__(self, name):
         """Return a DistanceMillimetersField instance."""
         super().__init__(name, Distance.from_mm, Distance.inches_or_mm, scale=10.0)
+
+
+class BestEffortDistance(Field):
+    """Field that takes in cm and returns a best effort distance string."""
+
+    _name = 'best_effort_distance'
+
+    meters_to_best_effort_distance_name = {
+        1609    : '1 mile',
+        42164   : '26.2 miles'
+    }
+
+    def _convert_single(self, distance_obj, invalid):
+        meters = distance_obj.to_meters()
+        if meters:
+            if meters in self.meters_to_best_effort_distance_name:
+                return self.meters_to_best_effort_distance_name[int(meters)]
+            if meters >= 1000:
+                return f'{int(meters / 1000)}k'
+            return f'{int(meters)} meters'
+
+    def convert(self, value, invalid, measurement_system=MeasurementSystem.metric):
+        """Return a FieldValue containing the field value as a Python object."""
+        value_obj = Distance.from_cm((value), invalid)
+        return [FieldValue(self, value_obj, invalid, **{self._name: self._convert_many(value_obj, invalid)})]
 
 
 class AltitudeField(DistanceMetersField):

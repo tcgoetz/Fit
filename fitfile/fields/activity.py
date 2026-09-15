@@ -6,7 +6,7 @@ __license__ = "GPL"
 
 
 from .field import Field, NamedField
-from .types import BitField
+from .types import BitField, FloatField
 from .sport import CyclesField, StepsField, StrokesField
 from .enum_fields.activity import ActivityTypeField
 
@@ -87,6 +87,43 @@ class ActivityTypeIntensityField(NamedField):
         return self.activity_type_field.convert(activity_type, 0xff, measurement_system) + self.intensity_field.convert(intensity, 0xff, measurement_system)
 
 
+class ActivityEvalEffort(Field):
+    """Contains the users self evaluation of effort."""
+
+    _name = 'self_eval_effort'
+
+    @classmethod
+    def get_self_eval_effort(cls, value):
+        """Return the Garmin Connect self evaluation perceived effort label for the activity."""
+        levels = [(100, "Maximum"), (90, "Extremely Hard"), (70, "Very Hard"), (50, "Hard"),
+                  (40, "Somewhat Hard"), (30, "Moderate"), (20, "Light"), (10, "Very Light"), (0, "None")]
+        for threshold, label in levels:
+            if value >= threshold:
+                return label
+
+    def _convert_single(self, value, invalid):
+        if value is not None and value != invalid:
+            return self.get_self_eval_effort(value)
+
+
+class ActivityEvalFeel(Field):
+    """Contains the users self evaluation of how they felt."""
+
+    _name = 'self_eval_feel'
+
+    @classmethod
+    def get_self_eval_feel(cls, value):
+        """Return the Garmin'x self evaluation 'How did you feel' label for the activity."""
+        levels = [(100, "Very Strong"), (75, "Strong"), (50, "Normal"), (25, "Weak"), (0, "Very Weak")]
+        for threshold, label in levels:
+            if value >= threshold:
+                return label
+
+    def _convert_single(self, value, invalid):
+        if value is not None and value != invalid:
+            return self.get_self_eval_feel(value)
+
+
 class SportBasedCyclesField(NamedField):
     """A cycles field that generates dependant fields based on the sport type."""
 
@@ -109,19 +146,21 @@ class SportBasedCyclesField(NamedField):
         return dependant_field(name=dependant_field_name, scale=self._scale_map[dependant_field])
 
 
-class CadenceField(NamedField):
+class CadenceField(FloatField):
     """Field that holds cycles/minute measurement for sports activity."""
 
     _name = 'cadence'
+    _precision = 1
     _units = 'rpm'
 
 
-class EnhancedCadenceField(NamedField):
+class EnhancedCadenceField(FloatField):
     """Field that holds cycles/minute measurement for sports activity."""
 
     _name = 'cadence'
-    _units = 'rpm'
     _scale = 128
+    _precision = 1
+    _units = 'rpm'
 
 
 class StepsCadenceField(NamedField):

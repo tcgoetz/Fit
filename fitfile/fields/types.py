@@ -45,7 +45,15 @@ class IntegerField(TypeField):
 class FloatField(TypeField):
     """A FIT file message field with a float value."""
 
+    _precision = None
     type_func = float
+
+    def _convert_single(self, value, invalid):
+        if value is not None and value != invalid:
+            if self._precision is None:
+                return super()._convert_single(value, invalid)
+            else:
+                return round(super()._convert_single(value, invalid), self._precision)
 
 
 class BoolField(TypeField):
@@ -128,6 +136,7 @@ class RespirationRateField(FloatField):
     """A respiration rate measurment in seconds."""
 
     _name = 'respiration_rate'
+    _precision = 1
     _units = 's'
 
 
