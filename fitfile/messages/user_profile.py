@@ -31,7 +31,7 @@ user_profile_message = {
     21 : DisplayMeasureField('temperature_setting'),
     22 : NamedField('local_id'),
     23 : NamedField('global_id'),
-    24: YearOffset('year_of_birth'),
+    24 : YearOffset('year_of_birth'),
     #
     28 : TimeOfDayField('wake_time'),
     29 : TimeOfDayField('sleep_time'),

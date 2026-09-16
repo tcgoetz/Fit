@@ -156,12 +156,13 @@ class EnhancedRespirationRateField(FloatField):
     _scale = 100.0
 
 
-class Vo2MaxField(IntegerField):
+class Vo2MaxField(FloatField):
     """A new Vo2 Max measurement."""
 
     _name = 'vo2_max'
-    _units = 'L/min'
+    _precision = 1
     _scale = 18724.5714
+    _units = 'L/min'
 
 
 class MetaMaxField(IntegerField):
