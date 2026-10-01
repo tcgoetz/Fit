@@ -13,7 +13,7 @@ user_profile_message = {
     1 : GenderField(),
     2 : IntegerField('age'),
     3 : HeightField(),
-    4 : WeightField('weight'),
+    4 : WeightField(),
     5 : LanguageField(),
     6 : DisplayMeasureField('elev_setting'),
     7 : DisplayMeasureField('weight_setting'),

@@ -36,12 +36,12 @@ class Measurement():
         """Create a Distance object from a distance measurement."""
         return cls((value * scale) if value is not None else None, value, invalid_value)
 
-    def to_units(self, scale=1.0, rounded=False):
+    def to_units(self, scale=1.0, precision=None):
         """Return a measurement value given the current value and a scale."""
         if not self.is_invalid():
             try:
                 value = self.value * scale
-                return round(value) if rounded else value
+                return round(value, precision) if precision is not None else value
             except Exception as e:
                 raise Exception(f'value {self.value} scale {scale}: {e}')
 
@@ -135,47 +135,47 @@ class Distance(Measurement):
         """Return a distance object."""
         return cls.from_meters(distance) if measurement_system is MeasurementSystem.metric else cls.from_feet(distance)
 
-    def to_mm(self):
+    def to_mm(self, precision=None):
         """Return the distance measurement as millimeters."""
-        return self.to_units(1000.0)
+        return self.to_units(1000.0, precision=precision)
 
-    def to_meters(self):
+    def to_meters(self, precision=None):
         """Return the distance measurement as meters."""
-        return self.to_units()
+        return self.to_units(precision=precision)
 
-    def to_kms(self):
+    def to_kms(self, precision=None):
         """Return the distance measurement as kilometers."""
-        return self.to_units(0.001)
+        return self.to_units(0.001, precision=precision)
 
-    def to_inches(self):
+    def to_inches(self, precision=None):
         """Return the distance measurement as inches."""
-        return self.to_units(39.37008)
+        return self.to_units(39.37008, precision=precision)
 
-    def to_feet(self):
+    def to_feet(self, precision=None):
         """Return the distance measurement as feet."""
-        return self.to_units(3.2808399)
+        return self.to_units(3.2808399, precision=precision)
 
-    def to_miles(self):
+    def to_miles(self, precision=None):
         """Return the distance measurement as miles."""
-        return self.to_units(0.0006213712)
+        return self.to_units(0.0006213712, precision=precision)
 
     @classmethod
-    def inches_or_mm(cls, distance, measurement_system=MeasurementSystem.metric):
+    def inches_or_mm(cls, distance, measurement_system=MeasurementSystem.metric, precision=1):
         """Return the distance measurement as millimeters or inches depending on the measurement system."""
-        return distance.mm_or_inches(measurement_system)
+        return distance.mm_or_inches(measurement_system, precision=precision)
 
-    def mm_or_inches(self, measurement_system=MeasurementSystem.metric):
+    def mm_or_inches(self, measurement_system=MeasurementSystem.metric, precision=None):
         """Return the distance measurement as millimeters or inches depending on the measurement system."""
-        return self.to_mm() if measurement_system is MeasurementSystem.metric else self.to_inches()
+        return self.to_mm(precision=precision) if measurement_system is MeasurementSystem.metric else self.to_inches(precision=precision)
 
     @classmethod
-    def feet_or_meters(cls, distance, measurement_system=MeasurementSystem.metric):
+    def feet_or_meters(cls, distance, measurement_system=MeasurementSystem.metric, precision=1):
         """Return the distance measurement as meters or feet depending on the measurement system."""
-        return distance.meters_or_feet(measurement_system)
+        return distance.meters_or_feet(measurement_system, precision=precision)
 
-    def meters_or_feet(self, measurement_system=MeasurementSystem.metric):
+    def meters_or_feet(self, measurement_system=MeasurementSystem.metric, precision=1):
         """Return the distance measurement as meters or feet depending on the measurement system."""
-        return self.to_meters() if measurement_system is MeasurementSystem.metric else self.to_feet()
+        return self.to_meters(precision=precision) if measurement_system is MeasurementSystem.metric else self.to_feet(precision=precision)
 
     #
     # @classmethod
@@ -183,9 +183,9 @@ class Distance(Measurement):
     #     """Return the distance measurement as kilometers or miles depending on the measurement system."""
     #     return distance.kms_or_miles(measurement_system)
 
-    def kms_or_miles(self, measurement_system=MeasurementSystem.metric):
+    def kms_or_miles(self, measurement_system=MeasurementSystem.metric, precision=1):
         """Return the distance measurement as kilometers or miles depending on the measurement system."""
-        return self.to_kms() if measurement_system is MeasurementSystem.metric else self.to_miles()
+        return self.to_kms(precision=precision) if measurement_system is MeasurementSystem.metric else self.to_miles(precision=precision)
 
 
 class Position(Measurement):
@@ -296,26 +296,26 @@ class Speed(Measurement):
         """Return a Speed instance intialized with a value in hectometers (100) per hopur or tenths of a mile per hour."""
         return cls.from_hmph(speed) if measurement_system is MeasurementSystem.metric else cls.from_tmph(speed)
 
-    def to_kph(self):
+    def to_kph(self, precision=None):
         """Return the speed measurement as kilometers per hour."""
-        return self.to_units(3.6)
+        return self.to_units(3.6, precision=precision)
 
-    def to_mph(self):
+    def to_mph(self, precision=None):
         """Return the speed measurement as miles per hour."""
-        return self.to_units(2.236936)
+        return self.to_units(2.236936, precision=precision)
 
-    def to_mps(self):
+    def to_mps(self, precision=None):
         """Return the speed measurement as meters per second."""
         return self.value
 
     @classmethod
-    def mph_or_kph(cls, speed, measurement_system=MeasurementSystem.metric):
+    def mph_or_kph(cls, speed, measurement_system=MeasurementSystem.metric, precision=1):
         """Return the speed measurement as kilometers per hour or miles per hour."""
-        return speed.kph_or_mph(measurement_system)
+        return speed.kph_or_mph(measurement_system, precision=precision)
 
-    def kph_or_mph(self, measurement_system=MeasurementSystem.metric):
+    def kph_or_mph(self, measurement_system=MeasurementSystem.metric, precision=1):
         """Return the speed measurement as kilometers per hour or miles per hour."""
-        return self.to_kph() if measurement_system is MeasurementSystem.metric else self.to_mph()
+        return self.to_kph(precision=precision) if measurement_system is MeasurementSystem.metric else self.to_mph(precision=precision)
 
 
 class Weight(Measurement):
@@ -374,17 +374,17 @@ class Volume(Measurement):
         """Return the volume measurement as liters."""
         return self.value
 
-    def to_milliliters(self, rounded=False):
+    def to_milliliters(self, precision=None):
         """Return the volume measurement as milliliters."""
-        return self.to_units(1000.0, rounded=rounded)
+        return self.to_units(1000.0, precision=precision)
 
-    def to_ounces(self, rounded=False):
+    def to_ounces(self, precision=None):
         """Return the volume measurement as ounces."""
-        return self.to_units(35.19503, rounded=rounded)
+        return self.to_units(35.19503, precision=precision)
 
-    def ml_or_oz(self, measurement_system=MeasurementSystem.metric, rounded=False):
+    def ml_or_oz(self, measurement_system=MeasurementSystem.metric, precision=None):
         """Return the volume measurement as milliliters or ounces."""
-        return self.to_milliliters(rounded) if measurement_system is MeasurementSystem.metric else self.to_ounces(rounded)
+        return self.to_milliliters(precision) if measurement_system is MeasurementSystem.metric else self.to_ounces(precision)
 
 
 class Temperature(Measurement):

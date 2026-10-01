@@ -9,7 +9,7 @@ from ..fields import NamedField, PercentField, WeightField
 
 
 weight_scale_message = {
-    0 : WeightField('weight'),
+    0 : WeightField(),
     1 : PercentField('percent_fat'),
     2 : PercentField('percent_hydration'),
     3 : WeightField('visceral_fat_mass'),

@@ -13,6 +13,8 @@ from ..measurement import Distance, Speed, Weight, Longitude, Latitude, Temperat
 class ObjectField(Field):
     """Class that handles a field that translates into a Python object."""
 
+    _precision = None
+
     def __init__(self, obj_func, output_func, **kwargs):
         """Return an instance of ObjectField."""
         self.obj_func = obj_func
@@ -23,6 +25,8 @@ class ObjectField(Field):
         return value.is_invalid()
 
     def _convert_single(self, value, invalid):
+        if self._precision is not None:
+            return round(self.output_func(value, self.measurement_system), self._precision)
         return self.output_func(value, self.measurement_system)
 
     def convert(self, value, invalid, measurement_system=MeasurementSystem.metric):
@@ -42,6 +46,7 @@ class HeightField(ObjectField):
     """Class that handles a user height measurement from a FIT message field."""
 
     _name = 'height'
+    _precision = 1
 
     def __init__(self):
         """Return a HeightField instance."""
@@ -51,9 +56,15 @@ class HeightField(ObjectField):
 class WeightField(ObjectField):
     """Class that handles a user weight measurement from a FIT message field."""
 
-    def __init__(self, name):
+    _name = 'weight'
+    _precision = 1
+
+    def __init__(self, *args, **kwargs):
         """Return a WeightField instance."""
-        super().__init__(Weight.from_cgs, Weight.lbs_or_kgs, name=name)
+        if len(args) > 0:
+            super().__init__(Weight.from_cgs, Weight.lbs_or_kgs, name=args[0], **kwargs)
+        else:
+            super().__init__(Weight.from_cgs, Weight.lbs_or_kgs, **kwargs)
 
 
 class SpeedMpsField(ObjectField):

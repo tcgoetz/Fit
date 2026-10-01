@@ -83,7 +83,7 @@ user_metrics_message = {
     # 0 : Vo2MaxField('pre_activity_vo2_max'),  wrong
     1 : IntegerField('age'),
     2 : HeightField(),  # uint8			100		m
-    3 : WeightField('weight'),  # uint16			10		kg
+    3 : WeightField(),  # uint16			10		kg
     4 : GenderField(),
     5 : ActivityClassField(),
     6 : HeartRateField('max_heart_rate'),
