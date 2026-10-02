@@ -10,7 +10,7 @@ from .types import FloatField
 from .enum_fields.sport import Sport, SubSport, BoulderingFontGradeField, IndoorFontGradeField
 
 
-class CyclesField(Field):
+class CyclesField(NamedField):
     """Field that holds cycles measurement for sports activity."""
 
     _name = 'cycles'
@@ -18,14 +18,14 @@ class CyclesField(Field):
     _scale = 2.0
 
 
-class StepsField(Field):
+class StepsField(NamedField):
     """Field that holds steps measurement for sports activity."""
 
     _name = 'steps'
     _units = 'steps'
 
 
-class StrokesField(Field):
+class StrokesField(NamedField):
     """Field that holds strokes measurement for sports activity."""
 
     _name = 'strokes'
@@ -40,14 +40,14 @@ class SwimStrokesField(NamedField):
     _units = 'strokes'
 
 
-class CyclesDistanceField(Field):
+class CyclesDistanceField(NamedField):
 
     _name = 'cycles_to_distance'
     _units = 'm/cycle'
     _scale = 5000.0
 
 
-class FractionalCyclesField(Field):
+class FractionalCyclesField(NamedField):
     """Field that holds cycles measurement for sports activity."""
 
     _name = 'total_fractional_cycles'
@@ -55,7 +55,7 @@ class FractionalCyclesField(Field):
     _scale = 128.0
 
 
-class EventDataField(Field):
+class EventDataField(NamedField):
     """A field that holds data that depends on the event's type."""
 
     _name = 'event_data'

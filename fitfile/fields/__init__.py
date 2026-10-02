@@ -17,7 +17,7 @@ from .sport import CyclesField, StepsField, StrokesField, CyclesDistanceField, F
     ClimbingRouteComletedField, FractionalCyclesField, SwimStrokesField, TrainingLoadField
 
 
-from .calories import CaloriesField, CaloriesDayField, CyclesCaloriesField
+from .calories import CaloriesField, CaloriesRateField, CaloriesDayField, CyclesCaloriesField
 from ..data_field import *
 from .dev import *
 from .device import *

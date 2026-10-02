@@ -8,7 +8,7 @@ __license__ = "GPL"
 from ..fields import IntegerField, HeartRateField, EnhancedRespirationRateField, AbsolutePressureField, FloatField, NamedField, TimeMsField, CaloriesField, PowerField, \
     LeftRightBalanceField, PercentField, TimeSField, FractionalCadenceField, BytePercentField, LatiitudeField, LongitudeField, DistanceCentimetersToKmsField, SpeedMpsField, \
     DistanceMetersField, AltitudeField, TemperatureField, DistanceMillimetersField, CompressedSpeedDistanceField, CadenceField, ActivityBasedCyclesField, ActivityTypeField, \
-    DistanceCentimetersToMetersField, RespirationRateField, DistanceKmsField, PressureField, FlowRateField
+    DistanceCentimetersToMetersField, RespirationRateField, DistanceKmsField, PressureField, FlowRateField, CaloriesRateField
 
 
 record_message = {
@@ -32,7 +32,7 @@ record_message = {
     #
     28 : NamedField('accumulated_power'),  # 16 bit version
     29 : NamedField('accumulated_power'),  # 32 bit version
-    30 : LeftRightBalanceField('left_right_balance'),
+    30 : LeftRightBalanceField(),
     31 : DistanceMetersField('gps_accuracy'),
     32 : SpeedMpsField('vertical_speed'),
     33 : CaloriesField(),
@@ -89,7 +89,10 @@ record_message = {
     97 : PercentField('cns_load'),
     98 : PercentField('n2_load'),
     99 : RespirationRateField('respiration_rate'),
+    100 : LatiitudeField('unknown_lat'),
+    101 : LatiitudeField('unknown_long'),
     #
+    107 : IntegerField('position_status'),
     108 : EnhancedRespirationRateField('enhanced_respiration_rate'),
     #
     114 : FloatField('grit'),
@@ -99,9 +102,8 @@ record_message = {
     118 : PercentField('ebike_battery_level'),
     119 : NamedField('ebike_assist_mode'),
     120 : PercentField('ebike_assist_level_percent'),
-    #
     121 : IntegerField('total_ascent'),
-    #
+    122 : IntegerField('total_descent'),
     123 : TimeSField('air_time_remaining'),
     124 : PressureField('pressure_sac'),
     125 : FlowRateField('volume_sac'),
@@ -110,13 +112,18 @@ record_message = {
     #
     129 : PercentField('po2'),
     #
+    133 : PercentField('spo2'),
+    #
     136 : HeartRateField('wrist_heart_rate'),
     137 : IntegerField('stamina_potential'),
     138 : IntegerField('stamina'),
     139 : TemperatureField('core_temperature'),
     140 : SpeedMpsField('grade_adjusted_speed'),
+    141 : CaloriesRateField(),
+    #
     143 : IntegerField('body_battery'),
     144 : HeartRateField('external_heart_rate'),
+    #
     146 : SpeedMpsField('step_speed_loss_distance'),
     147 : SpeedMpsField('step_speed_loss_percent'),
     148 : IntegerField('force'),

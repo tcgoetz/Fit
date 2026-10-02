@@ -6,7 +6,8 @@ __license__ = "GPL"
 
 
 from ..fields import TimestampField, NamedField, PowerField, TimeOfDayField, GenderField, LanguageField, HeightField, WeightField, EnhancedDistanceMetersField, \
-    DisplayMeasureField, DisplayHeartField, DisplayPositionField, IntegerField, HeartRateField, YearOffset, ActivityClassField, SpeedKphField
+    DisplayMeasureField, DisplayHeartField, DisplayPositionField, IntegerField, HeartRateField, YearOffset, ActivityClassField, SpeedKphField, TimeMinField, \
+    StringField
 
 
 user_profile_message = {
@@ -33,21 +34,37 @@ user_profile_message = {
     23 : NamedField('global_id'),
     24 : YearOffset('year_of_birth'),
     #
+    26 : IntegerField('pressure_setting'),
+    #
     28 : TimeOfDayField('wake_time'),
     29 : TimeOfDayField('sleep_time'),
     30 : DisplayMeasureField('height_setting'),
     31 : EnhancedDistanceMetersField('user_running_step_length'),
     32 : EnhancedDistanceMetersField('user_walking_step_length'),
     #
-    35 : TimestampField('ts_35', utc=True),
+    34 : TimeMinField('recovery_time'),
+    35 : TimestampField('recovery_time_start', utc=True),
     #
     37 : SpeedKphField('lactate_threshold_speed'),
     #
-    41 : TimestampField('time_last_lthr_update', utc=True),
+    41 : TimestampField('time_last_running_lthr_update', utc=True),
+    42 : TimestampField('time_last_cycling_lthr_update', utc=True),
+    #
+    44 : IntegerField('birth_day'),
+    45 : IntegerField('birth_month'),
     #
     47 : DisplayMeasureField('depth_setting'),
     #
     49 : IntegerField('dive_count'),
     #
-    62 : GenderField('gender_x')
+    53 : TimeMinField('moderate_activity'),
+    54 : TimeMinField('vigorous_activity'),
+    #
+    58 : IntegerField('golf_distance'),
+    #
+    62 : GenderField('gender_x'),
+    #
+    65 : IntegerField('running_coach'),
+    66 : IntegerField('cycling_coach'),
+    67 : StringField('user_name')
 }

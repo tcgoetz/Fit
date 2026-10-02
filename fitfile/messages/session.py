@@ -9,7 +9,8 @@ from ..fields import IntegerField, FloatField, HeartRateField, StringField, Enha
     TrainingEffectField, LeftRightBalanceField, WorkField, PercentField, FractionalCadenceField, FractionalCyclesField, BytePercentField, EventField, SessionTriggerField, \
     DisplayMeasureField, LatiitudeField, LongitudeField, DistanceCentimetersToKmsField, SpeedMpsField, DistanceMetersField, DistanceCentimetersToMetersField, AltitudeField, \
     TemperatureField, DistanceMillimetersField, WeightField, SportField, SubSportField, SportBasedCyclesField, SportBasedCadenceField, CadenceField, BenefitField, TimeSField, \
-    RespirationRateField, HeartRateVarianceField, SwitchField, PowerField, SwimStrokesCadenceField, ActivityEvalFeel, ActivityEvalEffort, TrainingLoadField
+    RespirationRateField, HeartRateVarianceField, SwitchField, PowerField, SwimStrokesCadenceField, ActivityEvalFeel, ActivityEvalEffort, TrainingLoadField, \
+    DistanceMillimetersToMetersField, SwimStrokeField
 
 
 session_message = {
@@ -49,13 +50,13 @@ session_message = {
     34 : PowerField('normalized_power'),
     35 : TrainingEffectField('training_stress_score'),
     36 : NamedField('intensity_factor'),
-    37 : LeftRightBalanceField('left_right_balance'),
+    37 : LeftRightBalanceField(),
     38 : LatiitudeField('end_position_lat'),
     39 : LongitudeField('end_position_long'),
     #
     41 : IntegerField('avg_stroke_count'),
     42 : DistanceCentimetersToMetersField('avg_stroke_distance'),
-    43 : NamedField('swim_stroke'),
+    43 : SwimStrokeField(),
     44 : DistanceCentimetersToMetersField('pool_length'),
     45 : PowerField('threshold_power'),
     46 : DisplayMeasureField('pool_length_unit'),
@@ -111,16 +112,16 @@ session_message = {
     103 : BytePercentField('avg_left_pedal_smoothness'),
     104 : BytePercentField('avg_right_pedal_smoothness'),
     105 : BytePercentField('avg_combined_pedal_smoothness'),
-    #
+    106 : IntegerField('num_segment_laps'),
     107 : IntegerField('front_shifts'),
     108 : IntegerField('rear_shifts'),
-    #
-    110 : StringField('sport_name'),
+    109 : IntegerField('sport_profile_index'),
+    110 : StringField('sport_profile_name'),
     111 : IntegerField('sport_index'),
     112 : TimeMsField('time_standing'),
     113 : NamedField('stand_count'),
-    114 : NamedField('avg_left_pco'),
-    115 : NamedField('avg_right_pco'),
+    114 : DistanceMillimetersField('avg_left_pco'),
+    115 : DistanceMillimetersField('avg_right_pco'),
     116 : NamedField('avg_left_power_phase'),
     117 : NamedField('avg_left_power_phase_peak'),
     118 : NamedField('avg_right_power_phase'),
@@ -144,8 +145,8 @@ session_message = {
     137 : TrainingEffectField('total_anaerobic_training_effect'),
     #
     139 : SpeedMpsField('avg_vam'),
-    140 : AltitudeField('avg_depth'),
-    141 : AltitudeField('max_depth'),
+    140 : DistanceMillimetersToMetersField('avg_depth'),
+    141 : DistanceMillimetersToMetersField('max_depth'),
     142 : TimeSField('surface_interval'),
     143 : PercentField('start_cns'),
     144 : PercentField('end_cns'),
@@ -160,6 +161,8 @@ session_message = {
     #
     155 : IntegerField('o2_toxicity', units='OTUs'),
     156 : IntegerField('DiveNumberFieldNum'),
+    157 : IntegerField('floors_ascended'),
+    158 : IntegerField('floors_descended'),
     #
     168 : TrainingLoadField(),
     169 : EnhancedRespirationRateField('enhanced_avg_respiration_rate'),
@@ -176,8 +179,9 @@ session_message = {
     185 : PercentField('execution_score'),
     186 : FloatField('avg_grit', units='kGrit'),
     187 : FloatField('avg_flow', units='Flow'),
-    #
     188 : BenefitField('primary_benefit'),
+    189 : PercentField('start_stress'),
+    190 : PercentField('end_stress'),
     #
     192 : ActivityEvalFeel(),
     193 : ActivityEvalEffort(),
@@ -188,23 +192,23 @@ session_message = {
     198 : HeartRateVarianceField('rmssd_hrv'),
     199 : DistanceCentimetersToMetersField('total_fractional_ascent'),
     200 : DistanceCentimetersToMetersField('total_fractional_descent'),
-    #
+    201 : PercentField('max_stress'),
     202 : IntegerField('recovery_heart_rate'),
-    #
+    203 : TimeSField('battery_gain'),
+    204 : PercentField('solar_intensity'),
     205 : IntegerField('beginning_potential'),
     206 : IntegerField('ending_potential'),
     207 : IntegerField('min_stamina'),
     208 : TemperatureField('avg_core_temperature'),
     209 : TemperatureField('min_core_temperature'),
     210 : TemperatureField('max_core_temperature'),
-    #
     211 : SpeedMpsField('grade_adjusted_speed'),
     212 : SwitchField('wind_data'),
     215 : IntegerField('beginning_body_battery'),
     216 : IntegerField('ending_body_battery'),
     #
     220 : WeightField('pack_weight'),  # 10		kg
-    #
+    221 : DistanceMetersField('unknown_distance'),
     222 : SpeedMpsField('step_speed_loss_distance'),
     223 : SpeedMpsField('step_speed_loss_percent'),
     224 : IntegerField('avg_force', scale=1000.0),

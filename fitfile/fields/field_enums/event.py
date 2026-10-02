@@ -39,15 +39,29 @@ class Event(Enum):
     user_marker = 32
     sport_point = 33
     calibration = 36
-    unknown = 41
+    detect_inactivity = 41
     front_gear_change = 42
     rear_gear_change = 43
     rider_position_change = 44
     elev_high_alert = 45
     elev_low_alert = 46
     comm_timeout = 47
-    sleep = 74
+    detect_autoactivity = 54
+    detect_incident = 55
+    dive_alert = 56
+    dive_gas_switch = 57
+    stress_high = 61
+    spo2 = 62
+    heartrate_sedentary = 66
+    dive_tank_reserve = 71
+    dive_tank_critical = 72
+    dive_tank_lost = 73
+    detect_sleep = 74
     radar_threat_alert = 75
+    dive_tank_battery_low = 76
+    dive_tank_connect = 81
+    dive_tank_disconnect = 82
+    dive_notification = 83
 
 
 class EventType(Enum):

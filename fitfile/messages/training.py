@@ -21,6 +21,7 @@ training_settings_message = {
     #
     12 : PowerAveragingField(),
     #
+    14 : IntegerField('display_pace'),
     15 : AutoScrollModeField(),
     #
     18 : SwitchField('timer_start_prompt'),

@@ -8,7 +8,8 @@ __license__ = "GPL"
 from ..fields import IntegerField, HeartRateField, EnhancedRespirationRateField, Volume, TimestampField, NamedField, TimeMsField, CaloriesField, PowerField, \
     LeftRightBalanceField, WorkField, PercentField, FractionalCadenceField, FractionalCyclesField, BytePercentField, MessageIndexField, EventField, EventTypeField, \
     LapTriggerField, LatiitudeField, LongitudeField, DistanceCentimetersToMetersField, SpeedMpsField, DistanceMetersField, AltitudeField, \
-    TemperatureField, DistanceMillimetersField, SportField, SubSportField, SportBasedCyclesField, SportBasedCadenceField, CadenceField, RespirationRateField, FloatField
+    TemperatureField, DistanceMillimetersField, SportField, SubSportField, SportBasedCyclesField, SportBasedCadenceField, CadenceField, RespirationRateField, FloatField, \
+    SwimStrokeField
 
 
 lap_message = {
@@ -46,11 +47,11 @@ lap_message = {
     #
     32 : IntegerField('num_lengths'),
     33 : PowerField('normalized_power'),
-    34 : LeftRightBalanceField('left_right_balance'),
+    34 : LeftRightBalanceField(),
     35 : IntegerField('first_length_index'),
     #
     37 : DistanceCentimetersToMetersField('avg_stroke_distance'),
-    38 : NamedField('swim_stroke'),
+    38 : SwimStrokeField(),
     39 : SubSportField(),
     40 : IntegerField('num_active_lengths'),
     41 : WorkField(),
@@ -102,11 +103,12 @@ lap_message = {
     93 : BytePercentField('avg_left_pedal_smoothness'),
     94 : BytePercentField('avg_right_pedal_smoothness'),
     95 : BytePercentField('avg_combined_pedal_smoothness'),
-    #
+    96 : IntegerField('front_gear_shift_count'),
+    97 : IntegerField('rear_gear_shift_count'),
     98 : TimeMsField('time_standing'),
     99 : IntegerField('stand_count'),
-    100 : NamedField('avg_left_pco'),
-    101 : NamedField('avg_right_pco'),
+    100 : DistanceMillimetersField('avg_left_pco'),
+    101 : DistanceMillimetersField('avg_right_pco'),
     102 : NamedField('avg_left_power_phase'),
     103 : NamedField('avg_left_power_phase_peak'),
     104 : NamedField('avg_right_power_phase'),
@@ -130,6 +132,8 @@ lap_message = {
     122 : DistanceMetersField('avg_depth'),
     123 : DistanceMetersField('max_depth'),
     124 : TemperatureField('min_temperature'),
+    125 : IntegerField('floors_ascended'),
+    126 : IntegerField('floors_descended'),
     #
     136 : EnhancedRespirationRateField('enhanced_avg_respiration_rate'),
     137 : EnhancedRespirationRateField('enhanced_max_respiration_rate'),

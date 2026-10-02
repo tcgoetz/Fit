@@ -41,7 +41,7 @@ class Measurement():
         if not self.is_invalid():
             try:
                 value = self.value * scale
-                return round(value, precision) if precision is not None else value
+                return round(value, precision) if precision is not None and value is not None else value
             except Exception as e:
                 raise Exception(f'value {self.value} scale {scale}: {e}')
 

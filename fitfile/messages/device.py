@@ -8,7 +8,7 @@ __license__ = "GPL"
 from ..fields import IntegerField, StringField, VersionField, NamedField, TimeMsField, DeviceTypeField, BatteryVoltageField, BatteryStatusField, BodyLocationField, \
     AntNetworkField, SourceTypeField, ManufacturerField, ProductField, FloatField, BoolField, TimestampField, TimeSField, TimeHourField, TimeOffsetField, TimeModeField, \
     SwitchField, DateModeField, TimeMinField, BacklightModeField, DisplayOrientationField, SideField, AutoSyncFrequencyField, AutoActivityDetectField, PercentField, \
-    TemperatureField, EpoCpeStatusField, LatiitudeField, LongitudeField, AltitudeField, SpeedMpsField, HeadingField, TapSensitivityField
+    TemperatureField, EpoCpeStatusField, LatiitudeField, LongitudeField, AltitudeField, SpeedMpsField, HeadingField, TapSensitivityField, BytesField
 
 
 device_info_message = {
@@ -21,6 +21,7 @@ device_info_message = {
     6 : NamedField('hardware_version'),
     7 : TimeMsField('cum_operating_time', scale=1000.0),
     #
+    9 : PercentField('reception_quality'),
     10 : BatteryVoltageField(),
     11 : BatteryStatusField(),
     #
@@ -36,6 +37,8 @@ device_info_message = {
     25 : SourceTypeField(),
     #
     27 : StringField('product_name'),
+    #
+    29 : BytesField('ble_address'),
     #
     32 : PercentField('battery_level'),
 }

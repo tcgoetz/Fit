@@ -25,9 +25,10 @@ class ObjectField(Field):
         return value.is_invalid()
 
     def _convert_single(self, value, invalid):
-        if self._precision is not None:
-            return round(self.output_func(value, self.measurement_system), self._precision)
-        return self.output_func(value, self.measurement_system)
+        if not value.is_invalid():
+            if self._precision is not None:
+                return round(self.output_func(value, self.measurement_system), self._precision)
+            return self.output_func(value, self.measurement_system)
 
     def convert(self, value, invalid, measurement_system=MeasurementSystem.metric):
         """Return a FieldValue containing the field value as a Python object."""
@@ -65,6 +66,20 @@ class WeightField(ObjectField):
             super().__init__(Weight.from_cgs, Weight.lbs_or_kgs, name=args[0], **kwargs)
         else:
             super().__init__(Weight.from_cgs, Weight.lbs_or_kgs, **kwargs)
+
+
+class WeightGramsField(ObjectField):
+    """Class that handles a user weight measurement from a FIT message field."""
+
+    _name = 'weight'
+    _precision = 2
+
+    def __init__(self, *args, **kwargs):
+        """Return a WeightField instance."""
+        if len(args) > 0:
+            super().__init__(Weight.from_grams, Weight.lbs_or_kgs, name=args[0], **kwargs)
+        else:
+            super().__init__(Weight.from_grams, Weight.lbs_or_kgs, **kwargs)
 
 
 class SpeedMpsField(ObjectField):
@@ -171,6 +186,14 @@ class DistanceMillimetersField(DistanceMetersField):
         super().__init__(name, Distance.from_mm, Distance.inches_or_mm, scale=10.0)
 
 
+class CrankLengthField(DistanceMetersField):
+    """Field holding a distance measure in meters."""
+
+    def __init__(self, name):
+        """Return a DistanceMillimetersField instance."""
+        super().__init__(name, Distance.from_mm, Distance.inches_or_mm, scale=2.0, offset=-110.0)
+
+
 class BestEffortDistance(Field):
     """Field that takes in cm and returns a best effort distance string."""
 
@@ -197,11 +220,27 @@ class BestEffortDistance(Field):
 
 
 class AltitudeField(DistanceMetersField):
-    """A field containing a altitude reading with greater range."""
+    """A field containing a 16 bit altitude reading."""
 
     def __init__(self, name):
         """Return an instance of AltitudeField."""
         super().__init__(name, Distance.from_meters, Distance.feet_or_meters, scale=5.0, offset=500.0)
+
+
+class ExpandedAltitudeField(DistanceMetersField):
+    """A field containing a 32 bit altitude reading with greater range."""
+
+    def __init__(self, name):
+        """Return an instance of AltitudeField."""
+        super().__init__(name, Distance.from_meters, Distance.feet_or_meters, scale=65536.0)
+
+
+class DepthField(DistanceMetersField):
+    """A field containing a 16 bit altitude reading."""
+
+    def __init__(self, name):
+        """Return an instance of AltitudeField."""
+        super().__init__(name, Distance.from_meters, Distance.feet_or_meters, scale=1000.0)
 
 
 class CompressedSpeedDistanceField(Field):

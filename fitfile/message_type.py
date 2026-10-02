@@ -96,24 +96,28 @@ class MessageType(enum.Enum):
     ant_rx                                  = 80
     ant_tx                                  = 81
     ant_channel_id                          = 82
-    # 83-100 not known
+    # 83-89 not known
     open_water_event                        = 89
+    #
     length                                  = 101
     # 102 not known
     monitoring_info                         = 103
     device_status                           = 104
     pad                                     = 105
     slave_device                            = 106
+    # 107-112 not known
     best_effort                             = 113
     personal_record                         = 114
-    # 107-126 not known
+    # 115-126 not known
     connectivity                            = 127
     weather_conditions                      = 128
     weather_alert                           = 129
     # 130 not known
     cadence_zone                            = 131
     hr                                      = 132
-    # 133-139 not known
+    # 133-137 not known
+    files                                   = 138
+    #
     activity_metrics                        = 140
     epo_status                              = 141
     segment_lap                             = 142
@@ -179,7 +183,7 @@ class MessageType(enum.Enum):
     stress_level                            = 227
     max_met_data                            = 229
     # 229-241 not known
-    metrics_232                             = 232  # guess, file type metrics
+    load_history                            = 232  # Gadgetbridge
     unknown_233                             = 233
     local_time                              = 241
     music_info                              = 243
@@ -197,15 +201,22 @@ class MessageType(enum.Enum):
     sleep_data                              = 274  # this is a guess
     sleep_level                             = 275
     sleep_end                               = 276  # this is a guess
-    metrics_281                             = 281  # guess, file type metrics
-    metrics_282                             = 282  # guess, file type metrics
-    unknown_284                             = 284
+    monitoring_alititude                    = 279
+    acclimatization                         = 281  # Gadgetbridge
+    daily_alititude                         = 282  # Gadgetbridge
+    recovery_metric                         = 284  # Gadgetbridge
     jump                                    = 285
-    respiration_rate                        = 297
+    #
+    environment                             = 288  # Gadgetbridge
+    #
     aad_accel_features                      = 289
     beat_intervals                          = 290
-    metrics_294                             = 294  # guess, file type metrics
+    training_balance_results                = 294  # Gadgetbridge
+    #
+    respiration_rate                        = 297
+    #
     hsa_accelerometer_data                  = 302
+    #
     hsa_step_data                           = 304
     hsa_spo2_data                           = 305
     hsa_spo2_data2                          = 306
@@ -227,7 +238,7 @@ class MessageType(enum.Enum):
     ecg_summary                             = 336
     ecg_raw_sample                          = 337
     ecg_smooth_sample                       = 338
-    metrics_339                             = 339
+    race_prediction                         = 339
     sleep_assessment                        = 346
     functional_metrics                      = 356
     race_event                              = 358
@@ -257,7 +268,9 @@ class MessageType(enum.Enum):
     sleep_disruption_severity_period        = 470
     sleep_disruption_overnight_severity     = 471
     #
-    metrics_493                             = 493
+    metrics_summary                         = 493  # Gadgetbridge
+    #
+    gear_item                               = 526
     #
     mfg_range_min                           = 0xFF00
     mfg_range_max                           = 0xFFFE

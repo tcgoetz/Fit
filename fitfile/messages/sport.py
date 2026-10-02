@@ -5,7 +5,7 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 
-from ..fields import StringField, SportField, SubSportField, SwitchField
+from ..fields import StringField, SportField, SubSportField, SwitchField, IntegerField
 
 
 sport_message = {
@@ -13,8 +13,16 @@ sport_message = {
     1 : SubSportField(),
     3 : StringField('name'),
     #
+    5 : IntegerField('active'),
+    #
+    10 : IntegerField('color'),
+    11 : IntegerField('high_contrast'),
+    #
     15 : SwitchField('popularity_routing'),
+    #
+    17 : IntegerField('navigation_prompt'),
     18 : SwitchField('sharp_bend_warnings'),
+    #
     21 : SwitchField('workout_videos'),
     22 : SwitchField('high_traffic_road_warnings'),
     23 : SwitchField('road_hazard_warnings'),

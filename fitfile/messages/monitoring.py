@@ -43,5 +43,8 @@ monitoring_message = {
     34 : TimeMinField('vigorous_activity_time'),
     35 : DistanceMillimetersToMetersField('cum_ascent'),
     36 : DistanceMillimetersToMetersField('cum_descent'),
+    37 : IntegerField('moderate_activity'),
+    38 : IntegerField('vigorous_activity'),
+    #
     41 : IntegerField('pushes'),
 }

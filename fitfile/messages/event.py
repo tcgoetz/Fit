@@ -5,7 +5,7 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 
-from ..fields import NamedField, TimestampField, IntegerField, EventField, EventTypeField, ActivityTypeField, RadarThreatLevelTypeField
+from ..fields import NamedField, TimestampField, IntegerField, EventField, EventTypeField, ActivityTypeField, RadarThreatLevelTypeField, SpeedMpsField
 
 
 event_message = {
@@ -26,4 +26,7 @@ event_message = {
     15 : TimestampField('start_timestamp', utc=True),
     #
     21 : RadarThreatLevelTypeField(),
+    22 : IntegerField('radar_threat_level_max'),
+    23 : SpeedMpsField('radar_threat_avg_approach_speed'),
+    24 : SpeedMpsField('radar_threat_max_approach_speed')
 }

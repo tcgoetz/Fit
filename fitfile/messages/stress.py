@@ -10,6 +10,7 @@ from ..fields import NamedField, TimestampField, IntegerField
 
 stress_level_message = {
     0 : NamedField('stress_level'),
-    1 : TimestampField('local_timestamp', utc=False),
+    1 : TimestampField('stress_level_time', utc=False),
+    2 : NamedField('average_stress'),
     3 : IntegerField('body_battery'),
 }

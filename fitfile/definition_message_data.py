@@ -7,7 +7,8 @@ __license__ = "GPL"
 from .message_type import MessageType
 from .fields import BytesField, NamedField, VersionField, FloatField, IntegerField, TimestampField, TimeMsField, WatchFaceModeField, SleepActivityLevelField, \
     SleepDisruptionsSeveritylField, SwitchField, EnhancedRespirationRateField, MessageIndexField, HeartRateField, HeartRateVarianceField, TemperatureField, TimeSField, \
-    TemperatureMilliField, Spo2MeasurementTypeField, GpsEventTypeField
+    TemperatureMilliField, Spo2MeasurementTypeField, GpsEventTypeField, StringField, BitField, AltitudeField, ExpandedAltitudeField, TimeMinField, PercentField, \
+    TrainingLoadField
 
 from .messages import file_id_message, device_settings_message, user_profile_message, hrm_profile_message, bike_profile_message, zones_target_message, hr_zone_message, \
     power_zone_message, sport_message, data_screen_message, goal_message, alert_message, range_alert_message, session_message, lap_message, record_message, event_message, \
@@ -94,6 +95,11 @@ class DefinitionMessageData():
         MessageType.weather_alert : {},
         MessageType.cadence_zone : {},
         MessageType.hr : {},
+        MessageType.files : {
+            1 : StringField('directory'),
+            2 : StringField('file'),
+            3 : BitField('flags'),
+        },
         MessageType.activity_metrics : activity_metrics_message,
         MessageType.epo_status : epo_status_message,
         MessageType.segment_lap : {},
@@ -153,7 +159,11 @@ class DefinitionMessageData():
         MessageType.set : {},
         MessageType.stress_level : stress_level_message,
         MessageType.max_met_data : {},
-        MessageType.metrics_232 : {},
+        MessageType.load_history : {
+            5 : IntegerField('weekly_load'),
+            6 : IntegerField('target_load_min'),
+            7 : IntegerField('target_load_max'),
+        },
         MessageType.unknown_233 : {
             2 : BytesField('unknown_2'),
         },
@@ -179,21 +189,51 @@ class DefinitionMessageData():
             0 : SleepActivityLevelField('sleep_level'),
         },
         MessageType.sleep_end : {},
-        MessageType.metrics_281 : {
-            1 : TimestampField('end', utc=True),
-            2 : TimestampField('start', utc=True)
+        MessageType.monitoring_alititude : {
+            0 : AltitudeField('altitude'),
         },
-        MessageType.metrics_282 : {},
-        MessageType.unknown_284 : {
-            1 : TimestampField('ts_1', utc=True),
+        MessageType.acclimatization : {
+            1 : TimestampField('end', utc=True),
+            2 : TimestampField('start', utc=True),
+            #
+            4 : IntegerField('acclimatization_altitude'),
+            #
+            11 : IntegerField('altitude'),
+        },
+        MessageType.daily_alititude : {
+            1 : ExpandedAltitudeField('altitude')
+        },
+        MessageType.recovery_metric : {
+            0 : TimeMinField('recovery_minutes'),
+            1 : TimestampField('recovery_start', utc=True),
         },
         MessageType.jump : jump_message,
+        MessageType.environment : {
+            0 : TemperatureField(),
+            1 : PercentField('humidity')
+        },
         MessageType.respiration_rate : {
             0 : EnhancedRespirationRateField(),
         },
-        MessageType.aad_accel_features : {},
-        MessageType.beat_intervals : {},
-        MessageType.metrics_294 : {},
+        MessageType.aad_accel_features : {
+            0 : TimeSField('time'),
+            1 : NamedField('energy_total'),
+            2 : IntegerField('zero_cross_cnt'),
+            3 : NamedField('instance'),
+            4 : NamedField('time_above_threshold')
+        },
+        MessageType.beat_intervals : {
+            0 : TimeMsField('timestamp_ms'),
+            1 : TimeMsField('time'),
+        },
+        MessageType.training_balance_results : {
+            0 : TrainingLoadField('monthly_load_aerobic_low'),
+            1 : TrainingLoadField('monthly_load_aerobic_high'),
+            2 : TrainingLoadField('monthly_load_anaerobic'),
+            #
+            7 : NamedField('monthly_load_anaerobic_target_min'),
+            8 : NamedField('monthly_load_anaerobic_target_max'),
+        },
         MessageType.hsa_accelerometer_data : {},
         MessageType.hsa_step_data : {},
         MessageType.hsa_spo2_data : {},
@@ -219,8 +259,12 @@ class DefinitionMessageData():
         MessageType.ecg_summary : {},
         MessageType.ecg_raw_sample : {},
         MessageType.ecg_smooth_sample : {},
-        MessageType.metrics_339 : {
+        MessageType.race_prediction : {
             0 : TimestampField('local_time', utc=False),
+            1 : TimeSField('time_5k'),
+            2 : TimeSField('time_10k'),
+            3 : TimeSField('time_half_marathon'),
+            4 : TimeSField('time_full_marathon'),
         },
         MessageType.sleep_assessment : sleep_assessment_message,
         MessageType.functional_metrics : {},
@@ -275,10 +319,22 @@ class DefinitionMessageData():
             0 : SleepDisruptionsSeveritylField()
         },
         #
-        MessageType.metrics_493 : {
-            0 : TimestampField('start', utc=True),
-            1 : TimestampField('end', utc=True),
+        MessageType.metrics_summary : {
+            0  : TimestampField('start', utc=True),
+            1  : TimestampField('end', utc=True),
+            #
+            8  : HeartRateField('hr_min'),
+            #
+            10 : HeartRateField('daily_hr_min'),
             11 : TimestampField('last_something', utc=True),
+        },
+        #
+        MessageType.gear_item : {
+            0 : StringField('uuid'),
+            #
+            2 : StringField('name'),
+            3 : StringField('brand'),
+            4 : StringField('model'),
         },
         #
         MessageType.mfg_range_min : {},

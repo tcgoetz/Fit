@@ -105,6 +105,8 @@ class UnknownField(Field):
 class LeftRightBalanceField(NamedField):
     """A composite field that indicates left or roight and the percentage for that side."""
 
+    _name = 'left_right_balance'
+
     def _convert_single(self, value, invalid):
         if value != invalid:
             if value & 0x8000:

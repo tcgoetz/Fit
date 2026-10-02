@@ -5,7 +5,7 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 
-from . import Field, NamedField
+from . import NamedField
 from ..field_definition import FieldDefinition
 
 
@@ -62,7 +62,7 @@ class BoolField(TypeField):
     type_func = bool
 
 
-class BitField(Field):
+class BitField(NamedField):
     """A FIT file message field with a bitfield value."""
 
     _bits = {}

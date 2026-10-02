@@ -15,5 +15,7 @@ file_id_message = {
     3 : IntegerField('serial_number'),
     4 : TimestampField('time_created', utc=True),
     5 : IntegerField('number'),
+    6 : IntegerField('manufacturer_partner'),
+    7 : TimestampField('original_time_created'),
     8 : StringField('product_name')
 }

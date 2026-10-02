@@ -14,6 +14,13 @@ class CaloriesField(NamedField):
     _units = 'kcal'
 
 
+class CaloriesRateField(NamedField):
+    """A field containing a calories measurement in kcal."""
+
+    _name = 'calories_rate'
+    _units = 'kcal/min'
+
+
 class CaloriesDayField(NamedField):
     """A field containing a calories measurement for a day in kcal/day."""
 
