@@ -5,10 +5,15 @@ __copyright__ = "Copyright Tom Goetz"
 __license__ = "GPL"
 
 import unittest
+import io
 import logging
 import datetime
+from unittest import mock
 
-from fitfile import fields
+from fitfile import fields, MeasurementSystem
+from fitfile.record_header import RecordHeader
+from fitfile.definition_message import DefinitionMessage
+from fitfile.data_message import DataMessage, DataMessageDecodeContext
 
 
 root_logger = logging.getLogger()
@@ -19,12 +24,49 @@ root_logger.setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+RECORD = 20
+SINT8 = 0x01
+UINT8 = 0x02
+UINT16 = 0x84
+UINT32 = 0x86
+
+
+def read_messages(field_definitions, data, byte_order):
+    """Return the definition message and the data message read from a record message definition followed by its data."""
+    definition = bytes([0x40, 0, byte_order == 'big']) + RECORD.to_bytes(2, byte_order) + bytes([len(field_definitions)])
+    for field_definition in field_definitions:
+        definition += bytes(field_definition)
+    file = io.BytesIO(definition + bytes([0x00]) + data)
+    definition_message = DefinitionMessage(RecordHeader(file), {}, file)
+    RecordHeader(file)
+    return definition_message, DataMessage(definition_message, file, MeasurementSystem.metric, DataMessageDecodeContext())
+
+
 class TestFitFields(unittest.TestCase):
     """Class for testing FIT file parsing."""
 
     @classmethod
     def setUpClass(cls):
         pass
+
+    def test_single_read_decoding_matches_field_by_field_decoding(self):
+        # timestamp, heart rate, distance, speed, temperature and an unknown field holding four values
+        field_definitions = [(253, 4, UINT32), (3, 1, UINT8), (5, 4, UINT32), (6, 2, UINT16), (13, 1, SINT8), (200, 4, UINT8)]
+        for byte_order in ('little', 'big'):
+            data = ((1000000000).to_bytes(4, byte_order) + bytes([142]) + (123456).to_bytes(4, byte_order) + (3210).to_bytes(2, byte_order)
+                    + (-5).to_bytes(1, byte_order, signed=True) + bytes([1, 2, 255, 4]))
+            definition_message, single_read = read_messages(field_definitions, data, byte_order)
+            self.assertIsNotNone(definition_message.decode_plan())
+            with mock.patch.object(DefinitionMessage, 'decode_plan', return_value=None):
+                _, field_by_field = read_messages(field_definitions, data, byte_order)
+            self.assertEqual(single_read.fields.heart_rate, 142)
+            self.assertEqual(single_read.fields, field_by_field.fields)
+            self.assertEqual(repr(single_read.field_values), repr(field_by_field.field_values))
+            self.assertEqual(single_read.file_size, field_by_field.file_size)
+
+    def test_fields_that_do_not_fill_their_size_are_decoded_one_at_a_time(self):
+        definition_message, _ = read_messages([(3, 1, UINT8), (6, 3, UINT16)], bytes([142, 1, 2, 3]), 'little')
+        self.assertIsNone(definition_message.decode_plan())
 
     def test_time_ms_field_valid_conversion(self):
         time = fields.TimeMsField('time')
