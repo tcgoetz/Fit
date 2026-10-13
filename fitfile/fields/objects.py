@@ -34,7 +34,11 @@ class ObjectField(Field):
         """Return a FieldValue containing the field value as a Python object."""
         self.measurement_system = measurement_system
         # apply scale and offset to invalid to or tests for invalid will fail!!
-        value_obj = self.obj_func((value / self._scale) - self._offset, (invalid / self._scale) - self._offset)
+        obj_invalid = (invalid / self._scale) - self._offset
+        if isinstance(value, list):
+            value_obj = [self.obj_func((sub_value / self._scale) - self._offset, obj_invalid) for sub_value in value]
+        else:
+            value_obj = self.obj_func((value / self._scale) - self._offset, obj_invalid)
         return [FieldValue(self, value_obj, invalid, **{self._name: self._convert_many(value_obj, invalid)})]
 
     def reconvert(self, value_obj, invalid, measurement_system=MeasurementSystem.metric):
