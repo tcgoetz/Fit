@@ -8,7 +8,9 @@ import unittest
 import logging
 
 from fitfile import MeasurementSystem
-from fitfile.fields import ProductField, GarminProduct, GarminProductField
+from fitfile.fields import ProductField, GarminProduct, GarminProductField, SportBasedGradeField, Sport, SubSport
+from fitfile.fields.enum_fields.sport import BoulderingFontGradeField, IndoorFontGradeField
+from fitfile.fields.sport import ClimbingGradeField
 
 
 
@@ -34,6 +36,13 @@ class TestFitDependantField(unittest.TestCase):
         field_value.reconvert(MeasurementSystem.metric)
         self.assertIsInstance(field_value['product'], GarminProduct)
         self.assertEqual(field_value['product'], GarminProduct.Fenix_5_Sapphire)
+
+    def test_sport_based_grade_field_dependant_field(self):
+        grade = SportBasedGradeField('grade')
+        self.assertIsInstance(grade.dependant_field([Sport.rock_climbing, SubSport.bouldering]), BoulderingFontGradeField)
+        self.assertIsInstance(grade.dependant_field([Sport.rock_climbing, SubSport.indoor_climbing]), IndoorFontGradeField)
+        self.assertIsInstance(grade.dependant_field([Sport.rock_climbing, None]), ClimbingGradeField)
+        self.assertIsInstance(grade.dependant_field([Sport.running, None]), ClimbingGradeField)
 
 
 if __name__ == '__main__':

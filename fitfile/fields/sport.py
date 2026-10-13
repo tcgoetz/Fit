@@ -118,7 +118,7 @@ class SportBasedGradeField(NamedField):
         sport = control_value_list[0]
         if sport is Sport.rock_climbing:
             sub_sport = control_value_list[1]
-            dependant_field = self._cycles_name_to_field.get(sub_sport, ClimbingGradeField)
+            dependant_field = self._subsport_to_field.get(sub_sport, ClimbingGradeField)
         else:
             dependant_field = ClimbingGradeField
         return dependant_field()
