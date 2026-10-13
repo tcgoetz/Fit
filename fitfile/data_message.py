@@ -110,7 +110,7 @@ class DataMessage():
                 # This should not happen, if the timestamp16 field exists, it should not be None
                 # Issue #21: seen on Ubuntu on Windows
                 logger.error('timestamp16 with value None: %r', self.fields)
-                self.fields.add('timestamp', self.__context.last_timestamp)
+                self.fields['timestamp'] = self.__context.last_timestamp
 
     @property
     def type(self):
