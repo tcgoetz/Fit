@@ -51,6 +51,14 @@ class TestFitFields(unittest.TestCase):
         field_value_list = time.convert(936189712, 4294967295)
         self.assertEqual(field_value_list[0]['timestamp'], datetime.datetime(2019, 8, 31, 12, 41, 52))
 
+    def test_object_field_converts_every_value_of_an_array(self):
+        speed = fields.SpeedMpsField('speed_1s')
+        self.assertEqual(speed.convert([255, 255, 255], 255)[0]['speed_1s'], [None, None, None])
+        values = speed.convert([1000, 255, 2000], 255)[0]['speed_1s']
+        self.assertEqual(values[1], None)
+        self.assertEqual(values[2], 2 * values[0])
+        self.assertEqual(values[0], speed.convert(1000, 255)[0]['speed_1s'])
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
