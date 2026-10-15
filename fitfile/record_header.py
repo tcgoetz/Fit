@@ -29,9 +29,9 @@ class RecordHeader(Data):
 
     def __init__(self, file):
         """Return a RecordHeader instance created by reading the record header data from a FIT file."""
-        self.record_header = None
-        super().__init__(file, self.rh_schema)
-        self.message_class = MessageClass(self.message_type())
+        self.record_header = file.read(1)[0]
+        self.file_size = 1
+        self.message_class = MessageClass.definition if self.message_type() else MessageClass.data
 
     def __compressed_timestamp(self):
         return (self.record_header & 0x80) == 0x80

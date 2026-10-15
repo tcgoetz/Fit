@@ -6,6 +6,7 @@ __license__ = "GPL"
 
 
 import collections
+import struct
 
 from .data import Schema, Data, Architecture
 from .fields import UnknownField
@@ -61,6 +62,7 @@ class DefinitionMessage(Data):
         self.dev_fields = None
         super().__init__(file, DefinitionMessage.dm_primary_schema, [(DefinitionMessage.dm_secondary_schema, self.__decode_secondary)])
 
+        self.__decode_plan = False
         self.message_type = MessageType.get_type(self.global_message_number)
         self.__message_data = DefinitionMessageData.get_message_definition(self.message_type)
 
@@ -89,7 +91,38 @@ class DefinitionMessage(Data):
 
     def field(self, field_number):
         """Return an instance of the proper Field subclass for the given field definition."""
-        return DefinitionMessageData.reserved_field_indexes.get(field_number, self.__message_data.get(field_number, UnknownField(field_number)))
+        field = DefinitionMessageData.reserved_field_indexes.get(field_number)
+        if field is None:
+            field = self.__message_data.get(field_number)
+        if field is None:
+            field = UnknownField(field_number)
+        return field
+
+    def decode_plan(self):
+        """
+        Return what is needed to decode all of the fields of a data message with a single read.
+
+        The plan is (struct, [(field, invalid value, index of the first value, value count)]) or None if the fields have
+        to be decoded one at a time.
+        """
+        if self.__decode_plan is False:
+            self.__decode_plan = self.__build_decode_plan()
+        return self.__decode_plan
+
+    def __build_decode_plan(self):
+        unpack_format = '>' if self.endian is Architecture.Big_Endian else '<'
+        entries = []
+        index = 0
+        for field_definition in self.field_definitions:
+            type_string = field_definition.type_string()
+            type_size = Schema.type_to_size[type_string]
+            count = field_definition.type_count()
+            if count < 1 or count * type_size != field_definition.size:
+                return None
+            unpack_format += Schema.type_to_unpack_format[type_string] * count
+            entries.append((self.field(field_definition.field_definition_number), field_definition.invalid(), index, count))
+            index += count
+        return (struct.Struct(unpack_format), entries)
 
     def __str__(self):
         """Return a string representation of a DefinitionMessage instance."""
