@@ -7,7 +7,7 @@ PYTHON=python3
 PYTHONPATH=${PROJECT_BASE}/..
 export PYTHONPATH
 
-TEST_GROUPS=fit_fields fit_field_enum fit_dependant_field measurements conversions
+TEST_GROUPS=fit_fields fit_field_enum fit_dependant_field measurements conversions data_message
 
 #
 # Over all targets
