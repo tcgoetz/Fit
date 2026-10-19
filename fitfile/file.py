@@ -41,6 +41,7 @@ class File():
         self.filename = filename
         self.measurement_system = measurement_system
         self.message_types = []
+        self.__seen_message_types = set()
         self.messages = []
         logger.debug("- Started file %s", self.filename)
         for message_type in MessageType:
@@ -89,7 +90,8 @@ class File():
         else:
             vars(self)[data_message_type.name] = [data_message]
         self.messages.append(data_message)
-        if data_message_type not in self.message_types:
+        if data_message_type not in self.__seen_message_types:
+            self.__seen_message_types.add(data_message_type)
             self.message_types.append(data_message_type)
 
     @classmethod

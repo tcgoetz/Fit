@@ -9,7 +9,8 @@ import logging
 import datetime
 
 from .fields import DataField, DevDataField
-from .exceptions import FitMessageParse
+from .exceptions import FitMessageParse, FitDataFieldConvertError
+from .exceptions.exceptions import FitDataUnpackError
 
 
 logger = logging.getLogger(__name__)
@@ -62,14 +63,31 @@ class DataMessage():
         self.field_values = MessageFields()
         self.file_size = 0
         message_fields = {}
-        for index in range(definition_message.fields):
+        decode_plan = definition_message.decode_plan()
+        if decode_plan is not None:
+            unpacker, entries = decode_plan
             try:
-                data_field = DataField(fit_file, definition_message, definition_message.field_definitions[index], measurement_system)
+                raw_values = unpacker.unpack(fit_file.read(unpacker.size))
             except Exception as e:
-                raise FitMessageParse(self, e)
-            self.file_size += data_field.file_size
-            for field_value in data_field.values:
-                message_fields[field_value.field.name] = field_value
+                raise FitMessageParse(self, FitDataUnpackError(definition_message.endian, unpacker.format, unpacker.size, e))
+            self.file_size += unpacker.size
+            for field, invalid, index, count in entries:
+                raw_value = raw_values[index] if count == 1 else list(raw_values[index:index + count])
+                try:
+                    values = field.convert(raw_value, invalid, measurement_system)
+                except Exception as e:
+                    raise FitMessageParse(self, FitDataFieldConvertError(raw_value, field, e))
+                for field_value in values:
+                    message_fields[field_value.field.name] = field_value
+        else:
+            for index in range(definition_message.fields):
+                try:
+                    data_field = DataField(fit_file, definition_message, definition_message.field_definitions[index], measurement_system)
+                except Exception as e:
+                    raise FitMessageParse(self, e)
+                self.file_size += data_field.file_size
+                for field_value in data_field.values:
+                    message_fields[field_value.field.name] = field_value
         self.__convert_fields(message_fields, measurement_system)
         self.__convert_dev_fields(fit_file, measurement_system)
         self.__track_time()

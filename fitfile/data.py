@@ -38,7 +38,7 @@ class Schema():
         'FLOAT64': 8
     }
 
-    __type_to_unpack_format = {
+    type_to_unpack_format = {
         'CHAR': 'B',
         'INT8': 'b',
         'UINT8': 'B',
@@ -67,7 +67,7 @@ class Schema():
         for key in self.ordered_dict:
             (type, count) = self.ordered_dict[key]
             for _ in range(count):
-                unpack_format += self.__type_to_unpack_format[type]
+                unpack_format += self.type_to_unpack_format[type]
                 self.file_size[endian.value] += self.type_to_size[type]
         self.unpack_format[endian.value] = unpack_format
 
